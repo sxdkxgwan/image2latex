@@ -1,3 +1,5 @@
+import os
+
 class Config():
     # directories
     dir_output    = "results/test/"
@@ -10,5 +12,10 @@ class Config():
 
     # model training
     batch_size    = 10
+
+    def __init__(self):
+         # directory for training outputs
+        if not os.path.exists(self.dir_output):
+            os.makedirs(self.dir_output)
 
 config = Config()

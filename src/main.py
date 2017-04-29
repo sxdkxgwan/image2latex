@@ -1,5 +1,3 @@
-import os
-
 from utils.dataset import Dataset
 from models.model import Model
 from configs.config import config
@@ -9,10 +7,6 @@ from utils.data_utils import load_vocab
 
 
 if __name__ == "__main__":
-    # directory for training outputs
-    if not os.path.exists(config.dir_output):
-        os.makedirs(config.dir_output)
-
     # Load vocab
     vocab   = load_vocab(config.path_vocab)
 
