@@ -1,4 +1,4 @@
-#Img2Latex
+# Img2Latex
 
 
 ## Data and Preprocessing
