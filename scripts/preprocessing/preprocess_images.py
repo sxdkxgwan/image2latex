@@ -3,7 +3,6 @@
 import sys, os, argparse, json, glob, logging
 import numpy as np
 from PIL import Image
-sys.path.insert(0, '%s'%os.path.join(os.path.dirname(__file__), '../utils/'))
 from image_utils import *
 from multiprocessing import Pool
 from multiprocessing.dummy import Pool as ThreadPool 
