@@ -1,9 +1,26 @@
+import os
+
 from utils.dataset import Dataset
+from models.model import Model
+from configs.config import config
+from utils.preprocess import greyscale, get_form_prepro
+from utils.data_utils import load_vocab
 
 
 
 if __name__ == "__main__":
-    path = "../data/val_filter.lst"
-    myset = Dataset(path)
-    for element in myset:
-        print element
+    # directory for training outputs
+    if not os.path.exists(config.dir_output):
+        os.makedirs(config.dir_output)
+
+    # Load vocab
+    vocab   = load_vocab(config.path_vocab)
+
+    # Load datasets
+    dataset =  Dataset(path_formulas=config.path_formulas, dir_images=config.dir_images,
+                    path_matching=config.path_matching, img_prepro=greyscale, 
+                    form_prepro=get_form_prepro(vocab))
+
+    # Build model
+    model   = Model(config)
+    model.build()
