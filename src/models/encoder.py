@@ -16,4 +16,6 @@ class Encoder(object):
         Returns:
             the encoded images
         """
-        pass
+        with tf.variable_scope("encoder"):
+            img = tf.cast(img, tf.float32) / 255.
+            out = layers.conv2d(inputs=img, num_outputs=10, kernel_size=3, stride=1)

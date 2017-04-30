@@ -1,14 +1,15 @@
 import numpy as np
+import time
 import logging
 import sys
 
 
 def get_logger(filename):
     logger = logging.getLogger('logger')
-    logger.setLevel(logging.DEBUG)
-    logging.basicConfig(format='%(message)s', level=logging.DEBUG)
+    logger.setLevel(logging.INFO)
+    logging.basicConfig(format='%(message)s', level=logging.INFO)
     handler = logging.FileHandler(filename)
-    handler.setLevel(logging.DEBUG)
+    handler.setLevel(logging.INFO)
     handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s: %(message)s'))
     logging.getLogger().addHandler(handler)
     return logger

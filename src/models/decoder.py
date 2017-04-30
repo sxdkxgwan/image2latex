@@ -9,11 +9,12 @@ class Decoder(object):
         self.config = config
 
 
-    def __call__(self, img):
+    def __call__(self, img, formula):
         """
         Args:
             takes an encoded img
         Returns:
             decoded img
         """
-        pass
+        return tf.one_hot(formula, self.config.vocab_size)
+        

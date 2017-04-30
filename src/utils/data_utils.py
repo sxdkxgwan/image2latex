@@ -2,6 +2,9 @@ import numpy as np
 from PIL import Image
 import time
 
+UNK = "_UNK"
+PAD = "_PAD"
+
 
 def render(arr):
     """
@@ -50,13 +53,16 @@ def pad_batch_formulas(formulas):
         formulas: (list) of list of ints
     Returns:
         array: of shape = (batch_size, max_len) of type np.int32
+        array: of shape = (batch_size) of type np.int32
     """
     max_len = max(map(lambda x: len(x), formulas))
     batch_formulas = np.zeros([len(formulas), max_len], dtype=np.int32)
+    formula_length = np.zeros(len(formulas), dtype=np.int32)
     for idx, formula in enumerate(formulas):
         batch_formulas[idx, :len(formula)] = np.asarray(formula, dtype=np.int32)
-
-    return batch_formulas
+        formula_length[idx] = len(formula)
+        
+    return batch_formulas, formula_length
 
 
 def minibatches(data_generator, minibatch_size):
@@ -92,5 +98,9 @@ def load_vocab(filename):
         for idx, token in enumerate(f):
             token = token.strip()
             vocab[token] = idx
+
+    # add pad and unk tokens
+    vocab[PAD] = len(vocab)
+    vocab[UNK] = len(vocab)
 
     return vocab

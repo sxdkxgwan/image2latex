@@ -1,5 +1,6 @@
 import numpy as np
-from PIL import Image
+# from PIL import Image
+from scipy.misc import imread
 from preprocess import greyscale, get_form_prepro
 import time
 from data_utils import minibatches, pad_batch_images, \
@@ -23,6 +24,7 @@ class Dataset(object):
         self.img_prepro    = img_prepro
         self.form_prepro   = form_prepro
         self.formulas      = self._load_formulas(path_formulas)
+        self.length        = None
 
 
     def _load_formulas(self, filename):
@@ -53,13 +55,20 @@ class Dataset(object):
         with open(self.path_matching) as f:
             for line in f:
                 img_path, formula_id = line.strip().split(' ')
-                img = Image.open(self.dir_images + "/" + img_path)
-                img = np.asarray(img)
-                img = self.img_prepro(img)
+                img = imread(self.dir_images + "/" + img_path)
+                img = self.img_prepro(img) 
                 formula = self.form_prepro(self.formulas[int(formula_id)])
                 yield img, formula
 
 
+    def __len__(self):
+        if self.length is None:
+            counter = 0
+            for _ in self:
+                counter += 1
+            self.length = counter
+
+        return self.length
 
 
 if __name__ == "__main__":
@@ -74,18 +83,6 @@ if __name__ == "__main__":
                     form_prepro=get_form_prepro(vocab))
 
     for x_batch, y_batch in minibatches(myset, batch_size):
-        print len(x_batch)
-        print len(y_batch)
-        for x in x_batch:
-            print x.shape
-
-        for y in y_batch:
-            print len(y)
-
         x_batch = pad_batch_images(x_batch)
-        y_batch = pad_batch_formulas(y_batch)
-        print y_batch
-        print x_batch.shape
-        print y_batch.shape
-        
-        time.sleep(5)
+        y_batch, y_length = pad_batch_formulas(y_batch)
+        print x_batch.shape, y_batch.shape
