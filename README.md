@@ -25,3 +25,12 @@ python scripts/preprocessing/preprocess_filter.py --filter --image-dir data/imag
 python scripts/preprocessing/preprocess_filter.py --filter --image-dir data/images_processed --label-path data/norm.formulas.lst --data-path data/im2latex_validate.lst  --output-path data/val_filter.lst
 python scripts/preprocessing/preprocess_filter.py --filter --image-dir data/images_processed --label-path data/norm.formulas.lst --data-path data/im2latex_test.lst  --output-path data/test_filter.lst
 ```
+
+
+## Train
+
+Edit the config file in configs/
+
+```
+python main.py
+```

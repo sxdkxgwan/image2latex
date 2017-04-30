@@ -23,11 +23,6 @@ if __name__ == "__main__":
                     path_matching=config.path_matching_val, img_prepro=greyscale, 
                     form_prepro=get_form_prepro(vocab))
 
-    # for x_batch, y_batch in minibatches(val_set, 10):
-    #     x_batch = pad_batch_images(x_batch)
-    #     y_batch, y_length = pad_batch_formulas(y_batch)
-        # print x_batch.shape, y_batch.shape
-
     # Build model
     model   = Model(config)
     model.build()
