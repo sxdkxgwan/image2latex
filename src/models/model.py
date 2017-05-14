@@ -47,9 +47,10 @@ class Model(object):
             name='dropout')
 
         # input of the graph
-        self.img = tf.placeholder(tf.uint8, shape=(None, None, None, 1), 
+        height, width, num_channel = self.config.max_shape_image
+        self.img = tf.placeholder(tf.uint8, shape=(None, height, width, 1), 
             name='img')
-        self.formula = tf.placeholder(tf.int32, shape=(None, None), 
+        self.formula = tf.placeholder(tf.int32, shape=(None, self.config.max_length_formula), 
             name='formula')
         self.formula_length = tf.placeholder(tf.int32, shape=(None, ), 
             name='formula_length')
@@ -78,7 +79,7 @@ class Model(object):
         """
         Defines self.pred
         """
-        encoded_img = self.encoder(self.img)
+        encoded_img = self.encoder(self.img, is_training=True)
         decoded_img = self.decoder(encoded_img, self.formula)
         self.pred = decoded_img
 
@@ -128,8 +129,8 @@ class Model(object):
         prog = Progbar(target=nbatches)
         for i, (img, formula) in enumerate(minibatches(train_set, self.config.batch_size)):
             # pad batch
-            img                     = pad_batch_images(img)
-            formula, formula_length = pad_batch_formulas(formula)
+            img                     = pad_batch_images(img, self.config.max_shape_image)
+            formula, formula_length = pad_batch_formulas(formula, self.config.max_length_formula)
 
             # get feed dict
             fd = self.get_feed_dict(img, formula, lr=self.config.lr, 

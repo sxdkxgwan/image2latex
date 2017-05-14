@@ -15,9 +15,9 @@ if __name__ == "__main__":
     config.vocab_size = len(vocab)
 
     # Load datasets
-    train_set =  Dataset(path_formulas=config.path_formulas, dir_images=config.dir_images,
-                    path_matching=config.path_matching_train, img_prepro=greyscale, 
-                    form_prepro=get_form_prepro(vocab))
+    # train_set =  Dataset(path_formulas=config.path_formulas, dir_images=config.dir_images,
+    #                 path_matching=config.path_matching_train, img_prepro=greyscale, 
+    #                 form_prepro=get_form_prepro(vocab))
 
     val_set   =  Dataset(path_formulas=config.path_formulas, dir_images=config.dir_images,
                     path_matching=config.path_matching_val, img_prepro=greyscale, 

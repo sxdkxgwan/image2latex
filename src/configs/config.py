@@ -15,12 +15,21 @@ class Config():
     path_vocab    = "../data/latex_vocab.txt"
     vocab_size    = None
 
+    #preprocess images and formulas
+    max_length_formula = 150
+    max_shape_image = [160,520,1]
+
     # model training
     batch_size    = 10
     dropout       = 0.5
     lr            = 1e-3
     n_epochs      = 2
+
+    #encoder parameters
+    encoder_hidden_size = 256 
     
+    #decoder parameters
+    decoder_hidden_size = 512
 
     def __init__(self):
          # directory for training outputs

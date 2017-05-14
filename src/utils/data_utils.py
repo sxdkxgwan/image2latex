@@ -30,14 +30,16 @@ def get_max_shape(arrays):
     return max_shape
 
 
-def pad_batch_images(images):
+def pad_batch_images(images, target_shape):
     """
     Args:
         images: list of arrays
+        target_shape: shape at which we want to pad
     """
 
     # 1. max shape
-    max_shape = get_max_shape(images)
+    # max_shape = get_max_shape(images)
+    max_shape = target_shape
 
     # 2. apply formating
     batch_images = 255 * np.ones([len(images)] + list(max_shape))
@@ -47,15 +49,17 @@ def pad_batch_images(images):
     return batch_images.astype(np.uint8)
 
 
-def pad_batch_formulas(formulas):
+def pad_batch_formulas(formulas, max_length):
     """
     Args:
         formulas: (list) of list of ints
+        max_length: length maximal of formulas
     Returns:
         array: of shape = (batch_size, max_len) of type np.int32
         array: of shape = (batch_size) of type np.int32
     """
-    max_len = max(map(lambda x: len(x), formulas))
+    # max_len = max(map(lambda x: len(x), formulas))
+    max_len = max_length
     batch_formulas = np.zeros([len(formulas), max_len], dtype=np.int32)
     formula_length = np.zeros(len(formulas), dtype=np.int32)
     for idx, formula in enumerate(formulas):
