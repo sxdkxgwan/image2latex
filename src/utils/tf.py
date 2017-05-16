@@ -1,5 +1,6 @@
 import tensorflow as tf
 from tensorflow.contrib.rnn import GRUCell
+# https://github.com/tensorflow/tensorflow/blob/master/tensorflow/contrib/rnn/python/ops/core_rnn_cell_impl.py
 
 
 class GRUAttnCell(GRUCell):
@@ -18,4 +19,6 @@ class GRUAttnCell(GRUCell):
                 # TODO compute e
                 # TODO compute a
                 # TODO compute c
-                pass
+                out = gru_out
+
+                return (out, out)
