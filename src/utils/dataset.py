@@ -24,7 +24,6 @@ class Dataset(object):
         self.img_prepro    = img_prepro
         self.form_prepro   = form_prepro
         self.formulas      = self._load_formulas(path_formulas)
-        self.max_shape_image, self.max_length_formula = self._get_max_shape()
         self.length        = None
         
 
@@ -45,10 +44,13 @@ class Dataset(object):
         return formulas
 
 
-    def _get_max_shape(self):
+    def get_max_shape(self):
         """
+        Computes max shape of images in the dataset
+
         Returns:
-            max_shape_image: tuple (max_heigh, max_width, max_channels) of images in the dataset
+            max_shape_image: tuple (max_heigh, max_width, max_channels) 
+                of images in the dataset
             max_length_formula: max length of formulas in the dataset
         """
         max_shape = [0,0,0]

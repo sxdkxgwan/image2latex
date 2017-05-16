@@ -1,6 +1,11 @@
 import os
 
 class Config():
+    def __init__(self):
+         # directory for training outputs
+        if not os.path.exists(self.dir_output):
+            os.makedirs(self.dir_output)
+
     # directories
     dir_output    = "results/test/"
     dir_images    = "../data/images_processed"
@@ -13,11 +18,11 @@ class Config():
 
     path_formulas = "../data/norm.formulas.lst"
     path_vocab    = "../data/latex_vocab.txt"
-    vocab_size    = None
+    vocab_size    = None # to be computed in main
 
     #preprocess images and formulas
     max_length_formula = 150
-    max_shape_image = [160,520,1]
+    max_shape_image = [160, 500, 1]
 
     # model training
     batch_size    = 10
@@ -25,15 +30,6 @@ class Config():
     lr            = 1e-3
     n_epochs      = 2
 
-    #encoder parameters
-    encoder_hidden_size = 256 
-    
-    #decoder parameters
-    decoder_hidden_size = 512
 
-    def __init__(self):
-         # directory for training outputs
-        if not os.path.exists(self.dir_output):
-            os.makedirs(self.dir_output)
-
+# initializer config
 config = Config()
