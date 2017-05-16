@@ -1,6 +1,7 @@
 import numpy as np
 from data_utils import UNK
 
+
 def greyscale(state):
     """
     Preprocess state (:, :, 3) image into

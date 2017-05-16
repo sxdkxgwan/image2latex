@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 import tensorflow as tf
 import tensorflow.contrib.layers as layers
@@ -78,10 +79,9 @@ class Model(object):
     def add_pred_op(self):
         """
         Defines self.pred
-        """
+        """        
         encoded_img = self.encoder(self.img, is_training=True)
-        decoded_img = self.decoder(encoded_img, self.formula)
-        self.pred = decoded_img
+        self.pred = self.decoder(encoded_img, self.formula)
 
 
     def add_loss_op(self):
@@ -142,11 +142,17 @@ class Model(object):
             prog.update(i + 1, [("loss", loss_eval)])
 
 
-    def run_evaluate(self, x_batch, y_batch):
+    def run_evaluate(self, val_set):
         """
         Performs an epoch of evaluation
+
+        Args:
+            val_set: Dataset instance
+        Returns:
+            bleu score: 
+            exact match score: 
         """
-        pass
+        return 0, 0
 
 
     def train(self, train_set, val_set):
@@ -157,12 +163,20 @@ class Model(object):
             sess.run(self.init)
 
             for epoch in range(self.config.n_epochs):
+                print("Epoch {}/{}".format(epoch+1, self.config.n_epochs))
                 self.run_epoch(sess, train_set)
-                #self.evaluate(val_set)
+                self.evaluate(val_set)
 
 
-    def evaluate(self):
+    def evaluate(self, val_set):
         """
         Global eval procedure
         """
-        pass
+        sys.stdout.write("\r- Evaluating...")
+        sys.stdout.flush()
+        
+        # do some stuff
+        bleu, em = self.run_evaluate(val_set)
+
+        sys.stdout.write("\r- Eval: BLEU {}, EM {}\n".format(bleu, em))
+        sys.stdout.flush()

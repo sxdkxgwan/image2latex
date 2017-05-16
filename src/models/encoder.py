@@ -3,7 +3,6 @@ import tensorflow as tf
 import tensorflow.contrib.layers as layers
 
 
-
 class Encoder(object):
     def __init__(self, config):
         self.config = config
