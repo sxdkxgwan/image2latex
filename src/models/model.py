@@ -40,15 +40,15 @@ class Model(object):
             self.formula: int32, shape = (None, None)
             self.formula_length: int32, shape = (None, )
             self.dropout: float32, shape = ()
-            self.is_training: bool, shape = ()
+            self.training: bool, shape = ()
         """
         # hyper params
         self.lr = tf.placeholder(tf.float32, shape=(),
             name='lr')
         self.dropout = tf.placeholder(tf.float32, shape=(),
             name='dropout')
-        self.is_training = tf.placeholder(tf.bool, shape=(),
-            name="is_training")
+        self.training = tf.placeholder(tf.bool, shape=(),
+            name="training")
 
 
         # input of the graph
@@ -60,7 +60,7 @@ class Model(object):
             name='formula_length')
        
 
-    def get_feed_dict(self, img, is_training, formula=None, lr=None, dropout=1):
+    def get_feed_dict(self, img, training, formula=None, lr=None, dropout=1):
         """
         Returns a dict
         """
@@ -70,7 +70,7 @@ class Model(object):
         fd = {
             self.img: img, 
             self.dropout: dropout, 
-            self.is_training: is_training,
+            self.training: training,
         }
 
         if formula is not None:
@@ -88,9 +88,8 @@ class Model(object):
         """
         Defines self.pred
         """        
-        encoded_img = self.encoder(self.is_training, self.img)
-        scores      = self.decoder(self.is_training, encoded_img, 
-                    self.formula_length, formula=self.formula)
+        encoded_img = self.encoder(self.training, self.img)
+        scores      = self.decoder(self.training, encoded_img, self.formula)
 
         self.pred   = scores
 
@@ -143,7 +142,7 @@ class Model(object):
         prog = Progbar(target=nbatches)
         for i, (img, formula) in enumerate(minibatches(train_set, self.config.batch_size)):
             # get feed dict
-            fd = self.get_feed_dict(img, is_training=True, formula=formula, lr=self.config.lr,
+            fd = self.get_feed_dict(img, training=True, formula=formula, lr=self.config.lr,
                                     dropout=self.config.dropout)
             # update step
             loss_eval, _ = sess.run([self.loss, self.train_op], feed_dict=fd)

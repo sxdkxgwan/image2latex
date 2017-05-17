@@ -7,10 +7,10 @@ class Encoder(object):
         self.config = config
 
 
-    def __call__(self, is_training, img):
+    def __call__(self, training, img):
         """
         Args:
-            is_training: (tf.placeholder) tf.bool
+            training: (tf.placeholder) tf.bool
             img: batch of img, shape = (?, height, width, channels)
         Returns:
             the encoded images, shape = (?, h', w', c')
@@ -28,17 +28,17 @@ class Encoder(object):
             out = max_pooling2d(inputs=out)
 
             out = conv2d(inputs=out, filters=256, kernel_size=3)
-            # out = batch_normalization(inputs=out, training=is_training) 
+            # out = batch_normalization(inputs=out, training=training) 
 
             out = conv2d(inputs=out, filters=256, kernel_size=3)
             out = max_pooling2d(inputs=out, pool_size=(2,1), strides=(2,1)) 
 
             out = conv2d(inputs=out, filters=512, kernel_size=3)
-            # out = batch_normalization(inputs=out, training=is_training)
+            # out = batch_normalization(inputs=out, training=training)
             out = max_pooling2d(inputs=out, pool_size=(1,2), strides=(1,2))
 
             out = conv2d(inputs=out, filters=512, kernel_size=3, padding='VALID')
-            # out = batch_normalization(inputs=out, training=is_training) 
+            # out = batch_normalization(inputs=out, training=training) 
 
             return out
             
