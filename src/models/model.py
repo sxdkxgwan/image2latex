@@ -40,33 +40,41 @@ class Model(object):
             self.formula: int32, shape = (None, None)
             self.formula_length: int32, shape = (None, )
             self.dropout: float32, shape = ()
+            self.is_training: bool, shape = ()
         """
         # hyper params
-        self.lr = tf.placeholder(tf.float32, shape=(), 
+        self.lr = tf.placeholder(tf.float32, shape=(),
             name='lr')
-        self.dropout = tf.placeholder(tf.float32, shape=(), 
+        self.dropout = tf.placeholder(tf.float32, shape=(),
             name='dropout')
+        self.is_training = tf.placeholder(tf.bool, shape=(),
+            name="is_training")
+
 
         # input of the graph
-        height, width, num_channel = self.config.max_shape_image
-        self.img = tf.placeholder(tf.uint8, shape=(None, height, width, 1), 
+        self.img = tf.placeholder(tf.uint8, shape=(None, None, None, 1), 
             name='img')
-        self.formula = tf.placeholder(tf.int32, shape=(None, self.config.max_length_formula), 
+        self.formula = tf.placeholder(tf.int32, shape=(None, None),
             name='formula')
         self.formula_length = tf.placeholder(tf.int32, shape=(None, ), 
             name='formula_length')
+       
 
-
-    def get_feed_dict(self, img, formula=None, lr=None, formula_length=None, dropout=1):
+    def get_feed_dict(self, img, is_training, formula=None, lr=None, dropout=1):
         """
         Returns a dict
         """
+        # pad batch
+        img = pad_batch_images(img)
+
         fd = {
             self.img: img, 
             self.dropout: dropout, 
+            self.is_training: is_training,
         }
 
         if formula is not None:
+            formula, formula_length = pad_batch_formulas(formula)
             fd[self.formula] = formula
         if lr is not None:
             fd[self.lr] = lr
@@ -80,8 +88,11 @@ class Model(object):
         """
         Defines self.pred
         """        
-        encoded_img = self.encoder(self.img, is_training=True)
-        self.pred = self.decoder(encoded_img, self.formula)
+        encoded_img = self.encoder(self.is_training, self.img)
+        scores      = self.decoder(self.is_training, encoded_img, 
+                    self.formula_length, formula=self.formula)
+
+        self.pred   = scores
 
 
     def add_loss_op(self):
@@ -110,7 +121,10 @@ class Model(object):
         """
         with tf.variable_scope("train_step"):
             optimizer = tf.train.AdamOptimizer(self.lr)
-            self.train_op = optimizer.minimize(self.loss)
+            # for batch norm beta gamma
+            update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS) 
+            with tf.control_dependencies(update_ops): 
+                self.train_op = optimizer.minimize(self.loss)
 
 
     def add_init_op(self):
@@ -128,13 +142,9 @@ class Model(object):
         nbatches = (len(train_set) + self.config.batch_size - 1) / self.config.batch_size
         prog = Progbar(target=nbatches)
         for i, (img, formula) in enumerate(minibatches(train_set, self.config.batch_size)):
-            # pad batch
-            img                     = pad_batch_images(img, self.config.max_shape_image)
-            formula, formula_length = pad_batch_formulas(formula, self.config.max_length_formula)
-
             # get feed dict
-            fd = self.get_feed_dict(img, formula, lr=self.config.lr, 
-                                formula_length=formula_length, dropout=self.config.dropout)
+            fd = self.get_feed_dict(img, is_training=True, formula=formula, lr=self.config.lr,
+                                    dropout=self.config.dropout)
             # update step
             loss_eval, _ = sess.run([self.loss, self.train_op], feed_dict=fd)
 

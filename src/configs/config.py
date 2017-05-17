@@ -20,7 +20,8 @@ class Config():
     path_vocab    = "../data/latex_vocab.txt"
     vocab_size    = None # to be computed in main
 
-    #preprocess images and formulas
+    # preprocess images and formulas
+    dim_embeddings = 100
     max_length_formula = 150
     max_shape_image = [160, 500, 1]
 
