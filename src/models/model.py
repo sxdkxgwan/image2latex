@@ -4,10 +4,10 @@ import tensorflow as tf
 import tensorflow.contrib.layers as layers
 from utils.general import Progbar, get_logger
 from utils.data_utils import minibatches, pad_batch_images, \
-    pad_batch_formulas
+    pad_batch_formulas, load_vocab
 from encoder import Encoder
 from decoder import Decoder
-
+from utilS.evaluate import evaluate
 
 class Model(object):
     def __init__(self, config):
@@ -74,7 +74,8 @@ class Model(object):
         }
 
         if formula is not None:
-            formula, formula_length = pad_batch_formulas(formula)
+            formula, formula_length = pad_batch_formulas(formula, 
+                max_len=self.config.max_length_formula)
             fd[self.formula] = formula
         if lr is not None:
             fd[self.lr] = lr
@@ -151,7 +152,7 @@ class Model(object):
             prog.update(i + 1, [("loss", loss_eval)])
 
 
-    def run_evaluate(self, val_set):
+    def run_evaluate(self, sess, val_set):
         """
         Performs an epoch of evaluation
 
@@ -161,7 +162,27 @@ class Model(object):
             bleu score: 
             exact match score: 
         """
-        return 0, 0
+
+        vocab = load_vocab(self.config.path_vocab)
+        rev_vocab = {idx:word for idx,word in vocab.iteritems()}
+        
+        for img, formula in minibatches(val_set, len(val_set)):
+            fd = self.get_feed_dict(img, training=False, formula=formula)
+            loss_eval, predictions = sess.run([self.loss, self.pred], feed_dict=fd)
+            predictions = self.generate_answer(predictions)
+            f1, exact_match, bleu_score = evaluate(predictions, ground_truth, rev_vocab)
+
+        return bleu_score, exact_match
+
+
+    def generate_answer(self, predictions):
+        """
+        Args:
+            predictions: array of shape (batch_size, max_formula_length, vocab_size)
+        Returns:
+            formula by choosing one word of the vocab at each time step
+        """
+        return np.argmax(predictions, axis=2)
 
 
     def train(self, train_set, val_set):
@@ -174,10 +195,10 @@ class Model(object):
             for epoch in range(self.config.n_epochs):
                 print("Epoch {}/{}".format(epoch+1, self.config.n_epochs))
                 self.run_epoch(sess, train_set)
-                self.evaluate(val_set)
+                self.evaluate(sess, val_set)
 
 
-    def evaluate(self, val_set):
+    def evaluate(self, sess, val_set):
         """
         Global eval procedure
         """
@@ -185,7 +206,7 @@ class Model(object):
         sys.stdout.flush()
         
         # do some stuff
-        bleu, em = self.run_evaluate(val_set)
+        bleu, em = self.run_evaluate(sess, val_set)
 
         sys.stdout.write("\r- Eval: BLEU {}, EM {}\n".format(bleu, em))
         sys.stdout.flush()

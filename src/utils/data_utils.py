@@ -109,3 +109,19 @@ def load_vocab(filename):
     vocab[UNK] = len(vocab)
 
     return vocab
+
+
+def reconstruct_formula(tokens, rev_vocab):
+"""
+Args:
+    tokens: list of idx each comprised between 0 and len(vocab) - 1
+    rev_vocab: dict such that rev_vocab[idx] = word
+Returns:
+    string resulting from mapping of idx to words with rev_vocab and then concatenation
+"""
+    result = []
+    for token in tokens:
+        word = rev_vocab[token]
+        result.append(word)
+
+    return " ".join(result)
