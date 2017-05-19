@@ -9,7 +9,7 @@ from data_utils import minibatches, pad_batch_images, \
 
 class Dataset(object):
     def __init__(self, path_formulas, dir_images, path_matching, 
-                img_prepro, form_prepro):
+                img_prepro, form_prepro, max_iter=None):
         """
         Args:
             path_formulas: (string) file of formulas, one formula per line
@@ -25,6 +25,7 @@ class Dataset(object):
         self.form_prepro   = form_prepro
         self.formulas      = self._load_formulas(path_formulas)
         self.length        = None
+        self.max_iter      = max_iter
         
 
     def _load_formulas(self, filename):
@@ -79,7 +80,10 @@ class Dataset(object):
             formula: one formula
         """
         with open(self.path_matching) as f:
-            for line in f:
+            for idx, line in enumerate(f):
+                if self.max_iter is not None and idx > self.max_iter:
+                    break
+
                 img_path, formula_id = line.strip().split(' ')
                 img = imread(self.dir_images + "/" + img_path)
                 img = self.img_prepro(img) 

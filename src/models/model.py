@@ -7,7 +7,7 @@ from utils.data_utils import minibatches, pad_batch_images, \
     pad_batch_formulas, load_vocab
 from encoder import Encoder
 from decoder import Decoder
-from utilS.evaluate import evaluate
+from utils.evaluate import evaluate
 
 class Model(object):
     def __init__(self, config):
@@ -164,13 +164,13 @@ class Model(object):
         """
 
         vocab = load_vocab(self.config.path_vocab)
-        rev_vocab = {idx:word for idx,word in vocab.iteritems()}
+        rev_vocab = {idx: word for word, idx in vocab.iteritems()}
         
         for img, formula in minibatches(val_set, len(val_set)):
             fd = self.get_feed_dict(img, training=False, formula=formula)
             loss_eval, predictions = sess.run([self.loss, self.pred], feed_dict=fd)
             predictions = self.generate_answer(predictions)
-            f1, exact_match, bleu_score = evaluate(predictions, ground_truth, rev_vocab)
+            f1, exact_match, bleu_score = evaluate(predictions, formula, rev_vocab)
 
         return bleu_score, exact_match
 

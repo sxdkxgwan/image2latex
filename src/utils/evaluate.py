@@ -5,8 +5,11 @@ from utils.data_utils import reconstruct_formula
 
 
 def f1_score(prediction, ground_truth):
-    prediction_tokens = prediction.split()
-    ground_truth_tokens = ground_truth.split()
+    # prediction_tokens = prediction.split()
+    # ground_truth_tokens = ground_truth.split()
+    prediction_tokens = prediction[:len(ground_truth)]
+    ground_truth_tokens = ground_truth
+
     common = Counter(prediction_tokens) & Counter(ground_truth_tokens)
     num_same = sum(common.values())
     if num_same == 0:
@@ -19,8 +22,7 @@ def f1_score(prediction, ground_truth):
 
 
 def exact_match_score(prediction, ground_truth):
-
-    return np.array_equal(prediction == ground_truth)
+    return np.array_equal(prediction, ground_truth)
 
 def bleu_score(prediction, ground_truth, rev_vocab):
 	hypothesis = [rev_vocab[idx] for idx in ground_truth]

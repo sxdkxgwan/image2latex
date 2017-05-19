@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
     val_set   =  Dataset(path_formulas=config.path_formulas, dir_images=config.dir_images,
                     path_matching=config.path_matching_val, img_prepro=greyscale, 
-                    form_prepro=get_form_prepro(vocab))
+                    form_prepro=get_form_prepro(vocab), max_iter=50)
 
     # Build model
     model = Model(config)
