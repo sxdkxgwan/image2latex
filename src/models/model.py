@@ -169,7 +169,7 @@ class Model(object):
         rev_vocab = {idx: word for word, idx in vocab.iteritems()}
         f1s, exact_matchs, bleu_scores = [], [], []
         
-        for img, formula in minibatches(val_set, len(val_set)):
+        for img, formula in minibatches(val_set, self.config.batch_size):
             fd = self.get_feed_dict(img, training=False, formula=formula)
             loss_eval, predictions = sess.run([self.loss, self.pred_test], feed_dict=fd)
             predictions = self.generate_answer(predictions)
