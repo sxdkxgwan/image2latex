@@ -7,7 +7,7 @@ from utils.data_utils import minibatches, pad_batch_images, \
     pad_batch_formulas, load_vocab
 from encoder import Encoder
 from decoder import Decoder
-from utils.evaluate import evaluate
+from utils.evaluate import evaluate, write_answers
 
 class Model(object):
     def __init__(self, config):
@@ -75,12 +75,12 @@ class Model(object):
 
         if formula is not None:
             formula, formula_length = pad_batch_formulas(formula, 
-                max_len=self.config.max_length_formula)
+                    self.config.id_PAD, self.config.id_END)
             fd[self.formula] = formula
+            fd[self.formula_length] = formula_length
         if lr is not None:
             fd[self.lr] = lr
-        if formula_length is not None:
-            fd[self.formula_length] = formula_length
+            
 
         return fd
 
@@ -90,20 +90,22 @@ class Model(object):
         Defines self.pred
         """        
         encoded_img = self.encoder(self.training, self.img)
-        scores      = self.decoder(self.training, encoded_img, self.formula)
+        dec         = self.decoder(self.training, encoded_img, self.formula)
 
-        self.pred   = scores
+        self.pred_train = dec[0]
+        self.pred_test  = dec[0]
 
 
     def add_loss_op(self):
         """
         Defines self.loss
         """
-        losses = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.pred, 
+        losses = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.pred_train, 
                                                                 labels=self.formula)
         mask = tf.sequence_mask(self.formula_length)
         losses = tf.boolean_mask(losses, mask)
-        self.loss = tf.reduce_mean(losses) + self.l2_loss() * 0.1
+        self.loss = tf.reduce_mean(losses) 
+        # + self.l2_loss() * 0.1
 
 
     def l2_loss(self):
@@ -165,14 +167,23 @@ class Model(object):
 
         vocab = load_vocab(self.config.path_vocab)
         rev_vocab = {idx: word for word, idx in vocab.iteritems()}
+        f1s, exact_matchs, bleu_scores = [], [], []
         
         for img, formula in minibatches(val_set, len(val_set)):
             fd = self.get_feed_dict(img, training=False, formula=formula)
-            loss_eval, predictions = sess.run([self.loss, self.pred], feed_dict=fd)
+            loss_eval, predictions = sess.run([self.loss, self.pred_test], feed_dict=fd)
             predictions = self.generate_answer(predictions)
+            write_answers(predictions, formula, self.config.path_answers, rev_vocab)
             f1, exact_match, bleu_score = evaluate(predictions, formula, rev_vocab)
+            f1s += [f1]
+            exact_matchs += [exact_match]
+            bleu_scores += [bleu_score]
 
-        return bleu_score, exact_match
+        f1 = np.mean(f1s)
+        bleu_score = np.mean(bleu_scores)
+        exact_match = np.mean(exact_matchs)
+
+        return f1, bleu_score, exact_match
 
 
     def generate_answer(self, predictions):
@@ -206,7 +217,6 @@ class Model(object):
         sys.stdout.flush()
         
         # do some stuff
-        bleu, em = self.run_evaluate(sess, val_set)
-
-        sys.stdout.write("\r- Eval: BLEU {}, EM {}\n".format(bleu, em))
-        sys.stdout.flush()
+        f1, bleu, em = self.run_evaluate(sess, val_set)
+        sys.stdout.write("\r")
+        self.logger.info("- Eval: BLEU {:04.2f}, EM {:04.2f}, F1 {:04.2f}".format(bleu, em, f1))

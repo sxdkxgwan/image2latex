@@ -4,6 +4,22 @@ import nltk
 from utils.data_utils import reconstruct_formula
 
 
+def write_answers(prediction, ground_truth, path, rev_vocab):
+    """ 
+    Write answers in file, the format is
+        truth
+        prediction
+        new line
+        ...
+    """
+    with open(path, "a") as f:
+        for t, p in zip(ground_truth, prediction):
+            t = [rev_vocab[idx] for idx in t]
+            p = [rev_vocab[idx] for idx in p]
+            f.write(" ".join(t) + "\n")
+            f.write(" ".join(p) + "\n\n")
+
+
 def f1_score(prediction, ground_truth):
     # prediction_tokens = prediction.split()
     # ground_truth_tokens = ground_truth.split()
@@ -22,7 +38,9 @@ def f1_score(prediction, ground_truth):
 
 
 def exact_match_score(prediction, ground_truth):
+    prediction = prediction[:len(ground_truth)]
     return np.array_equal(prediction, ground_truth)
+
 
 def bleu_score(prediction, ground_truth, rev_vocab):
 	hypothesis = [rev_vocab[idx] for idx in ground_truth]
@@ -39,6 +57,8 @@ def evaluate(predictions, ground_truths, rev_vocab):
     	exact_match += exact_match_score(pred, truth)
     	f1 += f1_score(pred, truth)
     	bleu += bleu_score(pred, truth, rev_vocab)
+
+    # macro average
     exact_match = 100.0 * exact_match / len(predictions)
     f1 = 100.0 * f1 / len(predictions)
     bleu = 100.0 * bleu / len(predictions)

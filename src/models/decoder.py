@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 import tensorflow.contrib.layers as layers
-from utils.tf import TrainAttnCell, TestAttnCell
+from .attn_cell import TrainAttnCell, TestAttnCell
 
 
 class Decoder(object):
@@ -21,16 +21,22 @@ class Decoder(object):
         Returns:
             pred: (tf.Tensor), shape = (?, max_length, vocab_size) scores of each class
         """
-        # reshape image to shape = (N, H*W, C)
-        N    = tf.shape(encoded_img)[0]
-        H, W = tf.shape(encoded_img)[1], tf.shape(encoded_img)[2]
-        C    = encoded_img.shape[3].value
+        # reshape image
+        N    = tf.shape(encoded_img)[0]                           # batch size
+        H, W = tf.shape(encoded_img)[1], tf.shape(encoded_img)[2] # image
+        C    = encoded_img.shape[3].value                         # channels
         encoded_img_flat = tf.reshape(encoded_img, shape=[N, H*W, C])
 
-        # get embeddings
+        # get embeddings for training
         E = tf.get_variable("E", shape=[self.config.vocab_size, self.config.dim_embeddings], 
-                dtype=tf.float32)
-        embedding_train = tf.nn.embedding_lookup(E, formula)
+            dtype=tf.float32, initializer=tf.random_uniform_initializer(minval=-1.0, maxval=1.0))
+        start_token = tf.get_variable("start_token", shape=[self.config.dim_embeddings],
+            dtype=tf.float32, initializer=tf.random_uniform_initializer(minval=-1.0, maxval=1.0))
+
+        embedding_formula = tf.nn.embedding_lookup(E, formula)
+        start_token_      = tf.reshape(start_token, [1, 1, self.config.dim_embeddings])
+        start_tokens      = tf.tile(start_token_, multiples=[N, 1, 1])
+        embedding_train   = tf.concat([start_tokens, embedding_formula[:, :-1, :]], axis=1)
        
         # get Attention cell and formula for rnn
         train_attn_cell = TrainAttnCell(100, self.config.vocab_size, encoded_img_flat, training, E)
@@ -38,11 +44,12 @@ class Decoder(object):
 
         # run attention cell
         with tf.variable_scope("attn_cell", reuse=False):
-            train_outputs, _ = tf.nn.dynamic_rnn(train_attn_cell, embedding_train, dtype=tf.float32)
+            train_outputs, _ = tf.nn.dynamic_rnn(train_attn_cell, embedding_train, 
+                                    initial_state=train_attn_cell.initial_state())
 
         with tf.variable_scope("attn_cell", reuse=True):
-            test_outputs, _  = tf.nn.dynamic_rnn(test_attn_cell, embedding_train, dtype=tf.float32)
+            test_outputs, _  = tf.nn.dynamic_rnn(test_attn_cell, tf.expand_dims(formula, axis=-1),
+                                    initial_state=test_attn_cell.initial_state(start_token))
 
-        pred = tf.cond(training, lambda: train_outputs, lambda: test_outputs)
         
-        return pred
+        return train_outputs, test_outputs

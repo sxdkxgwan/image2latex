@@ -11,6 +11,7 @@ class Config():
     dir_images    = "../data/images_processed"
     
     path_log      = dir_output + "log.txt"
+    path_answers  = dir_output + "results.txt"
 
     path_matching_train = "../data/train_filter.lst"
     path_matching_val = "../data/val_filter.lst"
@@ -19,6 +20,8 @@ class Config():
     path_formulas = "../data/norm.formulas.lst"
     path_vocab    = "../data/latex_vocab.txt"
     vocab_size    = None # to be computed in main
+    id_PAD        = None # to be computed in main
+    id_END        = None # to be computed in main
 
     # preprocess images and formulas
     dim_embeddings = 100

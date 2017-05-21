@@ -2,8 +2,9 @@ import numpy as np
 from PIL import Image
 import time
 
-UNK = "_UNK"
-PAD = "_PAD"
+UNK = "_UNK" # for unknown words
+PAD = "_PAD" # for padding
+END = "_END" # for the end of a caption
 
 
 def render(arr):
@@ -49,7 +50,7 @@ def pad_batch_images(images, max_shape=None):
     return batch_images.astype(np.uint8)
 
 
-def pad_batch_formulas(formulas, max_len=None):
+def pad_batch_formulas(formulas, id_PAD, id_END, max_len=None):
     """
     Args:
         formulas: (list) of list of ints
@@ -61,11 +62,12 @@ def pad_batch_formulas(formulas, max_len=None):
     if max_len is None:
         max_len = max(map(lambda x: len(x), formulas))
 
-    batch_formulas = np.zeros([len(formulas), max_len], dtype=np.int32)
+    batch_formulas = id_PAD * np.ones([len(formulas), max_len+1], dtype=np.int32)
     formula_length = np.zeros(len(formulas), dtype=np.int32)
     for idx, formula in enumerate(formulas):
         batch_formulas[idx, :len(formula)] = np.asarray(formula, dtype=np.int32)
-        formula_length[idx] = len(formula)
+        batch_formulas[idx, len(formula)]  = id_END
+        formula_length[idx] = len(formula) + 1
         
     return batch_formulas, formula_length
 
@@ -107,6 +109,7 @@ def load_vocab(filename):
     # add pad and unk tokens
     vocab[PAD] = len(vocab)
     vocab[UNK] = len(vocab)
+    vocab[END] = len(vocab)
 
     return vocab
 
