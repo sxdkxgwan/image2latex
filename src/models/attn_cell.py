@@ -152,8 +152,8 @@ class TrainAttnCell(RNNCell):
         return params
 
 
-    def _compute_h(self, embedding, c, h):
-        x        = tf.concat([embedding, c], axis=-1)
+    def _compute_h(self, h, embedding, o):
+        x        = tf.concat([embedding, o], axis=-1)
         new_h, _ = self.cell.__call__(x, h)
         return new_h
 
@@ -170,12 +170,12 @@ class TrainAttnCell(RNNCell):
         with tf.variable_scope(scope):
             # get params
             params = self._get_cell_params()
-
+            
             # compute attention
             c = self._compute_attention(self.encoded_img_flat, h, params)
-            
+
             # compute new h
-            new_h = self._compute_h(inputs, c, h)
+            new_h = self._compute_h(h, inputs, o)
 
             # compute o
             new_o = tf.tanh(tf.matmul(new_h, params["W_h"]) + tf.matmul(c, params["W_c"]))
@@ -199,7 +199,8 @@ class TestAttnCell(TrainAttnCell):
     """
     @property
     def state_size(self):
-        dim_embeddings = self.E.shape[1].value
+        # dim_embeddings = self.E.shape[1].value
+        dim_embeddings = 100
         return StateTuple3(self._num_units, self._dim_o, dim_embeddings)
 
 
@@ -209,7 +210,8 @@ class TestAttnCell(TrainAttnCell):
         """
         h_0, o_0 = super(TestAttnCell, self).initial_state()
 
-        dim_embeddings = self.E.shape[1].value
+        # dim_embeddings = self.E.shape[1].value
+        dim_embeddings = 100
         N              = tf.shape(self.encoded_img_flat)[0]
         start_token_   = tf.reshape(start_token, [1, dim_embeddings])
         start_tokens   = tf.tile(start_token_, multiples=[N, 1])
@@ -234,7 +236,7 @@ class TestAttnCell(TrainAttnCell):
             c = self._compute_attention(self.encoded_img_flat, h, params)
             
             # compute new h
-            new_h = self._compute_h(v, c, h)
+            new_h = self._compute_h(h, v, o)
 
             # compute o
             new_o = tf.tanh(tf.matmul(new_h, params["W_h"]) + tf.matmul(c, params["W_c"]))
