@@ -1,13 +1,24 @@
 import tensorflow as tf
 import collections
-from tensorflow.contrib.rnn import GRUCell
+from tensorflow.contrib.rnn import GRUCell, RNNCell
 # https://github.com/tensorflow/tensorflow/blob/master/tensorflow/contrib/rnn/python/ops/core_rnn_cell_impl.py
 
 
-_StateTuple = collections.namedtuple("StateTuple", ("h", "o", "y"))
+_StateTuple2 = collections.namedtuple("StateTuple", ("h", "o"))
+class StateTuple2(_StateTuple2):
+  __slots__ = ()
+
+  @property
+  def dtype(self):
+    (h, o) = self
+    if not h.dtype == o.dtype:
+      raise TypeError("Inconsistent internal state: %s vs %s" %
+                      (str(h.dtype), str(o.dtype)))
+    return h.dtype
 
 
-class StateTuple(_StateTuple):
+_StateTuple3 = collections.namedtuple("StateTuple", ("h", "o", "y"))
+class StateTuple3(_StateTuple3):
   __slots__ = ()
 
   @property
@@ -19,43 +30,98 @@ class StateTuple(_StateTuple):
     return h.dtype
 
 
-class AttnCell(GRUCell):
-    def __init__(self, num_units, num_proj, encoded_img, training, E, state_is_tuple=True):
+
+class TrainAttnCell(RNNCell):
+    def __init__(self, num_units, num_proj, encoded_img_flat, training, E):
         """
         Args:
             num_units: (int) number of hidden units
             num_proj: (int) number of projection units
-            encoded_img: (tf.Tensor) tensor of encoded image
+            encoded_img_flat: (tf.Tensor) tensor of encoded image
+                shape = (batch_size, nb of regions in image, channel size)
             training: (tf.placeholder) bool
             E: (tf.Variable) embeddings matrix
             state_is_tuple: (bool)
 
         """
-        self.encoded_img     = encoded_img
-        self.encoded_img_s   = tf.shape(encoded_img)
-        self.training        = training
-        self.E               = E
+        assert ((len(encoded_img_flat.shape.as_list()) == 3), 
+                "encoded_img_flat must have 3 dimensions")
 
-        self._n_channels = 512
+        # variables and tensors
+        self.encoded_img_flat = encoded_img_flat
+        self.training         = training
+        self.E                = E
+
+        # shapes of the input image
+        self.N = tf.shape(self.encoded_img_flat)[0]   # batch size
+        self.R = tf.shape(self.encoded_img_flat)[1]   # number of regions
+        self.C = self.encoded_img_flat.shape[2].value # number of channels
+
+        # hyperparemeters
         self._dim_e      = 100
         self._dim_o      = 100
-        self._dim_embed  = 100
+        self._num_units  = num_units
+        self._num_proj   = num_proj
 
-        self._state_is_tuple = state_is_tuple
-        self._num_units      = num_units
-        self._num_proj       = num_proj
-
-        super(AttnCell, self).__init__(num_units)
+        # regular cell init
+        self.cell = GRUCell(num_units)
 
 
     @property
     def state_size(self):
-        return StateTuple(self._num_units, self._dim_o, self._num_proj)
+        return StateTuple2(self._num_units, self._dim_o)
 
 
     @property
     def output_size(self):
         return self._num_proj
+
+
+    def _compute_attention(self, img, h):
+        """
+        Computes attention
+
+        Args:
+            img: (batch_size, regions, channels) image representation
+            h: (batch_size, num_units) hidden state 
+        
+        Returns:
+            c: (batch_size, channels) context vector
+        """
+        # get variables
+        W_img = tf.get_variable("W_img", shape=(self.C, self._dim_e), dtype=tf.float32)
+        W_h   = tf.get_variable("h", shape=(self._num_units, self._dim_e), dtype=tf.float32)
+        beta  = tf.get_variable("beta", shape=(self._dim_e, 1), dtype=tf.float32)
+
+        # compute attention over the image 
+        _img    = tf.reshape(img, shape=[self.N*self.R, self.C])
+        att_img = tf.matmul(_img, W_img)
+        att_img = tf.reshape(att_img, shape=[self.N, self.R, self._dim_e])
+
+        # compute attention over the hidden vector
+        att_h = tf.matmul(h, W_h)
+        att_h = tf.expand_dims(att_h, axis=1)
+
+        # sum the two contributions
+        s = tf.tanh(att_img + att_h)
+        s = tf.reshape(s, shape=[self.N*self.R, self._dim_e])
+        e = tf.matmul(s, beta)
+        e = tf.reshape(e, shape=[self.N, self.R])
+
+        # compute weights
+        a = tf.nn.softmax(e)
+        a = tf.expand_dims(a, axis=-1)
+
+        # compute context
+        c = tf.reduce_sum(a * img, axis=1)
+
+        return c
+
+
+    def _compute_h(self, inputs, c, h, o, W_o):
+        x        = tf.concat([inputs, c], axis=-1)
+        new_h, _ = self.cell.__call__(x, h)
+        return new_h
 
 
     def __call__(self, inputs, state):
@@ -65,60 +131,38 @@ class AttnCell(GRUCell):
             state: tuple: (h, o) where h is the hidden state and o is the vector 
                 used to make the prediction of the previous word
         """
-        if self._state_is_tuple:
-            h, o, y = state
+        h, o = state
+        scope = tf.get_variable_scope()
+        with tf.variable_scope(scope):
+            # compute attention
+            c = self._compute_attention(self.encoded_img_flat, h)
 
-        with tf.variable_scope(type(self).__name__):
-                # 1. compute e
-                # TODO: check some existing code online to see if there is a more direct way 
-                # of computing this - currently seems really slow but could be normal
-                W_img    = tf.get_variable("W_img", shape=(self._n_channels, self._dim_e),
-                                            dtype=tf.float32)
-                W_h      = tf.get_variable("h", shape=(self._num_units, self._dim_e),
-                                            dtype=tf.float32)
-                beta     = tf.get_variable("beta", shape=(self._dim_e, 1), dtype=tf.float32)
+            # get some variables
+            W_o   = tf.get_variable("W_o", shape=(self._dim_o, self._num_proj), dtype=tf.float32)
+           
+            # compute new h
+            new_h = self._compute_h(inputs, c, h, o, W_o)
 
-                img_flat = tf.reshape(self.encoded_img, shape=[-1, self._n_channels])
-                att_img  = tf.matmul(img_flat, W_img)
-                shape    = [self.encoded_img_s[0], self.encoded_img_s[1], self.encoded_img_s[2], self._dim_e]
-                att_img  = tf.reshape(att_img, shape=shape)
-                att_h    = tf.matmul(h, W_h)
-                att_h    = tf.expand_dims(att_h, axis=1)
-                att_h    = tf.expand_dims(att_h, axis=1)
-                s        = tf.tanh(att_img + att_h)
-                s        = tf.reshape(s, shape=[-1, self._dim_e])
-                e        = tf.matmul(s, beta)
-                shape    = [self.encoded_img_s[0], self.encoded_img_s[1]*self.encoded_img_s[2]]
-                e        = tf.reshape(e, shape=shape)
+            # compute o
+            W_c   = tf.get_variable("W_c", shape=(self.C, self._dim_o), dtype=tf.float32)
+            W_h   = tf.get_variable("W_h", shape=(self._num_units, self._dim_o), dtype=tf.float32)
+            new_o = tf.tanh(tf.matmul(h, W_h) + tf.matmul(c, W_c))
 
-                # 2. compute a
-                a = tf.nn.softmax(e)
-                a = tf.reshape(e, shape=self.encoded_img_s[:3])
-                a = tf.expand_dims(a, axis=-1)
+            # new states
+            new_y  = tf.matmul(new_o, W_o)
+            new_state = StateTuple2(new_h, new_o)
+            
+            return (new_y, new_state)
 
-                # 3. compute c
-                c = tf.reduce_sum(a * self.encoded_img, axis=[1, 2])
 
-                # 4. compute new h
-                embedding_train = tf.nn.embedding_lookup(self.E, inputs)
-                embedding_train = tf.reshape(embedding_train, shape=[-1, self._dim_embed])
-                embedding_test  = tf.nn.embedding_lookup(self.E, tf.argmax(y, axis=-1))
-                embedding       = tf.cond(self.training, lambda :embedding_train, lambda :embedding_test)
-                inputs     = tf.concat([embedding, c], axis=-1)
-                new_h, _   = super(AttnCell, self).__call__(inputs, h)
+class TestAttnCell(TrainAttnCell):
+    def _compute_h(self, inputs, c, h, o, W_o):
+        y         = tf.matmul(o, W_o)
+        embedding = tf.nn.embedding_lookup(self.E, tf.argmax(y, axis=-1))
+        x         = tf.concat([embedding, c], axis=-1)
+        new_h, _  = self.cell.__call__(x, h)
+        return new_h
 
-                # 5. compute o
-                W_c = tf.get_variable("W_c", shape=(self._n_channels, self._dim_o), dtype=tf.float32)
-                W_h = tf.get_variable("W_h", shape=(self._num_units, self._dim_o), dtype=tf.float32)
-                new_o   = tf.tanh(tf.matmul(h, W_h) + tf.matmul(c, W_c))
-
-                # 6. compute scores
-                W_o    = tf.get_variable("W_o", shape=(self._dim_o, self._num_proj))
-                new_y  = tf.matmul(o, W_o)
-                
-                new_state = StateTuple(new_h, new_o, new_y)
-                
-                return (new_y, new_state)
 
 
 def conv2d(inputs, filters=64, kernel_size=3, strides=1, padding='SAME'):
