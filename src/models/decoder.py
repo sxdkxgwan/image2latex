@@ -39,8 +39,8 @@ class Decoder(object):
         embedding_train   = tf.concat([start_tokens, embedding_formula[:, :-1, :]], axis=1)
        
         # get Attention cell and formula for rnn
-        train_attn_cell = TrainAttnCell(100, self.config.vocab_size, encoded_img_flat, training, E)
-        test_attn_cell  = TestAttnCell(100, self.config.vocab_size, encoded_img_flat, training, E)
+        train_attn_cell = TrainAttnCell(self.config.attn_cell_config, encoded_img_flat, training, E)
+        test_attn_cell  = TestAttnCell(self.config.attn_cell_config, encoded_img_flat, training, E)
 
         # run attention cell
         with tf.variable_scope("attn_cell", reuse=False):

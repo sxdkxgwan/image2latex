@@ -90,10 +90,10 @@ class Model(object):
         Defines self.pred
         """        
         encoded_img = self.encoder(self.training, self.img)
-        dec         = self.decoder(self.training, encoded_img, self.formula)
+        train, test = self.decoder(self.training, encoded_img, self.formula)
 
-        self.pred_train = dec[0]
-        self.pred_test  = dec[0]
+        self.pred_train = train
+        self.pred_test  = test
 
 
     def add_loss_op(self):
@@ -105,7 +105,6 @@ class Model(object):
         mask = tf.sequence_mask(self.formula_length)
         losses = tf.boolean_mask(losses, mask)
         self.loss = tf.reduce_mean(losses) 
-        # + self.l2_loss() * 0.1
 
 
     def l2_loss(self):
@@ -200,6 +199,7 @@ class Model(object):
         """
         with tf.Session() as sess:
             sess.run(self.init)
+            self.evaluate(sess, val_set)
 
             for epoch in range(self.config.n_epochs):
                 print("Epoch {}/{}".format(epoch+1, self.config.n_epochs))

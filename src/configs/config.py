@@ -34,6 +34,13 @@ class Config():
     lr            = 1e-3
     n_epochs      = 2
 
+    attn_cell_config = {
+        "num_units": 500,
+        "dim_e": 500,
+        "dim_o": 500,
+        "num_proj": None, # to be computed in main
+        "dim_embeddings": dim_embeddings
+    }
 
 # initializer config
 config = Config()

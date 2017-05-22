@@ -1,7 +1,6 @@
 import tensorflow as tf
 import collections
 from tensorflow.contrib.rnn import GRUCell, RNNCell
-# https://github.com/tensorflow/tensorflow/blob/master/tensorflow/contrib/rnn/python/ops/core_rnn_cell_impl.py
 
 
 _StateTuple2 = collections.namedtuple("StateTuple", ("h", "o"))
@@ -32,7 +31,7 @@ class StateTuple3(_StateTuple3):
 
 
 class TrainAttnCell(RNNCell):
-    def __init__(self, num_units, num_proj, encoded_img_flat, training, E):
+    def __init__(self, attn_cell_config, encoded_img_flat, training, E):
         """
         Args:
             num_units: (int) number of hidden units
@@ -53,13 +52,14 @@ class TrainAttnCell(RNNCell):
         self.C = self.encoded_img_flat.shape[2].value # number of channels
 
         # hyperparemeters
-        self._dim_e      = 100
-        self._dim_o      = 100
-        self._num_units  = num_units
-        self._num_proj   = num_proj
+        self._dim_e          = attn_cell_config["dim_e"]
+        self._dim_o          = attn_cell_config["dim_o"]
+        self._num_units      = attn_cell_config["num_units"]
+        self._num_proj       = attn_cell_config["num_proj"]
+        self._dim_embeddings = attn_cell_config["dim_embeddings"]
 
         # regular cell init
-        self.cell = GRUCell(num_units)
+        self.cell = GRUCell(self._num_units)
 
 
     @property
@@ -199,9 +199,7 @@ class TestAttnCell(TrainAttnCell):
     """
     @property
     def state_size(self):
-        # dim_embeddings = self.E.shape[1].value
-        dim_embeddings = 100
-        return StateTuple3(self._num_units, self._dim_o, dim_embeddings)
+        return StateTuple3(self._num_units, self._dim_o, self._dim_embeddings)
 
 
     def initial_state(self, start_token):
@@ -210,10 +208,8 @@ class TestAttnCell(TrainAttnCell):
         """
         h_0, o_0 = super(TestAttnCell, self).initial_state()
 
-        # dim_embeddings = self.E.shape[1].value
-        dim_embeddings = 100
         N              = tf.shape(self.encoded_img_flat)[0]
-        start_token_   = tf.reshape(start_token, [1, dim_embeddings])
+        start_token_   = tf.reshape(start_token, [1, self._dim_embeddings])
         start_tokens   = tf.tile(start_token_, multiples=[N, 1])
 
         return StateTuple3(h_0, o_0, start_tokens)

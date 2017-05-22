@@ -13,6 +13,7 @@ if __name__ == "__main__":
     # Load vocab
     vocab = load_vocab(config.path_vocab)
     config.vocab_size = len(vocab)
+    config.attn_cell_config["num_proj"] = config.vocab_size
     config.id_PAD = vocab[PAD]
     config.id_END = vocab[END]
 
