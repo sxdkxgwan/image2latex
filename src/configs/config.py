@@ -1,14 +1,25 @@
+from utils.data_utils import load_vocab, PAD, END
 import os
 
 class Config():
     def __init__(self):
-         # directory for training outputs
+        """
+        Creates output directories if they don't exist
+        """
+        # directory for training outputs
         if not os.path.exists(self.dir_output):
             os.makedirs(self.dir_output)
 
         if not os.path.exists(self.model_output):
             os.makedirs(self.model_output)
-            
+
+        self.vocab = load_vocab(self.path_vocab)
+        self.vocab_size = len(self.vocab)
+        self.attn_cell_config["num_proj"] = self.vocab_size
+        self.id_PAD = self.vocab[PAD]
+        self.id_END = self.vocab[END]
+
+                
     # directories
     dir_output    = "results/test/"
     dir_images    = "../data/images_processed"
@@ -22,10 +33,11 @@ class Config():
     path_matching_test = "../data/test_filter.lst"
 
     path_formulas = "../data/norm.formulas.lst"
+
     path_vocab    = "../data/latex_vocab.txt"
-    vocab_size    = None # to be computed in main
-    id_PAD        = None # to be computed in main
-    id_END        = None # to be computed in main
+    vocab_size    = None # to be computed in __init__
+    id_PAD        = None # to be computed in __init__
+    id_END        = None # to be computed in __init__
 
     # preprocess images and formulas
     dim_embeddings = 100
@@ -35,16 +47,13 @@ class Config():
     # model training
     batch_size    = 10
     dropout       = 0.5
-    lr            = 1e-3
-    n_epochs      = 2
+    lr            = 1e-2
+    n_epochs      = 30
 
     attn_cell_config = {
-        "num_units": 500,
-        "dim_e": 500,
-        "dim_o": 500,
-        "num_proj": None, # to be computed in main
+        "num_units": 200,
+        "dim_e": 200,
+        "dim_o": 200,
+        "num_proj": None, # to be computed in __init__
         "dim_embeddings": dim_embeddings
     }
-
-# initializer config
-config = Config()

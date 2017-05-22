@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow as tf
 import tensorflow.contrib.layers as layers
 from .attn_cell import TrainAttnCell, TestAttnCell
-
+from utils.tf import batch_normalization
 
 class Decoder(object):
     """

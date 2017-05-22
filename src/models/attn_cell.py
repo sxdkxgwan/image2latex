@@ -157,12 +157,12 @@ class TrainAttnCell(RNNCell):
         return new_h
 
 
-    def __call__(self, inputs, state):
+    def _step(self, embedding, state):
         """
         Args:
-            inputs: the embedding of the previous word for training only
-            state: tuple: (h, o) where h is the hidden state and o is the vector 
-                used to make the prediction of the previous word
+            embedding: shape =  (batch, dim_embeddings) embeddings
+                from previous time step
+            state: hidden state from previous time step
         """
         h, o = state
         scope = tf.get_variable_scope()
@@ -174,16 +174,29 @@ class TrainAttnCell(RNNCell):
             c = self._compute_attention(self.encoded_img_flat, h, params)
 
             # compute new h
-            new_h = self._compute_h(inputs, o, h)
+            new_h = self._compute_h(embedding, o, h)
 
             # compute o
-            new_o = tf.tanh(tf.matmul(new_h, params["W_h"]) + tf.matmul(c, params["W_c"]))
+            # new_o = tf.tanh(tf.matmul(new_h, params["W_h"]) + tf.matmul(c, params["W_c"]))
+            new_o = new_h
+            new_y  = tf.matmul(o, params["W_o"])
 
-            # new state
-            new_y  = tf.matmul(new_o, params["W_o"])
-            new_state = StateTuple2(new_h, new_o)
-            
-            return (new_y, new_state)
+            return new_h, new_o, new_y
+
+
+    def __call__(self, inputs, state):
+        """
+        Args:
+            inputs: the embedding of the previous word for training only
+            state: tuple: (h, o) where h is the hidden state and o is the vector 
+                used to make the prediction of the previous word
+        """
+        new_h, new_o, new_y = self._step(inputs, state)
+
+        new_state = StateTuple2(new_h, new_o)
+        
+        return (new_y, new_state)
+        
 
 
 class TestAttnCell(TrainAttnCell):
@@ -222,25 +235,11 @@ class TestAttnCell(TrainAttnCell):
                 of the previously predicted word
         """
         h, o, v = state
-        scope = tf.get_variable_scope()
-        with tf.variable_scope(scope):
-            # get params
-            params = self._get_cell_params()
+        new_h, new_o, new_y = super(TestAttnCell, self)._step(v, (h, o))
 
-            # compute attention
-            c = self._compute_attention(self.encoded_img_flat, h, params)
-            
-            # compute new h
-            new_h = self._compute_h(v, o, h)
+        idx    = tf.argmax(new_y, axis=-1)
+        new_v  = tf.nn.embedding_lookup(self.E, idx)
 
-            # compute o
-            new_o = tf.tanh(tf.matmul(new_h, params["W_h"]) + tf.matmul(c, params["W_c"]))
-
-            # new state
-            new_y  = tf.matmul(new_o, params["W_o"])
-            idx    = tf.argmax(new_y, axis=-1)
-            new_v  = tf.nn.embedding_lookup(self.E, idx)
-
-            new_state = StateTuple3(new_h, new_o, new_v)
-            
-            return (new_y, new_state)
+        new_state = StateTuple3(new_h, new_o, new_v)
+        
+        return (new_y, new_state)
