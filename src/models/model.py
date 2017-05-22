@@ -167,23 +167,21 @@ class Model(object):
 
         vocab = load_vocab(self.config.path_vocab)
         rev_vocab = {idx: word for word, idx in vocab.iteritems()}
-        f1s, exact_matchs, bleu_scores = [], [], []
+
+        references, hypotheses = [], []
         
         for img, formula in minibatches(val_set, self.config.batch_size):
             fd = self.get_feed_dict(img, training=False, formula=formula)
             loss_eval, predictions = sess.run([self.loss, self.pred_test], feed_dict=fd)
             predictions = self.generate_answer(predictions)
-            write_answers(predictions, formula, self.config.path_answers, rev_vocab)
-            f1, exact_match, bleu_score = evaluate(predictions, formula, rev_vocab)
-            f1s += [f1]
-            exact_matchs += [exact_match]
-            bleu_scores += [bleu_score]
+            for form, pred in zip(formula, predictions):
+                references.append([form])
+                hypotheses.append(pred)
 
-        f1 = np.mean(f1s)
-        bleu_score = np.mean(bleu_scores)
-        exact_match = np.mean(exact_matchs)
+        scores = evaluate(references, hypotheses, rev_vocab, 
+                            self.config.path_answers)
 
-        return f1, bleu_score, exact_match
+        return scores
 
 
     def generate_answer(self, predictions):
@@ -213,10 +211,15 @@ class Model(object):
         """
         Global eval procedure
         """
+        # logging
         sys.stdout.write("\r- Evaluating...")
         sys.stdout.flush()
         
-        # do some stuff
-        f1, bleu, em = self.run_evaluate(sess, val_set)
+        # computing scores
+        scores = self.run_evaluate(sess, val_set)
+        scores_to_print = ", ".join(["{} {:04.2f}".format(k, v) for k, v in scores.iteritems()])
+
+        # logging
         sys.stdout.write("\r")
-        self.logger.info("- Eval: BLEU {:04.2f}, EM {:04.2f}, F1 {:04.2f}".format(bleu, em, f1))
+        sys.stdout.flush()
+        self.logger.info("- Eval: {}".format(scores_to_print))

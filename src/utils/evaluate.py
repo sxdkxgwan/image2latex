@@ -4,7 +4,7 @@ import nltk
 from utils.data_utils import reconstruct_formula
 
 
-def write_answers(prediction, ground_truth, path, rev_vocab):
+def write_answers(references, hypotheses, rev_vocab, path):
     """ 
     Write answers in file, the format is
         truth
@@ -12,12 +12,15 @@ def write_answers(prediction, ground_truth, path, rev_vocab):
         new line
         ...
     """
+    assert len(references) == len(hypotheses)
+
     with open(path, "a") as f:
-        for t, p in zip(ground_truth, prediction):
-            t = [rev_vocab[idx] for idx in t]
-            p = [rev_vocab[idx] for idx in p]
-            f.write(" ".join(t) + "\n")
-            f.write(" ".join(p) + "\n\n")
+        for refs, hypo in zip(references, hypotheses):
+            ref = refs[0] # only take first ref
+            ref = [rev_vocab[idx] for idx in ref]
+            hypo = [rev_vocab[idx] for idx in hypo]
+            f.write(" ".join(ref) + "\n")
+            f.write(" ".join(hypo) + "\n\n")
 
 
 def f1_score(prediction, ground_truth):
@@ -37,30 +40,33 @@ def f1_score(prediction, ground_truth):
     return f1
 
 
-def exact_match_score(prediction, ground_truth):
-    prediction = prediction[:len(ground_truth)]
-    return np.array_equal(prediction, ground_truth)
+def exact_match_score(references, hypotheses):
+    exact_match = 0
+    for refs, hypo in zip(references, hypotheses):
+        ref = refs[0] # only take first ref
+        if np.array_equal(ref, hypo):
+            exact_match += 1
+
+    return exact_match / float(max(len(hypotheses), 1))
 
 
-def bleu_score(prediction, ground_truth, rev_vocab):
-	hypothesis = [rev_vocab[idx] for idx in ground_truth]
-	reference = [rev_vocab[idx] for idx in prediction]
-	BLEUscore = nltk.translate.bleu_score.sentence_bleu([reference], hypothesis)
-
-	return BLEUscore
+def bleu_score(references, hypotheses):
+	BLEU_4 = nltk.translate.bleu_score.corpus_bleu(references, hypotheses,
+        weights=(0.25, 0.25, 0.25, 0.25))
+	return BLEU_4
 
 
-def evaluate(predictions, ground_truths, rev_vocab):
-    f1 = exact_match = bleu = 0
-    for k, pred in enumerate(predictions):
-    	truth = ground_truths[k]
-    	exact_match += exact_match_score(pred, truth)
-    	f1 += f1_score(pred, truth)
-    	bleu += bleu_score(pred, truth, rev_vocab)
-
-    # macro average
-    exact_match = 100.0 * exact_match / len(predictions)
-    f1 = 100.0 * f1 / len(predictions)
-    bleu = 100.0 * bleu / len(predictions)
-
-    return f1, exact_match, bleu
+def evaluate(references, hypotheses, rev_vocab, path):
+    """
+    Args:
+        references: list of lists of list (multiple references per hypothesis)
+        hypotheses: list of list
+        rev_vocab: (dict) rev_vocab[idx] = word
+        path: (string) path where to write results
+    """
+    write_answers(references, hypotheses, rev_vocab, path)
+    scores = dict()
+    scores["BLEU-4"] = bleu_score(references, hypotheses)
+    scores["EM"] = exact_match_score(references, hypotheses)
+    return scores
+    
