@@ -1,8 +1,74 @@
 \int _ { - \epsilon } ^ { \infty } d l \: \mathrm { e } ^ { - l \zeta } \int _ { - \epsilon } ^ { \infty } d l ^ { \prime } \mathrm { e } ^ { - l ^ { \prime } \zeta } l l ^ { \prime } { \frac { l ^ { \prime } - l } { l + l ^ { \prime } } } \{ 3 \, \delta ^ { \prime \prime } ( l ) - { \frac { 3 } { 4 } } t \, \delta ( l ) \} = 0 .
+\vcenter \pi \pi \pi \pi \pi \notin \b \land \land \infty \infty \infty \infty \infty \imath \infty , \imath \pi \pi 0.1 0.1 \imath \imath \pi \notin 0.1 0.1 0.1 0.1 \smile \notin 0.1 \right\} 7 7 \mit \mit \bigtriangleup \scriptstyle \scriptstyle \scriptstyle \emptyset \emptyset 7 \mit \mit v 7 \mit v \end{cases} \end{cases} 0.3 \tilde \end{cases} \end{cases} \end{cases} 4 \end{cases} 4 \end{cases} 4 \varepsilon \varepsilon \varepsilon \big 0.3 \bigotimes \multiput " " " \sqcap " \otimes \alpha " \alpha " \alpha \mkern \mkern \mkern \mkern \bigtriangleup \bigtriangleup \bigtriangleup \bigtriangleup \bigtriangleup \bigtriangleup \bigtriangleup \AA \bigtriangleup \AA \bigtriangleup V V V \diamondsuit V \simeq \diamondsuit \simeq \setminus \overleftarrow \scriptstyle \scriptstyle \scriptstyle \scriptstyle \scriptstyle \scriptstyle
+
+[ { \bar { K } } _ { a } ^ { - } ( p ) , { \bar { K } } _ { b } ^ { - } ( k ) ] = i f _ { a b c } { \bar { K } } _ { c } ^ { - } ( p + k ) - 2 { \pi } ^ { 2 } C p { \delta } _ { a b } { \delta } _ { p + k , 0 } .
+\vcenter \pi \pi \pi \pi \pi \b \pi \notin \notin \land \land \textstyle \b \textstyle \b \pi 3.2 \b \textstyle \supset \end{cases} \end{cases} \end{cases} \varepsilon \qquad \put \itshape \pi \pi \b \pi \b . \pi \b \propto \land \b \infty \infty \infty \infty \sqcap \multiput \multiput \multiput " \multiput \left( \infty \sqcap \buildrel \buildrel \smile \smile \otimes \perp \ddots \emptyset \buildrel \emptyset \buildrel \mp N \prime \pi \subset \subset \oint \_ \_ \_ \prod \notin 3.2 \b \_ \_ \pi 3.2 \b \b \pi 3.2 \b \textstyle 3.2 \b \textstyle \supset \textstyle \pi \pi 3.2 3.2 \infty \infty \infty \infty \infty \infty \infty \sqcap \right\} \pi \pi \mathrel \right\} \ensuremath \right\} \prod 3.2
+
+E ( v ) = \frac { d } { d t } E ( q ) \; \; \; \; \; \; \; \forall t \, .
+\vcenter \pi \pi \pi \ll \pi \pi \notin \notin \land \land \b \textstyle \b \textstyle \pi 3.2 \b \textstyle \supset \end{cases} \end{cases} \end{cases} \varepsilon \qquad \qquad 0.3 0.3 \subset \multiput \multiput \multiput \end{array} \end{array} \end{array} E \smile 7 7 7 7 7 7 \vphantom \mit \mit \mit 0.3 7 \dag \Omega \Omega v \b \qquad \qquad 0.3 \b \qquad \right\} , \right\} \prod 3.2 3.2 \cal 3.2 3.2 \cal \phantom \phantom \varrho \phantom \varrho 9 \phantom \varrho 9 \right\} \prod 9 \right\} \prod \| \Phi 0 \Phi \/ \/ \star \bigotimes \star \b \: \bigsqcup \bigsqcup \emptyset \sqcup \star \enspace \star \put \put \bigr \star \put \put \multiput \multiput \end{array} \end{array} \end{array} E
+
+{ \frac { 1 } { L ^ { 2 } } } \prod _ { i = 1 } ^ { 3 } ( r _ { + } ^ { 2 } + q _ { i } ) - \mu r _ { + } ^ { 2 } \sim 0 \ .
+\vcenter \pi \pi \pi \pi \ll \pi \end{cases} \tilde \Longleftarrow \infty \infty \infty \infty , , \vdash \vdash \emptyset Object] Object] 7 \notin 7 7 \grave 7 \grave 7 \grave \scriptstyle \Pi \kappa \kappa \kappa \kappa \top \top \top 7 \atop \atop \atop \atop \atop 0.3 7 7 7 7 7 \vphantom 7 7 \mit \dag 7 7 \dag \langle \langle \langle \notin N \overleftarrow N \left\lbrace \large , \langle \langle N \large \large \dagger \qquad \right\} \prod \right\} \right\} \prod \right\} \notin \right\} \notin \bigoplus \ddots \P \neq \neq \neq \neq \neq \neq \equiv h \bigoplus \b / / / \b / \/ \b \/ 1 \special \b \/ \star 1 \varepsilon
+
+x ^ { I } ( \sigma + 2 \pi , \tau ) = x ^ { I } ( \sigma , \tau ) + 2 \pi L ^ { I } .
+\vcenter \pi \pi \pi \pi \ll \pi \end{cases} \tilde \Longleftarrow \infty \infty \infty \infty , , \vdash \vdash \emptyset Object] Object] 7 \notin 7 7 \grave 7 \grave 7 \grave 7 \grave \Pi \kappa \kappa \kappa \kappa \top \top \top 7 \atop \atop \atop \atop \atop 0.3 \atop 0.3 \mathrel \mathrel \_ \_ \prod 7 7 7 7 \operatorname* \grave \vphantom 7 7 7 \dag 7 \Pi \Pi 0.3 \Pi 0.3 0.3 \tilde \protectu \protectu \varpi \tilde v \end{cases} \tilde \end{cases} \end{cases} \end{cases} \varepsilon \qquad 0.3 0.3 \doteq \doteq \end{cases} \end{cases} \end{cases} \alpha \_ \alpha \_ \star " \star \smile \mkern \mkern \ddag \ddag \scriptstyle \scriptstyle \Pi \Pi \scriptstyle \scriptstyle \scriptstyle \Pi \kappa
+
+\xi _ { \sigma } ( \sigma ) = 1 - \frac { \pi e ^ { \sigma } } { 3 } + 8 \pi e ^ { \sigma } \sum _ { n = 1 } ^ { \infty } \frac { n e ^ { - 2 n \pi e ^ { \sigma } } } { 1 - e ^ { - 2 n \pi e ^ { \sigma } } }
+\vcenter \pi \pi \pi \pi \pi \notin \notin \land \land \b \textstyle \b \textstyle \pi 3.2 \b \textstyle \supset \end{cases} \end{cases} \end{cases} \varepsilon \qquad \pi 0.3 \subset \end{cases} \end{cases} 0.3 \tilde v \end{cases} \end{cases} \tilde \end{cases} \end{cases} \tilde \varepsilon \equiv \textit \oplus v \end{cases} \end{cases} \scriptstyle \scriptstyle \scriptstyle \scriptstyle \emptyset \setminus \kappa \kappa \hspace \Huge \Huge \_ \_ \_ \_ \_ \_ \prod \_ \_ \_ \geq 3.2 \b \_ \_ \equiv 3.2 \b \notin 3.2 \b \textstyle \overline 3.2 \null \smash \infty \infty \infty \infty \infty \sqcap \infty \sqcap \sqcap \right\} \prod \right\} \prod \right\} \notin \cal \right\} \cal \phantom \varrho \phantom \varrho H \prod \Gamma \Gamma \mathrel \mathrel \skew \prod \prod
+
+m _ { 0 } ^ { 2 } \varphi + { \frac { \mu ^ { 2 } - m _ { 0 } ^ { 2 } } { \beta } } \operatorname { t a n } ( \beta \varphi ) = 0
+\vcenter \pi \pi \pi \pi \ll \pi \end{cases} \tilde \Longleftarrow \infty \infty \infty \infty , , \vdash \vdash \vdash \emptyset Object] Object] 7 \notin 7 \grave 7 \grave 7 \grave \scriptstyle \scriptstyle \Pi \kappa \kappa \kappa \kappa \kappa \top \top \top \top 7 \atop \atop \atop \atop \atop 0.3 7 7 7 7 7 \vphantom 7 7 \mit \dag 7 7 \dag \langle \langle \langle \notin \notin \overleftarrow \overleftarrow N \left\lbrace \end{cases} \end{cases} 4 \end{cases} 4 \end{cases} 4 \varepsilon \varepsilon \qquad 0.3 \bigotimes \bigotimes \bigotimes \multiput " \sqcap \sqcap \sqcap \sqcap \sqcap \ss \vphantom \vphantom \vphantom \alpha \alpha \alpha \_ \_ \bigsqcup \bigsqcup \bigsqcup \bigsqcup \bigsqcup \prec \enspace \bigsqcup \bigsqcup / \enspace \enspace
+
+{ \frac { d z } { d r } } = e ^ { 2 A } , \hspace { 1 c m } \psi \rightarrow e ^ { - 3 A / 2 } \psi
+\vcenter \pi \pi \pi \ll \pi \pi \notin \notin \land \land \b \textstyle \b \textstyle \pi 3.2 \b \textstyle \supset \end{cases} \end{cases} \end{cases} \varepsilon \qquad \qquad 0.3 0.3 \subset \subset \multiput \multiput \multiput \end{array} \end{array} \buildrel \smile \otimes \perp 7 7 \grave 7 \grave 7 \grave \Pi \Pi \Pi 0.3 0.3 \enspace \enspace \top 7 \tilde 7 7 \varepsilon \varepsilon \_ \_ \pi 3.2 \b \_ \_ 7 7 7 \grave 7 7 \grave 7 7 \grave 7 7 \grave 7 7 7 \dag 7 7 \mit \dag 7 7 \dag \langle \langle \langle \mathrel \mathrel \mathrel \overline \overline \overline \atop \atop \prod \prod N N \prod N N \dagger N \dagger \prod
+
+F _ { A _ { 1 } } \left( q ^ { a _ { 1 } } , \dot { q } ^ { a _ { 1 } } \right) = 0 \, , \; F _ { A _ { 0 } } \left( q ^ { a _ { 1 } } \right) = 0 \, .
+\vcenter \vcenter \pi \pi \pi \pi \pi \pi \notin \notin \notin \land \land \b \textstyle \b \textstyle \b \pi 3.2 \b \textstyle \supset \end{cases} \end{cases} \end{cases} \varepsilon \qquad \put \itshape \pi \pi \b \pi \b . \pi \b \propto \land \b \textstyle \b \supset \supset \textstyle \supset \i \supset \infty \sqcap \sqcap \sqcap \sqcap \sqcap \sqcap \sqcap \enspace \enspace \enspace \enspace \: \: \enspace \quad \c \c \c \c \c \c \c \c \c \c \c \c \c \ddot \flat \c \ddot \rbrack \rbrack \bigg \rbrack \bigg \phi \phi \phi \grave \star \tilde \do \longrightarrow \sum \sum \sum \grave \grave \grave \grave \grave \grave \grave \grave \grave \grave \grave 7 \grave \grave 7
+
+1 - \frac { \delta \phi } { 2 \pi } = L ^ { \prime } ( \infty ) = \frac { 2 G W + 1 } { N ^ { 2 } ( \infty ) } .
+\vcenter \pi \pi \pi \pi \pi \notin \notin \land \land \b \textstyle \b \textstyle \pi \b \pi 3.2 \b \textstyle \supset \end{cases} \end{cases} \end{cases} 4 \pi \end{cases} \varepsilon \varepsilon \pi \pi \b \pi \b . \pi \b \pi \b \propto \end{cases} \tilde \put \put \put \varepsilon \multiput \multiput \multiput \multiput \multiput \end{array} \end{array} E E E \mathrel \mathrel \mathrel \mathrel \mathrel \overline \sim \prod \_ \_ \prod \_ \_ \_ \_ \star \bigsqcup \bigsqcup \bigsqcup \unitlength \enspace \enspace \grave \grave \grave \grave \grave \grave \succeq \succeq \bigr \bigr \longleftrightarrow \bigr E / / \bigr / \mkern \mkern 7 7 7 \varepsilon \Pi \Pi \pi \pi \mathrel \mathrel \tilde \tilde \vdash 7 7 \tilde
+
+\varphi ^ { \prime \prime } + { \frac { 1 } { r } } \varphi ^ { \prime } + \lambda \left( \varphi - \varphi ^ { 3 } \right) = 0 ,
+\vcenter \pi \pi \pi \pi \pi \notin \notin \land \land \infty \infty \infty \imath \infty \imath \b \pi \tilde 3.2 \b Object] 3.2 3.2 \infty \infty \infty \infty \infty \sqcap \right\} \pi \pi \ensuremath 3.2 \propto
+
+\int _ { - \epsilon } ^ { \infty } d l \: \mathrm { e } ^ { - l \zeta } \int _ { - \epsilon } ^ { \infty } d l ^ { \prime } \mathrm { e } ^ { - l ^ { \prime } \zeta } l l ^ { \prime } { \frac { l ^ { \prime } - l } { l + l ^ { \prime } } } \{ 3 \, \delta ^ { \prime \prime } ( l ) - { \frac { 3 } { 4 } } t \, \delta ( l ) \} = 0 .
+\c \end{picture} \end{picture} \end{picture} \end{picture} ` \end{picture} \end{picture} \end{picture} \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \strut \qquad \qquad \alpha , \qquad \alpha , \bigcap \mapsto \mapsto \qquad i i ? ? ? \ominus " " i \theta i ? \theta , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+
+[ { \bar { K } } _ { a } ^ { - } ( p ) , { \bar { K } } _ { b } ^ { - } ( k ) ] = i f _ { a b c } { \bar { K } } _ { c } ^ { - } ( p + k ) - 2 { \pi } ^ { 2 } C p { \delta } _ { a b } { \delta } _ { p + k , 0 } .
+\c \end{picture} \end{picture} \end{picture} \end{picture} ` \end{picture} \end{picture} \end{picture} \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \strut \qquad \qquad \alpha , \qquad \qquad \sp \sp \sp \bigcap \mapsto \mapsto \bigcap \mapsto A A \right\rbrace A \ne " " " i ! \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \strut [ \mapsto \mapsto \alpha \mapsto \mapsto \qquad i ? ? ? ? ? \cup ? \cup ? \cup ? \left( \atop \begin{cases} \begin{cases} \begin{cases} \sqcup \sqcup ! ! \hat \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad
+
+E ( v ) = \frac { d } { d t } E ( q ) \; \; \; \; \; \; \; \forall t \, .
+\c \end{picture} \end{picture} \end{picture} \end{picture} ` \end{picture} \end{picture} \end{picture} \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \strut \qquad \qquad \alpha , \qquad \sp \sp \sp \bigcap \mapsto \mapsto \bigcap \mapsto A A \ne \right\rbrace A \ne " " " " i \theta i \hss \pi , , , , , , , , , , \mathbin , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+
+{ \frac { 1 } { L ^ { 2 } } } \prod _ { i = 1 } ^ { 3 } ( r _ { + } ^ { 2 } + q _ { i } ) - \mu r _ { + } ^ { 2 } \sim 0 \ .
+\c \end{picture} \end{picture} \end{picture} \end{picture} ` \end{picture} \end{picture} \end{picture} \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \strut \qquad \qquad \alpha , \qquad \sp \sp \sp \bigcap \mapsto \mapsto \bigcap \mapsto A A \ne \right\rbrace A \ne " " " " i \theta i \hss \pi , , , , , , , , , , \mathbin , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+
+x ^ { I } ( \sigma + 2 \pi , \tau ) = x ^ { I } ( \sigma , \tau ) + 2 \pi L ^ { I } .
+\c \end{picture} \end{picture} \end{picture} \end{picture} ` \end{picture} \end{picture} \end{picture} \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \strut \qquad \qquad \alpha , \qquad \qquad \sp \sp \sp \bigcap \mapsto \mapsto \bigcap \mapsto A A \ne \right\rbrace A " " i " i ! \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \strut [ \mapsto \mapsto \alpha \mapsto \mapsto \qquad i ? ? ? ? , ? , " \begin{cases} \begin{cases} \begin{cases} \begin{cases} \longrightarrow \longrightarrow \backslash ! = , , , , , , , , , , , , , , , , , , , , ,
+
+\xi _ { \sigma } ( \sigma ) = 1 - \frac { \pi e ^ { \sigma } } { 3 } + 8 \pi e ^ { \sigma } \sum _ { n = 1 } ^ { \infty } \frac { n e ^ { - 2 n \pi e ^ { \sigma } } } { 1 - e ^ { - 2 n \pi e ^ { \sigma } } }
+\c \end{picture} \end{picture} \begin{cases} * mm \hat \begin{cases} \begin{cases} * mm \hat \zeta \end{picture} \end{picture} \end{picture} \end{picture} \qquad \qquad \qquad \qquad \qquad \qquad \qquad \strut \qquad \qquad \strut \alpha \mapsto \mapsto \qquad , \bigcap , \bigcap \mapsto \mapsto \mapsto i i \mapsto i ? , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+
+m _ { 0 } ^ { 2 } \varphi + { \frac { \mu ^ { 2 } - m _ { 0 } ^ { 2 } } { \beta } } \operatorname { t a n } ( \beta \varphi ) = 0
+\c \end{picture} \end{picture} \end{picture} \end{picture} ` \end{picture} \end{picture} \end{picture} \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \strut \qquad \qquad \alpha , \qquad \sp \sp \sp \bigcap \mapsto \mapsto \bigcap \mapsto A A \ne \right\rbrace A \ne " " " " i \theta i \hss \pi , , , , , , , , , , \mathbin , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+
+{ \frac { d z } { d r } } = e ^ { 2 A } , \hspace { 1 c m } \psi \rightarrow e ^ { - 3 A / 2 } \psi
+\c \end{picture} \end{picture} \end{picture} \end{picture} ` \end{picture} \end{picture} \end{picture} \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \strut \qquad \qquad \alpha , \qquad \qquad \sp \sp \sp \bigcap \mapsto \mapsto \bigcap \mapsto A A \ne A \right\rbrace " " i " i ! \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \strut [ \mapsto \mapsto \alpha \mapsto \mapsto \qquad i ? ? ? ? ? \cup ? \cup ? \cup ? \left( \atop \begin{cases} \begin{cases} \begin{cases} \begin{cases} \sqcup \sqcup ! ! \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \qquad \qquad \qquad \qquad \qquad \qquad \qquad
+
+F _ { A _ { 1 } } \left( q ^ { a _ { 1 } } , \dot { q } ^ { a _ { 1 } } \right) = 0 \, , \; F _ { A _ { 0 } } \left( q ^ { a _ { 1 } } \right) = 0 \, .
+\c \end{picture} \end{picture} \end{picture} \end{picture} ` \end{picture} \end{picture} \end{picture} \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \strut \qquad \qquad \alpha , \qquad \qquad \sp \sp \sp \bigcap \mapsto \mapsto \bigcap \mapsto A A \ne A \right\rbrace " " i " i ! \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \strut [ \mapsto \mapsto \alpha \mapsto \mapsto \qquad i ? ? ? ? , ? , " \begin{cases} \begin{cases} \begin{cases} \begin{cases} \longrightarrow \longrightarrow \backslash ! = , , , , , , , , , , , , , , , , , , , , ,
+
+1 - \frac { \delta \phi } { 2 \pi } = L ^ { \prime } ( \infty ) = \frac { 2 G W + 1 } { N ^ { 2 } ( \infty ) } .
+\c \end{picture} \end{picture} \end{picture} \end{picture} ` \end{picture} \end{picture} \end{picture} \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \strut \qquad \qquad \alpha , \qquad \sp \sp \sp \bigcap \mapsto \mapsto \bigcap \mapsto A A \ne \right\rbrace A \ne " " " " i \theta i \hss \pi , , , , , , , , , \mathbin , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+
+\varphi ^ { \prime \prime } + { \frac { 1 } { r } } \varphi ^ { \prime } + \lambda \left( \varphi - \varphi ^ { 3 } \right) = 0 ,
+\c \end{picture} \end{picture} \end{picture} \end{picture} \end{picture} ` \end{picture} \end{picture} \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \strut \qquad \qquad \alpha , \alpha , \bigcap \mapsto \mapsto \qquad i i \mapsto i ? ? ?
+
+\int _ { - \epsilon } ^ { \infty } d l \: \mathrm { e } ^ { - l \zeta } \int _ { - \epsilon } ^ { \infty } d l ^ { \prime } \mathrm { e } ^ { - l ^ { \prime } \zeta } l l ^ { \prime } { \frac { l ^ { \prime } - l } { l + l ^ { \prime } } } \{ 3 \, \delta ^ { \prime \prime } ( l ) - { \frac { 3 } { 4 } } t \, \delta ( l ) \} = 0 .
 { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
 
 [ { \bar { K } } _ { a } ^ { - } ( p ) , { \bar { K } } _ { b } ^ { - } ( k ) ] = i f _ { a b c } { \bar { K } } _ { c } ^ { - } ( p + k ) - 2 { \pi } ^ { 2 } C p { \delta } _ { a b } { \delta } _ { p + k , 0 } .
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
+} { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
 
 E ( v ) = \frac { d } { d t } E ( q ) \; \; \; \; \; \; \; \forall t \, .
 { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
@@ -11,7 +77,7 @@ E ( v ) = \frac { d } { d t } E ( q ) \; \; \; \; \; \; \; \forall t \, .
 { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
 
 x ^ { I } ( \sigma + 2 \pi , \tau ) = x ^ { I } ( \sigma , \tau ) + 2 \pi L ^ { I } .
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
+} { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
 
 \xi _ { \sigma } ( \sigma ) = 1 - \frac { \pi e ^ { \sigma } } { 3 } + 8 \pi e ^ { \sigma } \sum _ { n = 1 } ^ { \infty } \frac { n e ^ { - 2 n \pi e ^ { \sigma } } } { 1 - e ^ { - 2 n \pi e ^ { \sigma } } }
 { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
@@ -23,7 +89,7 @@ m _ { 0 } ^ { 2 } \varphi + { \frac { \mu ^ { 2 } - m _ { 0 } ^ { 2 } } { \beta 
 { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
 
 F _ { A _ { 1 } } \left( q ^ { a _ { 1 } } , \dot { q } ^ { a _ { 1 } } \right) = 0 \, , \; F _ { A _ { 0 } } \left( q ^ { a _ { 1 } } \right) = 0 \, .
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
+} { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
 
 1 - \frac { \delta \phi } { 2 \pi } = L ^ { \prime } ( \infty ) = \frac { 2 G W + 1 } { N ^ { 2 } ( \infty ) } .
 { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
@@ -63,202 +129,4 @@ F _ { A _ { 1 } } \left( q ^ { a _ { 1 } } , \dot { q } ^ { a _ { 1 } } \right) 
 
 \varphi ^ { \prime \prime } + { \frac { 1 } { r } } \varphi ^ { \prime } + \lambda \left( \varphi - \varphi ^ { 3 } \right) = 0 ,
 { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-\int _ { - \epsilon } ^ { \infty } d l \: \mathrm { e } ^ { - l \zeta } \int _ { - \epsilon } ^ { \infty } d l ^ { \prime } \mathrm { e } ^ { - l ^ { \prime } \zeta } l l ^ { \prime } { \frac { l ^ { \prime } - l } { l + l ^ { \prime } } } \{ 3 \, \delta ^ { \prime \prime } ( l ) - { \frac { 3 } { 4 } } t \, \delta ( l ) \} = 0 .
-\bigsqcup \bigsqcup \varpi \varpi \varpi \varpi k \ooalign \ooalign \ooalign k + s \ooalign + + \, \, \, U \langle \bmod \, \, \, \, \langle \langle \, \, \langle \langle \langle \langle \, \, \langle \langle s \, \, \, \, \, \langle \langle \langle \langle \langle \langle \langle \langle \langle \, \, \bigr \langle \langle \bigr \bigr \bigr \bigr \bigr \bigr \langle \langle \bigr \bigr \langle \bigr \bigr \bigr \bigr \bigr \bigr \bigr \bigr \bigr \bigr \bigr \bigr \bigr \bigr \end{picture} \langle \langle \langle \langle \langle \langle \langle \, \langle \langle \langle \langle \ooalign 0.4 \overrightarrow \overrightarrow \bigr \bigr \bigr \bigr \bigr \, \bigr \bigr \bigr \, \left\lbrack \left\vert \left\lbrack
-
-[ { \bar { K } } _ { a } ^ { - } ( p ) , { \bar { K } } _ { b } ^ { - } ( k ) ] = i f _ { a b c } { \bar { K } } _ { c } ^ { - } ( p + k ) - 2 { \pi } ^ { 2 } C p { \delta } _ { a b } { \delta } _ { p + k , 0 } .
-\bigsqcup \bigsqcup \Bigr \triangle \triangle ( \triangle \bigr \ooalign \bigr ; \bigr ; U ; \bigr \right\} + \right\} + \, : : \, \, \, \, \, \, \, \, U \langle \, \right\} \right\} \right\} \langle \left\lbrack \langle \small \small \langle \, \, \, \, \, \left\lbrack \, \, \, \, \, \, \, \, \langle \langle \langle \langle \langle \langle \langle \langle \langle \langle \langle \langle \langle \, \langle \langle \langle \langle \langle \langle \langle \langle \, \, \langle \langle \, \, \, \, \, \, \, \, \, \bigr \, \bigr \bigr \, \, \, \, \, \, \Phi \Phi \Phi \i \i \i \i \i \i \i \i
-
-E ( v ) = \frac { d } { d t } E ( q ) \; \; \; \; \; \; \; \forall t \, .
-\bigsqcup \bigsqcup \bigsqcup , _UNK , \mathop \triangle \triangle \ooalign \triangle \imath \imath \relax \imath \imath \bigr \bigr \bigr 0.4 0.4 0.4 0.4 0.4 0.4 S K \end{picture} \begin{array} K K + + + + + < < < < < < < < < < < < \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i
-
-{ \frac { 1 } { L ^ { 2 } } } \prod _ { i = 1 } ^ { 3 } ( r _ { + } ^ { 2 } + q _ { i } ) - \mu r _ { + } ^ { 2 } \sim 0 \ .
-\bigsqcup \bigsqcup \: \triangle \Bigr \Bigr \triangle \surd q q + + + + + + + + + + + + + + + + + + + + + + \langle \langle + + \langle \langle \langle \langle \langle \langle \langle \langle \langle \langle \langle \langle \bigr \langle \langle \langle \langle \langle \langle \langle \langle \, \, \Phi \Phi \Phi \Phi \Phi \Phi \Phi \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i
-
-x ^ { I } ( \sigma + 2 \pi , \tau ) = x ^ { I } ( \sigma , \tau ) + 2 \pi L ^ { I } .
-\bigsqcup \bigsqcup \bigsqcup \Bigr > \leftrightarrow \mathop \mathop \mathop \ell \ell \ell \ell \left\lfloor \left\lbrack \left\lbrack \zeta U \Phi \Phi \right\} \triangle \, \right\} \left\lbrack \left\lbrack \left\lbrack \left\lbrack \Phi U U \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \i \i \i \i \i \i \i \i \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i
-
-\xi _ { \sigma } ( \sigma ) = 1 - \frac { \pi e ^ { \sigma } } { 3 } + 8 \pi e ^ { \sigma } \sum _ { n = 1 } ^ { \infty } \frac { n e ^ { - 2 n \pi e ^ { \sigma } } } { 1 - e ^ { - 2 n \pi e ^ { \sigma } } }
-\bigsqcup \bigsqcup \begin{picture} \varpi \varpi \begin{picture} \mathop \varpi \varpi \end{picture} \end{picture} \end{picture} \varpi \varpi \varpi \varpi U U U \Phi \Phi \smile + + + + + + + U + + \Phi \Phi \Phi \Phi \Phi \Phi \Phi \langle \langle \Phi \Phi + \langle \langle \Phi \langle \langle \langle \langle \langle \Phi \Phi \Phi \Phi \langle \Phi \Phi \Phi \Phi \langle \langle \langle \langle \langle \langle \langle \langle \langle \Phi \langle \Phi \langle \Phi \Phi \Phi \Phi \Phi \Phi \small \small \small \small \small \small \small < \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \i \i \i \i \i \i \i \i \i
-
-m _ { 0 } ^ { 2 } \varphi + { \frac { \mu ^ { 2 } - m _ { 0 } ^ { 2 } } { \beta } } \operatorname { t a n } ( \beta \varphi ) = 0
-\bigsqcup \bigsqcup \begin{picture} \Bigr \Bigr \Bigr \Bigr \Bigr \varpi k + + + + + + + U + + + + + U + + \langle \langle + + + \, \Phi \Phi \, \langle \langle \langle \langle \, \, \, \langle \langle \langle \langle \langle \langle \small \small \small \small \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i
-
-{ \frac { d z } { d r } } = e ^ { 2 A } , \hspace { 1 c m } \psi \rightarrow e ^ { - 3 A / 2 } \psi
-\bigsqcup \bigsqcup \: \triangle \triangle \lower \relax \smile \relax \relax \relax \bigr \bigr \, + + + + + + + + + + + + + + + \langle \langle \langle \langle \langle \langle \langle \langle + \Phi \Phi \Phi \Phi \Phi \Phi \Phi \i \i \i \i \i \i \i \i \i \i \i \i \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i
-
-F _ { A _ { 1 } } \left( q ^ { a _ { 1 } } , \dot { q } ^ { a _ { 1 } } \right) = 0 \, , \; F _ { A _ { 0 } } \left( q ^ { a _ { 1 } } \right) = 0 \, .
-\bigsqcup \bigsqcup \varpi \varpi \varpi \varpi \varpi \varpi \varpi k \pi \bigr \bmod \it ; ; U + + + + + + + + + + \langle 0.4 0.4 + + \bigr \bigr \bigr + + + + \vss \vss \langle \langle \langle \le \le : \, \, \, \, \, \begin{array} \, \, \bigr \bigr \bigr \bigr \bigr \bigr \hat \hat \langle \vss \vss \vss \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i
-
-1 - \frac { \delta \phi } { 2 \pi } = L ^ { \prime } ( \infty ) = \frac { 2 G W + 1 } { N ^ { 2 } ( \infty ) } .
-\bigsqcup \Bigr \in \Bigr \Bigr \triangle \triangle \triangle \triangle \gg \varpi \Phi \Phi \Phi \Phi \Phi U + + + \Phi \Phi \triangle \triangle \, \, \, \, \bigr \bigr \bigr \bigr \langle \langle \langle \langle + + \Phi \Phi \overrightarrow \Phi \Phi \Phi \Phi + + \i \i \i \i \i \i \i \i \i \i \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \Phi \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i \i
-
-\varphi ^ { \prime \prime } + { \frac { 1 } { r } } \varphi ^ { \prime } + \lambda \left( \varphi - \varphi ^ { 3 } \right) = 0 ,
-\bigsqcup \bigsqcup \bigsqcup \bigsqcup 3 3 \ooalign \rgroup q \rgroup q q q q + \bigr \bigr + + + + + + + + + + + + + + + + + + +
-
-\int _ { - \epsilon } ^ { \infty } d l \: \mathrm { e } ^ { - l \zeta } \int _ { - \epsilon } ^ { \infty } d l ^ { \prime } \mathrm { e } ^ { - l ^ { \prime } \zeta } l l ^ { \prime } { \frac { l ^ { \prime } - l } { l + l ^ { \prime } } } \{ 3 \, \delta ^ { \prime \prime } ( l ) - { \frac { 3 } { 4 } } t \, \delta ( l ) \} = 0 .
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-[ { \bar { K } } _ { a } ^ { - } ( p ) , { \bar { K } } _ { b } ^ { - } ( k ) ] = i f _ { a b c } { \bar { K } } _ { c } ^ { - } ( p + k ) - 2 { \pi } ^ { 2 } C p { \delta } _ { a b } { \delta } _ { p + k , 0 } .
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-E ( v ) = \frac { d } { d t } E ( q ) \; \; \; \; \; \; \; \forall t \, .
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-{ \frac { 1 } { L ^ { 2 } } } \prod _ { i = 1 } ^ { 3 } ( r _ { + } ^ { 2 } + q _ { i } ) - \mu r _ { + } ^ { 2 } \sim 0 \ .
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-x ^ { I } ( \sigma + 2 \pi , \tau ) = x ^ { I } ( \sigma , \tau ) + 2 \pi L ^ { I } .
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-\xi _ { \sigma } ( \sigma ) = 1 - \frac { \pi e ^ { \sigma } } { 3 } + 8 \pi e ^ { \sigma } \sum _ { n = 1 } ^ { \infty } \frac { n e ^ { - 2 n \pi e ^ { \sigma } } } { 1 - e ^ { - 2 n \pi e ^ { \sigma } } }
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-m _ { 0 } ^ { 2 } \varphi + { \frac { \mu ^ { 2 } - m _ { 0 } ^ { 2 } } { \beta } } \operatorname { t a n } ( \beta \varphi ) = 0
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-{ \frac { d z } { d r } } = e ^ { 2 A } , \hspace { 1 c m } \psi \rightarrow e ^ { - 3 A / 2 } \psi
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-F _ { A _ { 1 } } \left( q ^ { a _ { 1 } } , \dot { q } ^ { a _ { 1 } } \right) = 0 \, , \; F _ { A _ { 0 } } \left( q ^ { a _ { 1 } } \right) = 0 \, .
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-1 - \frac { \delta \phi } { 2 \pi } = L ^ { \prime } ( \infty ) = \frac { 2 G W + 1 } { N ^ { 2 } ( \infty ) } .
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-\varphi ^ { \prime \prime } + { \frac { 1 } { r } } \varphi ^ { \prime } + \lambda \left( \varphi - \varphi ^ { 3 } \right) = 0 ,
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-\int _ { - \epsilon } ^ { \infty } d l \: \mathrm { e } ^ { - l \zeta } \int _ { - \epsilon } ^ { \infty } d l ^ { \prime } \mathrm { e } ^ { - l ^ { \prime } \zeta } l l ^ { \prime } { \frac { l ^ { \prime } - l } { l + l ^ { \prime } } } \{ 3 \, \delta ^ { \prime \prime } ( l ) - { \frac { 3 } { 4 } } t \, \delta ( l ) \} = 0 .
-} } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } }
-
-[ { \bar { K } } _ { a } ^ { - } ( p ) , { \bar { K } } _ { b } ^ { - } ( k ) ] = i f _ { a b c } { \bar { K } } _ { c } ^ { - } ( p + k ) - 2 { \pi } ^ { 2 } C p { \delta } _ { a b } { \delta } _ { p + k , 0 } .
-} } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } }
-
-E ( v ) = \frac { d } { d t } E ( q ) \; \; \; \; \; \; \; \forall t \, .
-} } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } }
-
-{ \frac { 1 } { L ^ { 2 } } } \prod _ { i = 1 } ^ { 3 } ( r _ { + } ^ { 2 } + q _ { i } ) - \mu r _ { + } ^ { 2 } \sim 0 \ .
-} } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } }
-
-x ^ { I } ( \sigma + 2 \pi , \tau ) = x ^ { I } ( \sigma , \tau ) + 2 \pi L ^ { I } .
-} } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } }
-
-\xi _ { \sigma } ( \sigma ) = 1 - \frac { \pi e ^ { \sigma } } { 3 } + 8 \pi e ^ { \sigma } \sum _ { n = 1 } ^ { \infty } \frac { n e ^ { - 2 n \pi e ^ { \sigma } } } { 1 - e ^ { - 2 n \pi e ^ { \sigma } } }
-} } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } }
-
-m _ { 0 } ^ { 2 } \varphi + { \frac { \mu ^ { 2 } - m _ { 0 } ^ { 2 } } { \beta } } \operatorname { t a n } ( \beta \varphi ) = 0
-} } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } }
-
-{ \frac { d z } { d r } } = e ^ { 2 A } , \hspace { 1 c m } \psi \rightarrow e ^ { - 3 A / 2 } \psi
-} } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } }
-
-F _ { A _ { 1 } } \left( q ^ { a _ { 1 } } , \dot { q } ^ { a _ { 1 } } \right) = 0 \, , \; F _ { A _ { 0 } } \left( q ^ { a _ { 1 } } \right) = 0 \, .
-} } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } }
-
-1 - \frac { \delta \phi } { 2 \pi } = L ^ { \prime } ( \infty ) = \frac { 2 G W + 1 } { N ^ { 2 } ( \infty ) } .
-} } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } }
-
-\varphi ^ { \prime \prime } + { \frac { 1 } { r } } \varphi ^ { \prime } + \lambda \left( \varphi - \varphi ^ { 3 } \right) = 0 ,
-} } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } } }
-
-\int _ { - \epsilon } ^ { \infty } d l \: \mathrm { e } ^ { - l \zeta } \int _ { - \epsilon } ^ { \infty } d l ^ { \prime } \mathrm { e } ^ { - l ^ { \prime } \zeta } l l ^ { \prime } { \frac { l ^ { \prime } - l } { l + l ^ { \prime } } } \{ 3 \, \delta ^ { \prime \prime } ( l ) - { \frac { 3 } { 4 } } t \, \delta ( l ) \} = 0 .
-Y \varsigma \Im \{ \partial \Longleftarrow J J 3.1 \colon \colon \hfill \frac \Huge \Huge \right> \right> \right> \vphantom \right> \top \top \top \top \j \vphantom \top \top \smallskip \smallskip \smallskip \smallskip \smallskip \top \smallskip \top \top \exists \smallskip \smallskip 2 \left\{ \bigg \bigg \bigg \bigg \bigg \bigg 6 \smallskip \ell \ell \subset \ell \ell \subset \put \ell \ell \subset \ell \bigg . \bigg . \bigg . \bigg 6 \epsilon \bigg 6 \ell \vphantom 6 \ell \ell \ell \ell \epsilon \ell \ell \epsilon \ell \vphantom \varepsilon \epsilon \ell \vphantom \vphantom \exists . \bigg \vphantom 6 \vphantom \vphantom \vphantom \top \vphantom \top \vphantom \top \mskip \mskip \mskip \ell \ell \vphantom \top \vphantom \top \vphantom
-
-[ { \bar { K } } _ { a } ^ { - } ( p ) , { \bar { K } } _ { b } ^ { - } ( k ) ] = i f _ { a b c } { \bar { K } } _ { c } ^ { - } ( p + k ) - 2 { \pi } ^ { 2 } C p { \delta } _ { a b } { \delta } _ { p + k , 0 } .
-\enspace \{ \enspace \{ \LARGE J J J 3.1 3.1 \colon \parbox \put \put \line Object] Object] Object] \hfill \Huge \Huge Object] \psi \psi \sqcup \sqcup \sqcup \bigtriangledown \bigtriangledown \lbrack \# \pm \xi 0.14 \forall \# 0.14 Y 0.14 Y \iota \iota \mskip \ell 3.1 \ell \put \ell \vphantom \put \put \arrowvert \arrowvert \j \vphantom \vphantom \vphantom \vphantom \mskip \mskip \mskip \mskip \iota \iota i \vphantom \vphantom \vphantom \vphantom \vphantom \top \vphantom \mskip \mskip \mskip \mskip \mskip } } } \vphantom \vphantom \vphantom \vphantom \top \vphantom \top \mskip \mskip \mskip \mskip } } } \triangle 2 i \vphantom 2 2 2 1 2 2 1 2 2 1 2 1 2 1 2
-
-E ( v ) = \frac { d } { d t } E ( q ) \; \; \; \; \; \; \; \forall t \, .
-\enspace \{ \enspace \{ \LARGE J J J 3.1 3.1 \colon \parbox \put \put \parbox Object] Object] Object] Object] \hfill \forall J \colon \sharp \sharp \sharp \sharp \sharp \hphantom \frac \bigg \skew \dag \dag \vphantom 3.1 \skew \dag i \vphantom 0.14 \left\{ \vphantom 0.14 \vphantom \top \vphantom \top \left\{ \vphantom \vphantom \top \left\{ \vphantom \top \vphantom \top \left\{ \vphantom \top \vphantom \top \left\{ \vphantom \thinspace \top \vphantom \top \vphantom \top \left\{ 2 \thinspace \left\{ \thinspace \thinspace \ell \vphantom \top \vphantom \top 2 \left\{ 2 \bigg \left\{ \bigg \bigg \bigg \vphantom 6 \vphantom 6 \vphantom \vphantom \top \vphantom \top \vphantom \top \vphantom \top \vphantom \sb \sb \O \O \ell \vphantom \vphantom \O \O \O
-
-{ \frac { 1 } { L ^ { 2 } } } \prod _ { i = 1 } ^ { 3 } ( r _ { + } ^ { 2 } + q _ { i } ) - \mu r _ { + } ^ { 2 } \sim 0 \ .
-\enspace \{ \enspace \{ \LARGE J J J 3.1 3.1 \colon \parbox \put \put \line Object] Object] Object] \hfill \forall \forall \/ \vphantom \sharp \sharp \sharp \sharp \sharp \sharp \sharp \frac \frac \bigg s \left\langle \dag \dag i \vphantom \vphantom \vphantom 0.14 M \left\{ \vphantom 0.14 \left\{ \vphantom \top \vphantom \top \vphantom \top \vphantom \vphantom \top \vphantom \top \vphantom \top \vphantom \vphantom \top \vphantom \top \vphantom \top \vphantom \sb \sb \sb \sb \sb r \arrowvert \arrowvert \arrowvert 3.1 3.1 3.1 \parbox \arrowvert \arrowvert \arrowvert \succeq \succeq 0.14 0.14 Y \vphantom Y \vphantom \top \vphantom \top \top \vphantom \top \vphantom \top \vphantom \top \vphantom \vphantom \top \vphantom \vphantom \top \vphantom \vphantom \vphantom \top \vphantom
-
-x ^ { I } ( \sigma + 2 \pi , \tau ) = x ^ { I } ( \sigma , \tau ) + 2 \pi L ^ { I } .
-\enspace \{ \enspace \{ \LARGE J J J 3.1 3.1 \colon \parbox \put \put \parbox Object] Object] Object] Object] \hfill Object] 6 \vphantom \Huge \psi \sqcup \sqcup \sqcup \sqcup Y \tau \tau \pm \pm \pm \pm i M M M M M M M M \bigm \mskip \mskip \mskip \mskip \iota \mskip \iota \iota \mskip \iota \left\langle Y \iota \wp \left\langle \left\langle \vphantom \vphantom \vphantom \vphantom \vphantom \vphantom \mskip \mskip \mskip \mskip \mskip \Sigma \vphantom \vphantom \vphantom \vphantom \vphantom \vphantom \top \vphantom \mskip \mskip \mskip \mskip \mskip \mskip \vert \vphantom \vphantom \top \top \vphantom \top 2 2 2 2 \thinspace 2 \thinspace \thinspace \left\langle 2 2 1 2 2 1 \bigg \bigg \bigg
-
-\xi _ { \sigma } ( \sigma ) = 1 - \frac { \pi e ^ { \sigma } } { 3 } + 8 \pi e ^ { \sigma } \sum _ { n = 1 } ^ { \infty } \frac { n e ^ { - 2 n \pi e ^ { \sigma } } } { 1 - e ^ { - 2 n \pi e ^ { \sigma } } }
-\enspace \{ \enspace \{ \LARGE J J J 3.1 3.1 \colon \parbox \put \put \line Object] Object] Object] \hfill \Huge \Huge Object] \psi \psi \sqcup \sqcup \sqcup \bigtriangledown \bigtriangledown \lbrack \# \pm \xi 0.14 \forall \forall \# 0.14 Y \vphantom 0.14 \put \put \top \vphantom \top \vphantom \top \vphantom \vphantom \top \vphantom \mskip \mskip \mskip \mskip } } \vphantom \vphantom \vphantom \top \vphantom \top \top \vphantom \top \vphantom \top 2 \vphantom \thinspace \top 2 \thinspace \sb 2 \sb 2 \bigg \bigg \bigg \arrowvert \bigg \bigg 6 \vphantom 6 \vphantom \vphantom \frac 6 \vphantom \frac \vphantom \frac \vphantom \frac \vphantom \top \vphantom \mskip \mskip \mskip \ell \ell \vphantom \vphantom \top \vphantom \vphantom \top \vphantom
-
-m _ { 0 } ^ { 2 } \varphi + { \frac { \mu ^ { 2 } - m _ { 0 } ^ { 2 } } { \beta } } \operatorname { t a n } ( \beta \varphi ) = 0
-\enspace \{ \enspace \{ \LARGE J J J 3.1 3.1 \colon \parbox \put \put \parbox Object] Object] Object] Object] \hfill Object] 6 \vphantom \Huge \psi \sqcup \sqcup \sqcup \sqcup Y \tau \tau \pm \pm \pm \pm i M M M M M M M M \bigm \mskip \mskip \mskip \mskip \iota \mskip \iota \iota \mskip \iota \left\langle Y \iota \wp \left\langle \left\langle \vphantom \vphantom \vphantom \vphantom \vphantom \vphantom \mskip \mskip \mskip \mskip \mskip \Sigma \vphantom \vphantom \vphantom \vphantom \vphantom \vphantom \top \mskip \mskip \mskip \mskip \mskip \mskip \vert \vphantom \vphantom \top \vphantom \top \top 2 2 2 2 2 1 2 2 1 2 2 1 2 1 2 1 \bigg \bigg \bigg
-
-{ \frac { d z } { d r } } = e ^ { 2 A } , \hspace { 1 c m } \psi \rightarrow e ^ { - 3 A / 2 } \psi
-\enspace \{ \enspace \{ \LARGE J J J 3.1 3.1 \colon \parbox \put \put \parbox Object] Object] Object] Object] \hfill \forall J \colon \sharp \sharp \sharp \sharp \sharp \hphantom \frac \bigg \skew \dag \dag \vphantom 3.1 \skew \dag i \vphantom 0.14 \left\{ \vphantom 0.14 \vphantom \top \vphantom \top \left\{ \vphantom \vphantom \top \left\{ \vphantom \top \vphantom \top \left\{ \vphantom \top \vphantom \top \left\{ \vphantom \thinspace \top \vphantom \top \vphantom \top \left\{ 2 \thinspace \left\{ \thinspace \thinspace \ell \vphantom \top \vphantom \top 2 \left\{ 2 \bigg \left\{ \bigg \bigg \bigg \vphantom 6 \vphantom \vphantom 6 \vphantom \vphantom \top \top \vphantom \top \vphantom \top \vphantom \sb \sb \O \O \ell \vphantom \vphantom \O \O \O
-
-F _ { A _ { 1 } } \left( q ^ { a _ { 1 } } , \dot { q } ^ { a _ { 1 } } \right) = 0 \, , \; F _ { A _ { 0 } } \left( q ^ { a _ { 1 } } \right) = 0 \, .
-\enspace \{ \enspace \{ \LARGE J J J 3.1 3.1 \colon \parbox \put \put \line Object] Object] Object] \hfill \Huge \Huge Object] \psi \psi \sqcup \sqcup \sqcup \bigtriangledown \bigtriangledown \lbrack \# \pm \# \leq \Bigr \Bigr \Bigr \overleftarrow \longmapsto \put \put \put \mathversion M M \put M M M \put \Theta M \mskip \mskip \mskip \mskip \mskip \nu \nu Y \vphantom \vphantom \vphantom \otimes \mskip \mskip \mskip \mskip \mskip \mskip \iota \Sigma \Sigma \Sigma 2 \Sigma 2 2 i 2 2 1 2 2 1 2 1 2 1 2 1 \right) 2 1 \right) \bigtriangledown \bigtriangledown \bigtriangledown \bigtriangledown \lbrack \bigtriangledown \lbrack \right] \right] \bigtriangledown \bigtriangledown \lbrack \right] \rbrace \rbrace \' \' \'
-
-1 - \frac { \delta \phi } { 2 \pi } = L ^ { \prime } ( \infty ) = \frac { 2 G W + 1 } { N ^ { 2 } ( \infty ) } .
-\enspace \{ \enspace \{ \LARGE J J J 3.1 3.1 \colon \parbox \put \put \line Object] Object] Object] \hfill \Huge \Huge Object] \psi \psi \sqcup \sqcup \sqcup \bigtriangledown \bigtriangledown \lbrack \# \pm \xi 0.14 \forall \forall \# 0.14 Y \vphantom 0.14 \put \put \top \vphantom \top \vphantom \top \vphantom \vphantom \top \vphantom \mskip \mskip \mskip \mskip } } \vphantom \vphantom \vphantom \top \vphantom \top \top \vphantom \top \vphantom \top \vphantom \top 2 \thinspace \sb 2 \sb 2 2 \sb 2 \bigg \bigg \bigg \bigg \bigg 6 \vphantom 6 \vphantom \vphantom \frac 6 \vphantom \frac \vphantom \frac \psi \psi \psi \psi \Upsilon \Upsilon \vphantom \vphantom \vphantom \vphantom \mskip \mskip \mskip \mskip \mskip \iota \iota
-
-\varphi ^ { \prime \prime } + { \frac { 1 } { r } } \varphi ^ { \prime } + \lambda \left( \varphi - \varphi ^ { 3 } \right) = 0 ,
-Y \varsigma \Im \{ \partial \Longleftarrow J J 3.1 \colon \colon \hfill \frac \Huge \Huge \right> \right> \right> \right> \vphantom \top \top \top \top \j \vphantom \top \top \smallskip \smallskip \smallskip \smallskip \smallskip \smallskip \top \top
-
-\int _ { - \epsilon } ^ { \infty } d l \: \mathrm { e } ^ { - l \zeta } \int _ { - \epsilon } ^ { \infty } d l ^ { \prime } \mathrm { e } ^ { - l ^ { \prime } \zeta } l l ^ { \prime } { \frac { l ^ { \prime } - l } { l + l ^ { \prime } } } \{ 3 \, \delta ^ { \prime \prime } ( l ) - { \frac { 3 } { 4 } } t \, \delta ( l ) \} = 0 .
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-[ { \bar { K } } _ { a } ^ { - } ( p ) , { \bar { K } } _ { b } ^ { - } ( k ) ] = i f _ { a b c } { \bar { K } } _ { c } ^ { - } ( p + k ) - 2 { \pi } ^ { 2 } C p { \delta } _ { a b } { \delta } _ { p + k , 0 } .
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-E ( v ) = \frac { d } { d t } E ( q ) \; \; \; \; \; \; \; \forall t \, .
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-{ \frac { 1 } { L ^ { 2 } } } \prod _ { i = 1 } ^ { 3 } ( r _ { + } ^ { 2 } + q _ { i } ) - \mu r _ { + } ^ { 2 } \sim 0 \ .
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-x ^ { I } ( \sigma + 2 \pi , \tau ) = x ^ { I } ( \sigma , \tau ) + 2 \pi L ^ { I } .
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-\xi _ { \sigma } ( \sigma ) = 1 - \frac { \pi e ^ { \sigma } } { 3 } + 8 \pi e ^ { \sigma } \sum _ { n = 1 } ^ { \infty } \frac { n e ^ { - 2 n \pi e ^ { \sigma } } } { 1 - e ^ { - 2 n \pi e ^ { \sigma } } }
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-m _ { 0 } ^ { 2 } \varphi + { \frac { \mu ^ { 2 } - m _ { 0 } ^ { 2 } } { \beta } } \operatorname { t a n } ( \beta \varphi ) = 0
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-{ \frac { d z } { d r } } = e ^ { 2 A } , \hspace { 1 c m } \psi \rightarrow e ^ { - 3 A / 2 } \psi
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-F _ { A _ { 1 } } \left( q ^ { a _ { 1 } } , \dot { q } ^ { a _ { 1 } } \right) = 0 \, , \; F _ { A _ { 0 } } \left( q ^ { a _ { 1 } } \right) = 0 \, .
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-1 - \frac { \delta \phi } { 2 \pi } = L ^ { \prime } ( \infty ) = \frac { 2 G W + 1 } { N ^ { 2 } ( \infty ) } .
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-\varphi ^ { \prime \prime } + { \frac { 1 } { r } } \varphi ^ { \prime } + \lambda \left( \varphi - \varphi ^ { 3 } \right) = 0 ,
-{ { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { { {
-
-\int _ { - \epsilon } ^ { \infty } d l \: \mathrm { e } ^ { - l \zeta } \int _ { - \epsilon } ^ { \infty } d l ^ { \prime } \mathrm { e } ^ { - l ^ { \prime } \zeta } l l ^ { \prime } { \frac { l ^ { \prime } - l } { l + l ^ { \prime } } } \{ 3 \, \delta ^ { \prime \prime } ( l ) - { \frac { 3 } { 4 } } t \, \delta ( l ) \} = 0 .
-^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
-
-[ { \bar { K } } _ { a } ^ { - } ( p ) , { \bar { K } } _ { b } ^ { - } ( k ) ] = i f _ { a b c } { \bar { K } } _ { c } ^ { - } ( p + k ) - 2 { \pi } ^ { 2 } C p { \delta } _ { a b } { \delta } _ { p + k , 0 } .
-^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
-
-E ( v ) = \frac { d } { d t } E ( q ) \; \; \; \; \; \; \; \forall t \, .
-^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
-
-{ \frac { 1 } { L ^ { 2 } } } \prod _ { i = 1 } ^ { 3 } ( r _ { + } ^ { 2 } + q _ { i } ) - \mu r _ { + } ^ { 2 } \sim 0 \ .
-^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
-
-x ^ { I } ( \sigma + 2 \pi , \tau ) = x ^ { I } ( \sigma , \tau ) + 2 \pi L ^ { I } .
-^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
-
-\xi _ { \sigma } ( \sigma ) = 1 - \frac { \pi e ^ { \sigma } } { 3 } + 8 \pi e ^ { \sigma } \sum _ { n = 1 } ^ { \infty } \frac { n e ^ { - 2 n \pi e ^ { \sigma } } } { 1 - e ^ { - 2 n \pi e ^ { \sigma } } }
-^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
-
-m _ { 0 } ^ { 2 } \varphi + { \frac { \mu ^ { 2 } - m _ { 0 } ^ { 2 } } { \beta } } \operatorname { t a n } ( \beta \varphi ) = 0
-^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
-
-{ \frac { d z } { d r } } = e ^ { 2 A } , \hspace { 1 c m } \psi \rightarrow e ^ { - 3 A / 2 } \psi
-^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
-
-F _ { A _ { 1 } } \left( q ^ { a _ { 1 } } , \dot { q } ^ { a _ { 1 } } \right) = 0 \, , \; F _ { A _ { 0 } } \left( q ^ { a _ { 1 } } \right) = 0 \, .
-^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
-
-1 - \frac { \delta \phi } { 2 \pi } = L ^ { \prime } ( \infty ) = \frac { 2 G W + 1 } { N ^ { 2 } ( \infty ) } .
-^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
-
-\varphi ^ { \prime \prime } + { \frac { 1 } { r } } \varphi ^ { \prime } + \lambda \left( \varphi - \varphi ^ { 3 } \right) = 0 ,
-^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
 

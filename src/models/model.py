@@ -104,7 +104,10 @@ class Model(object):
                                                                 labels=self.formula)
         mask = tf.sequence_mask(self.formula_length)
         losses = tf.boolean_mask(losses, mask)
-        self.loss = tf.reduce_mean(losses) 
+        self.loss = tf.reduce_mean(losses)
+
+        # for tensorboard
+        tf.summary.scalar("loss", self.loss)
 
 
     def l2_loss(self):
@@ -136,7 +139,7 @@ class Model(object):
         self.init = tf.global_variables_initializer()
 
 
-    def run_epoch(self, sess, train_set):
+    def run_epoch(self, sess, epoch, train_set):
         """
         Performs an epoch of training
         """
@@ -147,7 +150,8 @@ class Model(object):
             fd = self.get_feed_dict(img, training=True, formula=formula, lr=self.config.lr,
                                     dropout=self.config.dropout)
             # update step
-            loss_eval, _ = sess.run([self.loss, self.train_op], feed_dict=fd)
+            loss_eval, _, summary = sess.run([self.loss, self.train_op, self.merged], feed_dict=fd)
+            self.file_writer.add_summary(summary, epoch*nbatches + i)
 
             # logging
             prog.update(i + 1, [("loss", loss_eval)])
@@ -193,17 +197,26 @@ class Model(object):
         return np.argmax(predictions, axis=2)
 
 
+    def add_summary(self, sess): 
+        # tensorboard stuff
+        self.merged = tf.summary.merge_all()
+        self.file_writer = tf.summary.FileWriter(self.config.dir_output, sess.graph)
+
+
     def train(self, train_set, val_set):
         """
         Global train procedure
         """
+        saver = tf.train.Saver()
         with tf.Session() as sess:
-            sess.run(self.init)
+            sess.run(self.init)    # initialize variables
+            self.add_summary(sess) # tensorboard
             self.evaluate(sess, val_set)
 
             for epoch in range(self.config.n_epochs):
                 print("Epoch {}/{}".format(epoch+1, self.config.n_epochs))
-                self.run_epoch(sess, train_set)
+                self.run_epoch(sess, epoch, train_set)
+                saver.save(sess, self.config.model_output)
                 self.evaluate(sess, val_set)
 
 

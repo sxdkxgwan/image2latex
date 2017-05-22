@@ -29,7 +29,6 @@ class StateTuple3(_StateTuple3):
     return h.dtype
 
 
-
 class TrainAttnCell(RNNCell):
     def __init__(self, attn_cell_config, encoded_img_flat, training, E):
         """
@@ -152,7 +151,7 @@ class TrainAttnCell(RNNCell):
         return params
 
 
-    def _compute_h(self, h, embedding, o):
+    def _compute_h(self, embedding, o, h):
         x        = tf.concat([embedding, o], axis=-1)
         new_h, _ = self.cell.__call__(x, h)
         return new_h
@@ -175,7 +174,7 @@ class TrainAttnCell(RNNCell):
             c = self._compute_attention(self.encoded_img_flat, h, params)
 
             # compute new h
-            new_h = self._compute_h(h, inputs, o)
+            new_h = self._compute_h(inputs, o, h)
 
             # compute o
             new_o = tf.tanh(tf.matmul(new_h, params["W_h"]) + tf.matmul(c, params["W_c"]))
@@ -190,12 +189,12 @@ class TrainAttnCell(RNNCell):
 class TestAttnCell(TrainAttnCell):
     """
     Test-time version of the Attention cell. Must be placed
-    in the same scope name with reuse=True to share parameters
+    in the same scope as the train_attn_cell with reuse=True 
+    to share parameters.
 
     Main difference is that it doesn't receive an input embedding
     of the true formula, but just a dummy input. The embedding is the
     one from the word predicted at the previous time step.
-
     """
     @property
     def state_size(self):
@@ -232,7 +231,7 @@ class TestAttnCell(TrainAttnCell):
             c = self._compute_attention(self.encoded_img_flat, h, params)
             
             # compute new h
-            new_h = self._compute_h(h, v, o)
+            new_h = self._compute_h(v, o, h)
 
             # compute o
             new_o = tf.tanh(tf.matmul(new_h, params["W_h"]) + tf.matmul(c, params["W_c"]))

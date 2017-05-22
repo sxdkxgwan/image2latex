@@ -6,12 +6,16 @@ class Config():
         if not os.path.exists(self.dir_output):
             os.makedirs(self.dir_output)
 
+        if not os.path.exists(self.model_output):
+            os.makedirs(self.model_output)
+            
     # directories
     dir_output    = "results/test/"
     dir_images    = "../data/images_processed"
     
     path_log      = dir_output + "log.txt"
     path_answers  = dir_output + "results.txt"
+    model_output  = dir_output + "model.weights/"
 
     path_matching_train = "../data/train_filter.lst"
     path_matching_val = "../data/val_filter.lst"
