@@ -9,7 +9,7 @@ from data_utils import minibatches, pad_batch_images, \
 
 class Dataset(object):
     def __init__(self, path_formulas, dir_images, path_matching, 
-                img_prepro, form_prepro, max_iter=None):
+                img_prepro, form_prepro, max_iter=None, max_len=None):
         """
         Args:
             path_formulas: (string) file of formulas, one formula per line
@@ -17,6 +17,9 @@ class Dataset(object):
             path_matchin: (string) file of name_of_img, id_formula
             img_prepro: (lambda function) takes an array -> an array
             form_prepro: (lambda function) takes a string -> array of int32
+            max_iter: (int) maximum numbers of elements in the dataset
+            max_len: (int) maximum length of a formula in the dataset
+                if longer, not yielded.
         """
         self.path_formulas = path_formulas
         self.dir_images    = dir_images
@@ -24,8 +27,10 @@ class Dataset(object):
         self.img_prepro    = img_prepro
         self.form_prepro   = form_prepro
         self.formulas      = self._load_formulas(path_formulas)
-        self.length        = None
-        self.max_iter      = max_iter
+        self.length        = None     # computed when len(Dataset) is called 
+                                      # for the first time
+        self.max_iter      = max_iter # optional
+        self.max_len       = max_len  # optional
         
 
     def _load_formulas(self, filename):
@@ -81,13 +86,18 @@ class Dataset(object):
         """
         with open(self.path_matching) as f:
             for idx, line in enumerate(f):
-                if self.max_iter is not None and idx > self.max_iter:
+                if self.max_iter is not None and idx >= self.max_iter:
                     break
 
                 img_path, formula_id = line.strip().split(' ')
                 img = imread(self.dir_images + "/" + img_path)
                 img = self.img_prepro(img) 
                 formula = self.form_prepro(self.formulas[int(formula_id)])
+
+                # filter length of formula
+                if self.max_len is not None and len(formula) > self.max_len:
+                    continue
+
                 yield img, formula
 
 

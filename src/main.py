@@ -15,11 +15,12 @@ if __name__ == "__main__":
     # Load datasets
     train_set =  Dataset(path_formulas=config.path_formulas, dir_images=config.dir_images,
                     path_matching=config.path_matching_train, img_prepro=greyscale, 
-                    form_prepro=get_form_prepro(config.vocab))
+                    form_prepro=get_form_prepro(config.vocab), max_len=config.max_length_formula)
 
     val_set   =  Dataset(path_formulas=config.path_formulas, dir_images=config.dir_images,
                     path_matching=config.path_matching_val, img_prepro=greyscale, 
-                    form_prepro=get_form_prepro(config.vocab), max_iter=1)
+                    form_prepro=get_form_prepro(config.vocab), max_len=config.max_length_formula,
+                    max_iter=config.max_iter)
 
     # Build model
     model = Model(config)

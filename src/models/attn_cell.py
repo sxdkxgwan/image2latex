@@ -152,8 +152,9 @@ class TrainAttnCell(RNNCell):
 
 
     def _compute_h(self, embedding, o, h):
-        x        = tf.concat([embedding, o], axis=-1)
-        new_h, _ = self.cell.__call__(x, h)
+        # x        = tf.concat([embedding, o], axis=-1)
+        # new_h, _ = self.cell.__call__(x, h)
+        new_h, _ = self.cell.__call__(embedding, h)
         return new_h
 
 

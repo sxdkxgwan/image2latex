@@ -105,6 +105,10 @@ class Model(object):
         mask = tf.sequence_mask(self.formula_length)
         losses = tf.boolean_mask(losses, mask)
         self.loss = tf.reduce_mean(losses)
+        
+        # to compute perplexity
+        self.ce_words = tf.reduce_sum(losses) # sum of cross entropy for each word
+        self.n_words = tf.reduce_sum(self.formula_length) # number of words
 
         # for tensorboard
         tf.summary.scalar("loss", self.loss)
@@ -147,14 +151,17 @@ class Model(object):
         prog = Progbar(target=nbatches)
         for i, (img, formula) in enumerate(minibatches(train_set, self.config.batch_size)):
             # get feed dict
-            fd = self.get_feed_dict(img, training=True, formula=formula, lr=self.config.lr,
+            fd = self.get_feed_dict(img, training=True, formula=formula, lr=self.config.lr_schedule.lr,
                                     dropout=self.config.dropout)
             # update step
             loss_eval, _, summary = sess.run([self.loss, self.train_op, self.merged], feed_dict=fd)
             self.file_writer.add_summary(summary, epoch*nbatches + i)
 
             # logging
-            prog.update(i + 1, [("loss", loss_eval)])
+            prog.update(i + 1, [("loss", loss_eval), ("lr", self.config.lr_schedule.lr)])
+
+            # update learning rate
+            self.config.lr_schedule.update(t=epoch*nbatches + i)
 
 
     def run_evaluate(self, sess, val_set):
@@ -172,10 +179,14 @@ class Model(object):
         rev_vocab = {idx: word for word, idx in vocab.iteritems()}
 
         references, hypotheses = [], []
+        n_words, ce_words = 0, 0 # for perplexity, sum of ce for all words + nb of words
         
         for img, formula in minibatches(val_set, self.config.batch_size):
             fd = self.get_feed_dict(img, training=False, formula=formula)
-            loss_eval, predictions = sess.run([self.loss, self.pred_test], feed_dict=fd)
+            ce_words_eval, n_words_eval, predictions = sess.run(
+                    [self.ce_words, self.n_words, self.pred_test], feed_dict=fd)
+            n_words += n_words_eval
+            ce_words += ce_words_eval
             predictions = self.generate_answer(predictions)
             for form, pred in zip(formula, predictions):
                 references.append([form])
@@ -183,6 +194,12 @@ class Model(object):
 
         scores = evaluate(references, hypotheses, rev_vocab, 
                             self.config.path_answers)
+
+        ce_mean = ce_words / float(n_words)
+        scores["perplexity"] = np.exp(ce_mean)
+
+        self.config.lr_schedule.update(score=scores["perplexity"])
+
 
         return scores
 
