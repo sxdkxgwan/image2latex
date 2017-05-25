@@ -90,7 +90,7 @@ class Model(object):
         Defines self.pred
         """        
         encoded_img = self.encoder(self.training, self.img)
-        train, test = self.decoder(self.training, encoded_img, self.formula)
+        train, test = self.decoder(self.training, encoded_img, self.formula, self.dropout)
 
         self.pred_train = train
         self.pred_test  = test

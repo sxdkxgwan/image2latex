@@ -25,4 +25,4 @@ if __name__ == "__main__":
     # Build model
     model = Model(config)
     model.build()
-    model.train(val_set, val_set)
+    model.train(train_set, val_set)

@@ -47,19 +47,19 @@ class Config():
     id_END        = None # to be computed in __init__
 
     # preprocess images and formulas
-    dim_embeddings = 100
+    dim_embeddings = 80
     max_length_formula = 150
     max_shape_image = [160, 500, 1]
 
     # model training parameters
-    n_epochs      = 50
-    batch_size    = 10
-    dropout       = 0.8 #keep_prob
-    max_iter      = 2
+    n_epochs      = 12
+    batch_size    = 20
+    dropout       = 1 #keep_prob
+    max_iter      = None
 
     # learning rate stuff
-    lr_init       = 1e-2
-    lr_min        = 1e-3
+    lr_init       = 1e-1
+    lr_min        = 1e-5
     start_decay   = 0 # start decaying from begining
     decay_rate    = 0.5 # decay rate if eval score doesn't improve
     # n_steps       = ((max_iter + batch_size - 1) // batch_size) * n_epochs
@@ -67,9 +67,9 @@ class Config():
     
     # model config
     attn_cell_config = {
-        "num_units": 200,
-        "dim_e": 200,
-        "dim_o": 200,
+        "num_units": 512,
+        "dim_e": 512,
+        "dim_o": 512,
         "num_proj": None, # to be computed in __init__
         "dim_embeddings": dim_embeddings
     }

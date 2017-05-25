@@ -58,10 +58,6 @@ class TrainAttnCell(RNNCell):
         self._dim_embeddings = attn_cell_config["dim_embeddings"]
         self.dropout         = dropout
 
-        #initializers
-        self.bias_initializer = tf.constant_initializer(0.0)
-        self.weight_initializer = tf.contrib.layers.xavier_initializer()
-
         # regular cell init
         self.cell = GRUCell(self._num_units)
 
@@ -82,13 +78,13 @@ class TrainAttnCell(RNNCell):
         """
         C = self.encoded_img_flat.shape[-1].value
         img_0 = tf.reduce_mean(self.encoded_img_flat, axis=1)
-        W_h_0 = tf.get_variable("W_h_0", shape=[C, self._num_units], initializer=self.weight_initializer)
-        b_h_0 = tf.get_variable("b_h_0", shape=[self._num_units], initializer=self.bias_initializer)
+        W_h_0 = tf.get_variable("W_h_0", shape=[C, self._num_units])
+        b_h_0 = tf.get_variable("b_h_0", shape=[self._num_units])
 
         h_0 = tf.tanh(tf.matmul(img_0, W_h_0) + b_h_0)
 
-        W_o_0 = tf.get_variable("W_o_0", shape=[C, self._dim_o], initializer=self.weight_initializer)
-        b_o_0 = tf.get_variable("b_o_0", shape=[self._dim_o], initializer=self.bias_initializer)
+        W_o_0 = tf.get_variable("W_o_0", shape=[C, self._dim_o])
+        b_o_0 = tf.get_variable("b_o_0", shape=[self._dim_o])
 
         o_0 = tf.tanh(tf.matmul(img_0, W_o_0) + b_o_0)
 
@@ -142,29 +138,24 @@ class TrainAttnCell(RNNCell):
         params = dict()
 
         # to compute context vector (attention)
-        params["W_img"] = tf.get_variable("W_img", shape=(self.C, self._dim_e), 
-                                            dtype=tf.float32, initializer=self.weight_initializer)
-        params["W_h"]   = tf.get_variable("h", shape=(self._num_units, self._dim_e), 
-                                            dtype=tf.float32, initializer=self.weight_initializer)
+        params["W_img"] = tf.get_variable("W_img", shape=(self.C, self._dim_e), dtype=tf.float32)
+        params["W_h"]   = tf.get_variable("h", shape=(self._num_units, self._dim_e), dtype=tf.float32)
         params["beta"]  = tf.get_variable("beta", shape=(self._dim_e, 1), dtype=tf.float32)
 
         # to compute new o (before the scores)
-        params["W_c"]   = tf.get_variable("W_c", shape=(self.C, self._dim_o), 
-                                            dtype=tf.float32, initializer=self.weight_initializer)
-        params["W_h"]   = tf.get_variable("W_h", shape=(self._num_units, self._dim_o), 
-                                            dtype=tf.float32, initializer=self.weight_initializer)
+        params["W_c"]   = tf.get_variable("W_c", shape=(self.C, self._dim_o), dtype=tf.float32)
+        params["W_h"]   = tf.get_variable("W_h", shape=(self._num_units, self._dim_o), dtype=tf.float32)
 
         # to compute new y (scores of next words)
-        params["W_o"]   = tf.get_variable("W_o", shape=(self._dim_o, self._num_proj), 
-                                            dtype=tf.float32, initializer=self.weight_initializer)
+        params["W_o"]   = tf.get_variable("W_o", shape=(self._dim_o, self._num_proj), dtype=tf.float32)
 
         return params
 
 
     def _compute_h(self, embedding, o, h):
-        # x        = tf.concat([embedding, o], axis=-1)
-        # new_h, _ = self.cell.__call__(x, h)
-        new_h, _ = self.cell.__call__(embedding, h)
+        x        = tf.concat([embedding, o], axis=-1)
+        new_h, _ = self.cell.__call__(x, h)
+        # new_h, _ = self.cell.__call__(embedding, h)
         return new_h
 
 

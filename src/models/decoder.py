@@ -12,7 +12,7 @@ class Decoder(object):
         self.config = config
 
 
-    def __call__(self, training, encoded_img, formula, reuse=False):
+    def __call__(self, training, encoded_img, formula, dropout, reuse=False):
         """
         Args:
             training: (tf.placeholder) bool
@@ -40,7 +40,7 @@ class Decoder(object):
        
         # get Attention cell and formula for rnn
         train_attn_cell = TrainAttnCell(self.config.attn_cell_config, encoded_img_flat, 
-                                        training, E, dropout=self.config.dropout)
+                                        training, E, dropout=dropout)
         test_attn_cell  = TestAttnCell(self.config.attn_cell_config, encoded_img_flat, 
                                         training, E, dropout=1)
 
