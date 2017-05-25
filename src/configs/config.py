@@ -54,7 +54,7 @@ class Config():
     # model training parameters
     n_epochs      = 50
     batch_size    = 10
-    dropout       = 0.5
+    dropout       = 0.5 #keep_prob
     max_iter      = 2
 
     # learning rate stuff

@@ -39,14 +39,16 @@ class Decoder(object):
         embedding_train   = tf.concat([start_tokens, embedding_formula[:, :-1, :]], axis=1)
        
         # get Attention cell and formula for rnn
-        train_attn_cell = TrainAttnCell(self.config.attn_cell_config, encoded_img_flat, training, E)
-        test_attn_cell  = TestAttnCell(self.config.attn_cell_config, encoded_img_flat, training, E)
+        train_attn_cell = TrainAttnCell(self.config.attn_cell_config, encoded_img_flat, 
+                                        training, E, dropout=self.config.dropout)
+        test_attn_cell  = TestAttnCell(self.config.attn_cell_config, encoded_img_flat, 
+                                        training, E, dropout=1)
 
         # run attention cell
         with tf.variable_scope("attn_cell", reuse=False):
             train_outputs, _ = tf.nn.dynamic_rnn(train_attn_cell, embedding_train, 
                                     initial_state=train_attn_cell.initial_state())
-
+            
         with tf.variable_scope("attn_cell", reuse=True):
             test_outputs, _  = tf.nn.dynamic_rnn(test_attn_cell, tf.expand_dims(formula, axis=-1),
                                     initial_state=test_attn_cell.initial_state(start_token))
