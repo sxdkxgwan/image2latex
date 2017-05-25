@@ -122,7 +122,7 @@ if __name__ == "__main__":
                     path_matching=path_matching, img_prepro=greyscale, 
                     form_prepro=get_form_prepro(vocab))
 
-    for x_batch, y_batch in minibatches(myset, batch_size):
-        x_batch = pad_batch_images(x_batch, myset.max_shape_image)
-        y_batch, y_length = pad_batch_formulas(y_batch, myset.max_length_formula)
-        print x_batch.shape, y_batch.shape
+    # for x_batch, y_batch in minibatches(myset, batch_size):
+    #     x_batch = pad_batch_images(x_batch, myset.max_shape_image)
+    #     y_batch, y_length = pad_batch_formulas(y_batch, myset.max_length_formula)
+    #     print x_batch.shape, y_batch.shape
