@@ -189,9 +189,9 @@ class TrainAttnCell(RNNCell):
             new_h = tf.nn.dropout(new_h, self.dropout) #apply dropout
 
             # compute o
-            # new_o = tf.tanh(tf.matmul(new_h, params["W_h"]) + tf.matmul(c, params["W_c"]))
-            # new_o = tf.nn.dropout(new_o, self.dropout) #apply dropout
-            new_o = new_h
+            new_o = tf.tanh(tf.matmul(new_h, params["W_h"]) + tf.matmul(c, params["W_c"]))
+            new_o = tf.nn.dropout(new_o, self.dropout) #apply dropout
+            # new_o = new_h
             new_y  = tf.matmul(o, params["W_o"])
 
             return new_h, new_o, new_y
