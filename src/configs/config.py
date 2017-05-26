@@ -67,9 +67,9 @@ class Config():
     
     # model config
     attn_cell_config = {
-        "num_units": 512,
-        "dim_e": 512,
-        "dim_o": 512,
+        "num_units": 300,
+        "dim_e": 300,
+        "dim_o": 300,
         "num_proj": None, # to be computed in __init__
         "dim_embeddings": dim_embeddings
     }
