@@ -58,7 +58,7 @@ class Config():
     max_iter      = None
 
     # learning rate stuff
-    lr_init       = 1e-1
+    lr_init       = 1e-2
     lr_min        = 1e-5
     start_decay   = 0 # start decaying from begining
     decay_rate    = 0.5 # decay rate if eval score doesn't improve
