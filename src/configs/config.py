@@ -52,10 +52,10 @@ class Config():
     max_shape_image = [160, 500, 1]
 
     # model training parameters
-    n_epochs      = 12
-    batch_size    = 20
+    n_epochs      = 20
+    batch_size    = 40
     dropout       = 1 #keep_prob
-    max_iter      = None
+    max_iter      = 1000
 
     # learning rate stuff
     lr_init       = 1e-2

@@ -109,7 +109,7 @@ class TrainAttnCell(RNNCell):
         att_img = tf.reshape(att_img, shape=[self.N, self.R, self._dim_e])
 
         # compute attention over the hidden vector
-        att_h = tf.matmul(h, params["W_h"])
+        att_h = tf.matmul(h, params["W_h_att"])
         att_h = tf.expand_dims(att_h, axis=1)
 
         # sum the two contributions
@@ -139,7 +139,7 @@ class TrainAttnCell(RNNCell):
 
         # to compute context vector (attention)
         params["W_img"] = tf.get_variable("W_img", shape=(self.C, self._dim_e), dtype=tf.float32)
-        params["W_h"]   = tf.get_variable("h", shape=(self._num_units, self._dim_e), dtype=tf.float32)
+        params["W_h_att"]   = tf.get_variable("W_h_att", shape=(self._num_units, self._dim_e), dtype=tf.float32)
         params["beta"]  = tf.get_variable("beta", shape=(self._dim_e, 1), dtype=tf.float32)
 
         # to compute new o (before the scores)
