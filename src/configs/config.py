@@ -53,7 +53,7 @@ class Config():
 
     # model training parameters
     n_epochs      = 20
-    batch_size    = 40
+    batch_size    = 20
     dropout       = 1 #keep_prob
     max_iter      = None
 
@@ -63,7 +63,7 @@ class Config():
     start_decay   = 0 # start decaying from begining
     decay_rate    = 0.5 # decay rate if eval score doesn't improve
     # n_steps       = ((max_iter + batch_size - 1) // batch_size) * n_epochs
-    n_steps       = None
+    n_steps       = 20
     
     # model config
     attn_cell_config = {

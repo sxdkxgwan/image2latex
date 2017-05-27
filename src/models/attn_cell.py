@@ -242,7 +242,7 @@ class TestAttnCell(TrainAttnCell):
         h, o, v = state
         new_h, new_o, new_y = super(TestAttnCell, self)._step(v, (h, o))
 
-        new_y = tf.nn.softmax(new_y)
+        # new_y = tf.nn.softmax(new_y)
 
         idx    = tf.argmax(new_y, axis=-1)
         new_v  = tf.nn.embedding_lookup(self.E, idx)
