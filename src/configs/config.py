@@ -58,7 +58,7 @@ class Config():
     max_iter      = None
 
     # learning rate stuff
-    lr_init       = 5e-2
+    lr_init       = 1e-2
     lr_min        = 1e-5
     start_decay   = 0 # start decaying from begining
     decay_rate    = 0.5 # decay rate if eval score doesn't improve
@@ -67,9 +67,9 @@ class Config():
     
     # model config
     attn_cell_config = {
-        "num_units": 400,
-        "dim_e": 400,
-        "dim_o": 400,
-        "num_proj": 400, # to be computed in __init__
+        "num_units": 512,
+        "dim_e": 512,
+        "dim_o": 512,
+        "num_proj": None, # to be computed in __init__
         "dim_embeddings": dim_embeddings
     }

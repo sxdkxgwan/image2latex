@@ -172,18 +172,19 @@ class TrainAttnCell(RNNCell):
             # get params
             params = self._get_cell_params()
             
-            # compute attention
-            c = self._compute_attention(self.encoded_img_flat, h, params)
-
             # compute new h
             new_h = self._compute_h(embedding, o, h)
             new_h = tf.nn.dropout(new_h, self.dropout) #apply dropout
 
+            # compute attention
+            c = self._compute_attention(self.encoded_img_flat, new_h, params)
+
             # compute o
             new_o = tf.tanh(tf.matmul(new_h, params["W_h"]) + tf.matmul(c, params["W_c"]))
             new_o = tf.nn.dropout(new_o, self.dropout) #apply dropout
+
             # new_o = new_h
-            new_y  = tf.matmul(o, params["W_o"])
+            new_y  = tf.matmul(new_o, params["W_o"])
 
             return new_h, new_o, new_y
 
@@ -240,6 +241,8 @@ class TestAttnCell(TrainAttnCell):
         """
         h, o, v = state
         new_h, new_o, new_y = super(TestAttnCell, self)._step(v, (h, o))
+
+        new_y = tf.nn.softmax(new_y)
 
         idx    = tf.argmax(new_y, axis=-1)
         new_v  = tf.nn.embedding_lookup(self.E, idx)

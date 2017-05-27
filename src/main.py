@@ -2,7 +2,7 @@ from utils.dataset import Dataset
 from models.model import Model
 from configs.config import Config
 from utils.preprocess import greyscale, get_form_prepro
-
+import tensorflow as tf
 
 from utils.data_utils import minibatches, pad_batch_formulas, \
     pad_batch_images

@@ -211,7 +211,7 @@ class Model(object):
         Returns:
             formula by choosing one word of the vocab at each time step
         """
-        return np.argmax(predictions, axis=2)
+        return np.argmax(predictions, axis=-1)
 
 
     def add_summary(self, sess): 
