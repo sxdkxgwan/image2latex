@@ -221,14 +221,24 @@ class Model(object):
         self.file_writer = tf.summary.FileWriter(self.config.dir_output, sess.graph)
 
 
+    def initialize_sess(self, sess, saver):
+        if self.config.dir_reload is not None:
+            # restoring weights
+            print("Restoring weights from {}".format(self.config.dir_reload))
+            saver.restore(sess, self.config.dir_reload)
+        else:
+            sess.run(self.init) # initialize variables
+        # tensorboard
+        self.add_summary(sess) 
+
+
     def train(self, train_set, val_set, lr_schedule):
         """
         Global train procedure
         """
         saver = tf.train.Saver()
         with tf.Session() as sess:
-            sess.run(self.init)    # initialize variables
-            self.add_summary(sess) # tensorboard
+            self.initialize_sess(sess, saver)
             self.evaluate(sess, val_set, lr_schedule)
 
             for epoch in range(self.config.n_epochs):

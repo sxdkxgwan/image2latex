@@ -8,13 +8,21 @@ class Config():
         """
         Creates output directories if they don't exist
         """
+        # check that the reload directory exists
+        if self.dir_reload is not None and not os.path.exists(self.dir_reload):
+            print("Weights directory not found ({})".format(self.dir_reload))
+            self.dir_reload = None
+
         # directory for training outputs
         if not os.path.exists(self.dir_output):
             os.makedirs(self.dir_output)
         else:
-            # sanity check before removing dir
-            assert("results" in self.dir_output)
-            shutil.rmtree(self.dir_output)
+            # remove results directory if not same as reload directory
+            if self.dir_reload is None or (self.model_output != self.dir_reload):
+                # sanity check before removing dir
+                assert("results" in self.dir_output)
+                print("Removing {}".format(self.dir_output))
+                shutil.rmtree(self.dir_output)
 
         if not os.path.exists(self.model_output):
             os.makedirs(self.model_output)
@@ -29,6 +37,7 @@ class Config():
         self.id_PAD = self.vocab[PAD]
         self.id_END = self.vocab[END]
 
+
     # directories
     dir_output    = "results/"
     dir_images    = "../data/images_processed"
@@ -36,6 +45,8 @@ class Config():
     path_log      = dir_output + "log.txt"
     path_answers  = dir_output + "results.txt"
     model_output  = dir_output + "model.weights/"
+    dir_reload    = dir_output + "model.weights/" # set to None if no reload
+    # dir_reload    = None
 
     path_matching_train = "../data/train_filter.lst"
     path_matching_val = "../data/val_filter.lst"
