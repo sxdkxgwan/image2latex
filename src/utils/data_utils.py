@@ -13,7 +13,8 @@ def render(arr):
     Args:
         arr: np array (np.uint8) representing an image
     """
-    img = Image.fromarray(arr)
+    mode = "RGB" if arr.shape[-1] == 3 else "L"
+    img =  Image.fromarray(np.squeeze(arr), mode)
     img.show()
 
 

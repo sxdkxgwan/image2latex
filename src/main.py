@@ -2,10 +2,9 @@ from utils.dataset import Dataset
 from models.model import Model
 from configs.config import Config
 from utils.preprocess import greyscale, get_form_prepro
-import tensorflow as tf
-
 from utils.data_utils import minibatches, pad_batch_formulas, \
     pad_batch_images
+from utils.lr_schedule import LRSchedule
 
 
 if __name__ == "__main__":
@@ -15,19 +14,19 @@ if __name__ == "__main__":
     # Load datasets
     train_set =  Dataset(path_formulas=config.path_formulas, dir_images=config.dir_images,
                     path_matching=config.path_matching_train, img_prepro=greyscale, 
-                    form_prepro=get_form_prepro(config.vocab), max_len=100)
+                    form_prepro=get_form_prepro(config.vocab), max_len=config.max_length_formula)
 
     val_set   =  Dataset(path_formulas=config.path_formulas, dir_images=config.dir_images,
                     path_matching=config.path_matching_val, img_prepro=greyscale, 
-                    form_prepro=get_form_prepro(config.vocab), max_len=100,
+                    form_prepro=get_form_prepro(config.vocab), max_len=config.max_length_formula,
                     max_iter=config.max_iter)
 
-    # val_set   =  Dataset(path_formulas=config.path_formulas, dir_images=config.dir_images,
-    #                 path_matching=config.path_matching_val, img_prepro=greyscale, 
-    #                 form_prepro=get_form_prepro(config.vocab), max_len=50,
-    #                 max_iter=config.max_iter)
+    # set n_steps to None if no exponential decay
+    n_steps     = ((len(train_set) + config.batch_size - 1) // config.batch_size) * config.n_epochs
+    lr_schedule = LRSchedule(config.lr_init, config.lr_min, config.start_decay, 
+                                      config.decay_rate, n_steps)
 
     # Build model
     model = Model(config)
     model.build()
-    model.train(train_set, val_set)
+    model.train(val_set, val_set, lr_schedule)

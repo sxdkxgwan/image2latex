@@ -58,7 +58,10 @@ class Model(object):
             name='formula')
         self.formula_length = tf.placeholder(tf.int32, shape=(None, ), 
             name='formula_length')
-       
+        
+        # for tensorboard
+        tf.summary.scalar("lr", self.lr) 
+
 
     def get_feed_dict(self, img, training, formula=None, lr=None, dropout=1):
         """
@@ -81,7 +84,6 @@ class Model(object):
         if lr is not None:
             fd[self.lr] = lr
             
-
         return fd
 
 
@@ -130,8 +132,8 @@ class Model(object):
         with tf.variable_scope("train_step"):
             optimizer = tf.train.AdamOptimizer(self.lr)
             # for batch norm beta gamma
-            update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS) 
-            with tf.control_dependencies(update_ops): 
+            update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+            with tf.control_dependencies(update_ops):
                 self.train_op = optimizer.minimize(self.loss)
 
 
@@ -143,7 +145,7 @@ class Model(object):
         self.init = tf.global_variables_initializer()
 
 
-    def run_epoch(self, sess, epoch, train_set):
+    def run_epoch(self, sess, epoch, train_set, lr_schedule):
         """
         Performs an epoch of training
         """
@@ -151,20 +153,20 @@ class Model(object):
         prog = Progbar(target=nbatches)
         for i, (img, formula) in enumerate(minibatches(train_set, self.config.batch_size)):
             # get feed dict
-            fd = self.get_feed_dict(img, training=True, formula=formula, lr=self.config.lr_schedule.lr,
+            fd = self.get_feed_dict(img, training=True, formula=formula, lr=lr_schedule.lr,
                                     dropout=self.config.dropout)
             # update step
             loss_eval, _, summary = sess.run([self.loss, self.train_op, self.merged], feed_dict=fd)
             self.file_writer.add_summary(summary, epoch*nbatches + i)
 
             # logging
-            prog.update(i + 1, [("loss", loss_eval), ("lr", self.config.lr_schedule.lr)])
+            prog.update(i + 1, [("loss", loss_eval), ("lr", lr_schedule.lr)])
 
             # update learning rate
-            self.config.lr_schedule.update(t=epoch*nbatches + i)
+            lr_schedule.update(t=epoch*nbatches + i)
 
 
-    def run_evaluate(self, sess, val_set):
+    def run_evaluate(self, sess, val_set, lr_schedule):
         """
         Performs an epoch of evaluation
 
@@ -182,7 +184,7 @@ class Model(object):
         n_words, ce_words = 0, 0 # for perplexity, sum of ce for all words + nb of words
         
         for img, formula in minibatches(val_set, self.config.batch_size):
-            fd = self.get_feed_dict(img, training=False, formula=formula)
+            fd = self.get_feed_dict(img, training=False, formula=formula, dropout=1)
             ce_words_eval, n_words_eval, predictions = sess.run(
                     [self.ce_words, self.n_words, self.pred_test], feed_dict=fd)
             n_words += n_words_eval
@@ -198,8 +200,7 @@ class Model(object):
         ce_mean = ce_words / float(n_words)
         scores["perplexity"] = np.exp(ce_mean)
 
-        self.config.lr_schedule.update(score=scores["perplexity"])
-
+        lr_schedule.update(score=scores["perplexity"])
 
         return scores
 
@@ -220,7 +221,7 @@ class Model(object):
         self.file_writer = tf.summary.FileWriter(self.config.dir_output, sess.graph)
 
 
-    def train(self, train_set, val_set):
+    def train(self, train_set, val_set, lr_schedule):
         """
         Global train procedure
         """
@@ -228,16 +229,16 @@ class Model(object):
         with tf.Session() as sess:
             sess.run(self.init)    # initialize variables
             self.add_summary(sess) # tensorboard
-            self.evaluate(sess, val_set)
+            self.evaluate(sess, val_set, lr_schedule)
 
             for epoch in range(self.config.n_epochs):
                 print("Epoch {}/{}".format(epoch+1, self.config.n_epochs))
-                self.run_epoch(sess, epoch, train_set)
+                self.run_epoch(sess, epoch, train_set, lr_schedule)
                 saver.save(sess, self.config.model_output)
-                self.evaluate(sess, val_set)
+                self.evaluate(sess, val_set, lr_schedule)
 
 
-    def evaluate(self, sess, val_set):
+    def evaluate(self, sess, val_set, lr_schedule):
         """
         Global eval procedure
         """
@@ -246,7 +247,7 @@ class Model(object):
         sys.stdout.flush()
         
         # computing scores
-        scores = self.run_evaluate(sess, val_set)
+        scores = self.run_evaluate(sess, val_set, lr_schedule)
         scores_to_print = ", ".join(["{} {:04.2f}".format(k, v) for k, v in scores.iteritems()])
 
         # logging

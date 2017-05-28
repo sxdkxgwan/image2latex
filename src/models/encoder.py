@@ -17,6 +17,11 @@ class Encoder(object):
         """        
         img = tf.cast(img, tf.float32) / 255.
 
+        """
+        ISSUE: seems to have performance issue (speed and accuracy) when
+        using batch norm
+        """
+
         with tf.variable_scope("convolutional_encoder"):
             out = conv2d(inputs=img, filters=64, kernel_size=3) 
             out = max_pooling2d(inputs=out)
@@ -25,17 +30,17 @@ class Encoder(object):
             out = max_pooling2d(inputs=out)
 
             out = conv2d(inputs=out, filters=256, kernel_size=3)
-            out = batch_normalization(inputs=out, training=training) 
+            # out = batch_normalization(inputs=out, training=training) 
 
             out = conv2d(inputs=out, filters=256, kernel_size=3)
             out = max_pooling2d(inputs=out, pool_size=(2,1), strides=(2,1)) 
 
             out = conv2d(inputs=out, filters=512, kernel_size=3)
-            out = batch_normalization(inputs=out, training=training)
+            # out = batch_normalization(inputs=out, training=training)
             out = max_pooling2d(inputs=out, pool_size=(1,2), strides=(1,2))
 
             out = conv2d(inputs=out, filters=512, kernel_size=3, padding='VALID')
-            out = batch_normalization(inputs=out, training=training) 
+            # out = batch_normalization(inputs=out, training=training) 
 
             return out
             

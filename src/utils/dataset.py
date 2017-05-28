@@ -1,10 +1,9 @@
 import numpy as np
-# from PIL import Image
 from scipy.misc import imread
 from preprocess import greyscale, get_form_prepro
 import time
 from data_utils import minibatches, pad_batch_images, \
-    load_vocab, pad_batch_formulas
+    load_vocab, pad_batch_formulas, render
 
 
 class Dataset(object):
@@ -84,20 +83,26 @@ class Dataset(object):
             img: array
             formula: one formula
         """
+        n_iter = 0
         with open(self.path_matching) as f:
             for idx, line in enumerate(f):
-                if self.max_iter is not None and idx >= self.max_iter:
+                if self.max_iter is not None and n_iter >= self.max_iter:
                     break
 
                 img_path, formula_id = line.strip().split(' ')
-                img = imread(self.dir_images + "/" + img_path)
-                img = self.img_prepro(img) 
-                formula = self.form_prepro(self.formulas[int(formula_id)])
 
+                # formula
+                formula = self.form_prepro(self.formulas[int(formula_id)])
                 # filter length of formula
                 if self.max_len is not None and len(formula) > self.max_len:
                     continue
 
+                # image 
+                img = imread(self.dir_images + "/" + img_path)
+                img = self.img_prepro(img)
+
+                n_iter += 1
+                
                 yield img, formula
 
 
