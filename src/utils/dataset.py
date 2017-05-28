@@ -108,10 +108,12 @@ class Dataset(object):
 
     def __len__(self):
         if self.length is None:
+            print("First call to len(dataset) - may take a while.")
             counter = 0
             for _ in self:
                 counter += 1
             self.length = counter
+            print("- done.")
 
         return self.length
 

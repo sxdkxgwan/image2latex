@@ -19,7 +19,8 @@ class Encoder(object):
 
         """
         ISSUE: seems to have performance issue (speed and accuracy) when
-        using batch norm
+        using batch norm 
+        TODO: check that the training bool is what we want
         """
 
         with tf.variable_scope("convolutional_encoder"):

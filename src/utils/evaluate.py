@@ -19,8 +19,8 @@ def write_answers(references, hypotheses, rev_vocab, path):
             ref = refs[0] # only take first ref
             ref = [rev_vocab[idx] for idx in ref]
             hypo = [rev_vocab[idx] for idx in hypo]
-            f.write(" ".join(ref) + "\n\n")
-            f.write(" ".join(hypo) + "\n\n\n\n")
+            f.write(" ".join(ref) + "\n")
+            f.write(" ".join(hypo) + "\n\n")
 
 
 def f1_score(prediction, ground_truth):

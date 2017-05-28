@@ -6,7 +6,9 @@ import os
 class Config():
     def __init__(self):
         """
-        Creates output directories if they don't exist
+        Creates output directories if they don't exist and load vocabulary
+        Defines attributes that depends on the vocab.
+        Look for the __init__ comments in the class attributes
         """
         # check that the reload directory exists
         if self.dir_reload is not None and not os.path.exists(self.dir_reload):
@@ -45,8 +47,8 @@ class Config():
     path_log      = dir_output + "log.txt"
     path_answers  = dir_output + "results.txt"
     model_output  = dir_output + "model.weights/"
-    dir_reload    = dir_output + "model.weights/" # set to None if no reload
-    # dir_reload    = None
+    # dir_reload    = dir_output + "model.weights/" # set to None if no reload
+    dir_reload    = None
 
     path_matching_train = "../data/train_filter.lst"
     path_matching_val = "../data/val_filter.lst"
@@ -62,11 +64,11 @@ class Config():
 
     # preprocess images and formulas
     dim_embeddings = 80
-    max_length_formula = 20
+    max_length_formula = 50
     max_shape_image = [160, 500, 1]
 
     # model training parameters
-    n_epochs      = 100
+    n_epochs      = 15
     batch_size    = 20
     dropout       = 1 # keep_prob
     max_iter      = 20
