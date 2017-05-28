@@ -18,8 +18,7 @@ if __name__ == "__main__":
 
     val_set   =  Dataset(path_formulas=config.path_formulas, dir_images=config.dir_images,
                     path_matching=config.path_matching_val, img_prepro=greyscale, 
-                    form_prepro=get_form_prepro(config.vocab), max_len=config.max_length_formula,
-                    max_iter=config.max_iter)
+                    form_prepro=get_form_prepro(config.vocab), max_len=config.max_length_formula)
 
     # set n_steps to None if no exponential decay
     n_steps     = ((len(train_set) + config.batch_size - 1) // config.batch_size) * config.n_epochs
