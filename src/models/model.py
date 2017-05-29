@@ -166,7 +166,7 @@ class Model(object):
             lr_schedule.update(t=epoch*nbatches + i)
 
 
-    def run_evaluate(self, sess, val_set, lr_schedule):
+    def run_evaluate(self, sess, val_set, lr_schedule=None):
         """
         Performs an epoch of evaluation
 
@@ -200,7 +200,8 @@ class Model(object):
         ce_mean = ce_words / float(n_words)
         scores["perplexity"] = np.exp(ce_mean)
 
-        lr_schedule.update(score=scores["perplexity"])
+        if lr_schedule is not None:
+            lr_schedule.update(score=scores["perplexity"])
 
         return scores
 
@@ -221,12 +222,22 @@ class Model(object):
         self.file_writer = tf.summary.FileWriter(self.config.dir_output, sess.graph)
 
 
-    def initialize_sess(self, sess, saver):
-        if self.config.dir_reload is not None:
+    def initialize_sess(self, sess, saver=None, dir_reload=None):
+        """
+        Initializes the variables in a session
+
+        Args:
+            sess: (tf.Session) instance
+            saver: (tf.saver) optional, to reload weights from
+            dir_reload: (string) path to directory with weights
+        """
+        if dir_reload is not None and saver is not None:
             # restoring weights
-            print("Restoring weights from {}".format(self.config.dir_reload))
-            saver.restore(sess, self.config.dir_reload)
+            print("Restoring parameters from {}".format(dir_reload))
+            saver.restore(sess, dir_reload)
         else:
+            # initialize with random initializer
+            print("Initializing session with random weights")
             sess.run(self.init) # initialize variables
         # tensorboard
         self.add_summary(sess) 
@@ -236,19 +247,24 @@ class Model(object):
         """
         Global train procedure
         """
+        best_score = None
         saver = tf.train.Saver()
         with tf.Session() as sess:
-            self.initialize_sess(sess, saver)
-            self.evaluate(sess, val_set, lr_schedule)
+            self.initialize_sess(sess, saver, self.config.dir_reload)
+            self.evaluate_sess(sess, val_set, lr_schedule)
 
             for epoch in range(self.config.n_epochs):
                 print("Epoch {}/{}".format(epoch+1, self.config.n_epochs))
                 self.run_epoch(sess, epoch, train_set, lr_schedule)
-                saver.save(sess, self.config.model_output)
-                self.evaluate(sess, val_set, lr_schedule)
+                scores = self.evaluate_sess(sess, val_set, lr_schedule)
+
+                # save weights if we have new best perplexity on eval
+                if best_score is None or scores["perplexity"] < best_score:
+                    saver.save(sess, self.config.model_output)
+                    best_score = scores["perplexity"]
 
 
-    def evaluate(self, sess, val_set, lr_schedule):
+    def evaluate_sess(self, sess, val_set, lr_schedule=None):
         """
         Global eval procedure
         """
@@ -264,3 +280,20 @@ class Model(object):
         sys.stdout.write("\r")
         sys.stdout.flush()
         self.logger.info("- Eval: {}".format(scores_to_print))
+
+        return scores
+
+
+    def evaluate(self, test_set, dir_reload):
+        """
+        Evaluate on test set and reloads weights from dir_reload
+
+        Args:
+            test_set: (Dataset)
+            dir_reload: (string) path to directory with weights
+        """
+        saver = tf.train.Saver()
+        with tf.Session() as sess:
+            self.initialize_sess(sess, saver, dir_reload)
+            self.evaluate_sess(sess, test_set)
+

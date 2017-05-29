@@ -12,6 +12,36 @@ def greyscale(state):
     return state.astype(np.uint8)
 
 
+def downsample(state):
+    """
+    Downsample an image on the first 2 dimensions
+
+    Args:
+        state: (np array) with 3 dimensions
+    """
+    return state[::2, ::2, :]
+
+
+def compose(functions):
+    """
+    Return a function which is the composition of functions
+
+    Args:
+        functions: (list of functions) = [f1, f2]
+
+    Returns:
+        function: f(x) = f2 (f1(x))
+    """
+    def f(x):
+        res = x
+        for func in functions:
+            res = func(res)
+
+        return res
+
+    return f
+
+
 def get_form_prepro(vocab):
     """
     Args:

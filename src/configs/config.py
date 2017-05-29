@@ -92,6 +92,6 @@ class Config():
 
 
 class Test(Config):
-    n_epochs = 100
+    n_epochs = 50
     max_iter = 1
     max_length_formula = 20
