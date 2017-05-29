@@ -195,7 +195,7 @@ class Model(object):
                 hypotheses.append(pred)
 
         scores = evaluate(references, hypotheses, rev_vocab, 
-                            self.config.path_answers)
+                            self.config.path_answers, self.config.id_END)
 
         ce_mean = ce_words / float(n_words)
         scores["perplexity"] = np.exp(ce_mean)

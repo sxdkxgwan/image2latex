@@ -53,6 +53,9 @@ def pad_batch_images(images, max_shape=None):
 
 def pad_batch_formulas(formulas, id_PAD, id_END, max_len=None):
     """
+    Pad formulas to the max length with id_PAD and adds and id_END token
+    at the end of each formula
+    
     Args:
         formulas: (list) of list of ints
         max_length: length maximal of formulas

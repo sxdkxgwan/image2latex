@@ -1,7 +1,7 @@
 from collections import Counter
 import numpy as np
 import nltk
-from utils.data_utils import reconstruct_formula
+from utils.data_utils import reconstruct_formula, END
 
 
 def write_answers(references, hypotheses, rev_vocab, path):
@@ -56,7 +56,24 @@ def bleu_score(references, hypotheses):
 	return BLEU_4
 
 
-def evaluate(references, hypotheses, rev_vocab, path):
+def truncate_end(hypotheses, id_END):
+    """
+    Dummy code to remove the end of each sentence starting from
+    the first id_END token.
+    """
+    trunc_hypotheses = []
+    for hypo in hypotheses:
+        trunc_hypo = []
+        for id_ in hypo:
+            if id_ == id_END:
+                break
+            trunc_hypo.append(id_)
+        trunc_hypotheses.append(trunc_hypo)
+
+    return trunc_hypotheses
+
+
+def evaluate(references, hypotheses, rev_vocab, path, id_END):
     """
     Args:
         references: list of lists of list (multiple references per hypothesis)
@@ -64,6 +81,7 @@ def evaluate(references, hypotheses, rev_vocab, path):
         rev_vocab: (dict) rev_vocab[idx] = word
         path: (string) path where to write results
     """
+    hypotheses = truncate_end(hypotheses, id_END)
     write_answers(references, hypotheses, rev_vocab, path)
     scores = dict()
     scores["BLEU-4"] = bleu_score(references, hypotheses)
