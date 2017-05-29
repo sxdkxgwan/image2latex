@@ -71,7 +71,7 @@ class Config():
     n_epochs      = 15
     batch_size    = 20
     dropout       = 1 # keep_prob
-    max_iter      = 20
+    max_iter      = None
 
     # learning rate stuff
     lr_init       = 1e-3
@@ -88,3 +88,10 @@ class Config():
         "num_proj": None, # to be computed in __init__  because vocab size
         "dim_embeddings": dim_embeddings
     }
+
+
+
+class Test(Config):
+    n_epochs = 100
+    max_iter = 1
+    max_length_formula = 20
