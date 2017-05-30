@@ -30,7 +30,10 @@ class Config():
             os.makedirs(self.model_output)
 
         # initializer file for answers by erasing previous files
-        with open(self.path_answers, "w") as f:
+        with open(self.path_results, "w") as f:
+            pass
+
+        with open(self.path_results_final, "w") as f:
             pass
 
         self.vocab = load_vocab(self.path_vocab)
@@ -44,11 +47,13 @@ class Config():
     dir_output    = "results/"
     dir_images    = "../data/images_processed"
     
-    path_log      = dir_output + "log.txt"
-    path_answers  = dir_output + "results.txt"
-    model_output  = dir_output + "model.weights/"
-    # dir_reload    = dir_output + "model.weights/" # set to None if no reload
-    dir_reload    = None
+    path_log            = dir_output + "log.txt"
+    path_results        = dir_output + "results_val.txt"
+    model_output        = dir_output + "model.weights/"
+    path_results_final  = dir_output + "results.txt"
+    path_results_img    = dir_output + "images/"
+    # dir_reload          = dir_output + "model.weights/" # set to None if no reload
+    dir_reload          = None
 
     path_matching_train = "../data/train_filter.lst"
     path_matching_val = "../data/val_filter.lst"

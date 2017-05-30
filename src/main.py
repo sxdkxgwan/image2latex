@@ -39,4 +39,4 @@ if __name__ == "__main__":
     model = Model(config)
     model.build()
     model.train(train_set, val_set, lr_schedule)
-    model.evaluate(test_set, config.model_output)
+    model.evaluate(test_set, config.model_output, config.path_results_final, config.path_results_img)

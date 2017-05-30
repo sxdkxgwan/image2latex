@@ -7,7 +7,8 @@ from utils.data_utils import minibatches, pad_batch_images, \
     pad_batch_formulas, load_vocab
 from encoder import Encoder
 from decoder import Decoder
-from utils.evaluate import evaluate, write_answers
+from utils.evaluate import evaluate, write_answers, evaluate_images_and_edit
+
 
 class Model(object):
     def __init__(self, config):
@@ -166,17 +167,19 @@ class Model(object):
             lr_schedule.update(t=epoch*nbatches + i)
 
 
-    def run_evaluate(self, sess, val_set, lr_schedule=None):
+    def run_evaluate(self, sess, val_set, lr_schedule=None, path_results=None):
         """
         Performs an epoch of evaluation
 
         Args:
+            sess: (tf.Session)
             val_set: Dataset instance
+            lr_schedule: (instance of Lr schedule) optional
+            path_results: (string) where to write the results
         Returns:
             bleu score: 
             exact match score: 
         """
-
         vocab = load_vocab(self.config.path_vocab)
         rev_vocab = {idx: word for word, idx in vocab.iteritems()}
 
@@ -194,8 +197,12 @@ class Model(object):
                 references.append([form])
                 hypotheses.append(pred)
 
+
+        if path_results is None:
+            path_results = self.config.path_results
+
         scores = evaluate(references, hypotheses, rev_vocab, 
-                            self.config.path_answers, self.config.id_END)
+                            path_results, self.config.id_END)
 
         ce_mean = ce_words / float(n_words)
         scores["perplexity"] = np.exp(ce_mean)
@@ -264,7 +271,7 @@ class Model(object):
                     best_score = scores["perplexity"]
 
 
-    def evaluate_sess(self, sess, val_set, lr_schedule=None):
+    def evaluate_sess(self, sess, val_set, lr_schedule=None, path_results=None):
         """
         Global eval procedure
         """
@@ -273,7 +280,7 @@ class Model(object):
         sys.stdout.flush()
         
         # computing scores
-        scores = self.run_evaluate(sess, val_set, lr_schedule)
+        scores = self.run_evaluate(sess, val_set, lr_schedule, path_results)
         scores_to_print = ", ".join(["{} {:04.2f}".format(k, v) for k, v in scores.iteritems()])
 
         # logging
@@ -284,7 +291,7 @@ class Model(object):
         return scores
 
 
-    def evaluate(self, test_set, dir_reload):
+    def evaluate(self, test_set, dir_reload, path_results, path_img):
         """
         Evaluate on test set and reloads weights from dir_reload
 
@@ -295,5 +302,8 @@ class Model(object):
         saver = tf.train.Saver()
         with tf.Session() as sess:
             self.initialize_sess(sess, saver, dir_reload)
-            self.evaluate_sess(sess, test_set)
+            self.evaluate_sess(sess, test_set, path_results=path_results)
+            edit_txt, edit_img, info = evaluate_images_and_edit(path_results, path_img)
+            self.logger.info("- Levenshtein dist: text {}, img {}".format(edit_txt, edit_img))
+            self.logger.info("- Info: {}".format(info))
 
