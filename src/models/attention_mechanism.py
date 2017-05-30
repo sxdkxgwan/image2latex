@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow.contrib.rnn import LSTMStateTuple
 
 
-class AttnMechanism(object):
+class AttentionMechanism(object):
     """
     Class to compute attention over an image
     """
