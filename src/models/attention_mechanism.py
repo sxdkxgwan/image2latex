@@ -93,29 +93,15 @@ class AttentionMechanism(object):
 
         Args:
             cell: (instance of RNNCell) must define _state_size
-
-        Only supports GRU or LSTM like states (see code)
         """
         # initialize the hidden state of the cell
         _states_0 = []
         for hidden_name in cell._state_size._fields:
-            assert hidden_name!= "o", "o is reserved for AttentionState"
             hidden_dim = getattr(cell._state_size, hidden_name)
             h = self.initial_state(hidden_name, hidden_dim)
             _states_0.append(h)
 
-        """
-        TODO: do something like _zero_state_tensors of python.ops.rnn_cell_impl
-
-        Works for LSTMCell and GRUCell for the moment
-        """
-        if len(_states_0) == 1:
-            initial_state_cell = _states_0[0]
-        elif len(_states_0) == 2:
-            initial_state_cell = LSTMStateTuple(_states_0[0], _states_0[1])
-        else:
-            print("Unsupported hidden state")
-            raise NotImplementedError
+        initial_state_cell = type(cell.state_size)(*_states_0)
 
         return initial_state_cell
 
