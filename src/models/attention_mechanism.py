@@ -1,5 +1,4 @@
 import tensorflow as tf
-from tensorflow.contrib.rnn import LSTMStateTuple
 
 
 class AttentionMechanism(object):
@@ -90,11 +89,13 @@ class AttentionMechanism(object):
     def initial_cell_state(self, cell):
         """
         Return initial state of a cell computed from the image
+        Assumes cell.state_type is an instance of named_tuple.
+
+        Ex: LSTMStateTuple
 
         Args:
             cell: (instance of RNNCell) must define _state_size
         """
-        # initialize the hidden state of the cell
         _states_0 = []
         for hidden_name in cell._state_size._fields:
             hidden_dim = getattr(cell._state_size, hidden_name)
