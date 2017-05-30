@@ -9,8 +9,8 @@ from utils.lr_schedule import LRSchedule
 
 if __name__ == "__main__":
     # Load config
-    config = Config()
-    # config = Test() # for test purposes
+    # config = Config()
+    config = Test() # for test purposes
 
     # Load datasets
     train_set =  Dataset(path_formulas=config.path_formulas, dir_images=config.dir_images,
@@ -28,7 +28,7 @@ if __name__ == "__main__":
                     form_prepro=get_form_prepro(config.vocab), max_len=config.max_length_formula,
                     max_iter=config.max_iter)
 
-    # test_set = train_set = val_set # for test purposes
+    test_set = train_set = val_set # for test purposes
 
     # set n_steps to None if no exponential decay
     n_steps     = ((len(train_set) + config.batch_size - 1) // config.batch_size) * config.n_epochs

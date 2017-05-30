@@ -90,15 +90,17 @@ def bleu_score(references, hypotheses):
     Computes bleu score. BLEU-4 has been shown to be the most 
     correlated with human judgement so we use this one.
     """
-	BLEU_4 = nltk.translate.bleu_score.corpus_bleu(references, hypotheses,
+    BLEU_4 = nltk.translate.bleu_score.corpus_bleu(references, hypotheses,
         weights=(0.25, 0.25, 0.25, 0.25))
-	return BLEU_4
+    return BLEU_4
 
 
 def img_edit_distance(file1, file2):
     """
     Computes Levenshtein distance between two images.
     Slice the images into columns and consider one column as a character.
+
+    Code strongly inspired by Harvard's evaluation scripts.
 
     Args:
         file1: (string) path to image (reference)
