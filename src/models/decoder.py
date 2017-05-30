@@ -25,8 +25,6 @@ class Decoder(object):
         Returns:
             pred: (tf.Tensor), shape = (?, max_length, vocab_size) scores of each class
         """
-        
-
         # get embeddings for training
         E = tf.get_variable("E", shape=[self.config.vocab_size, self.config.dim_embeddings], 
             dtype=tf.float32, initializer=tf.random_uniform_initializer(minval=-1.0, maxval=1.0))

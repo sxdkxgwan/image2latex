@@ -7,7 +7,7 @@ class Encoder(object):
         self.config = config
 
 
-    def __call__(self, training, img):
+    def __call__(self, training, img, dropout):
         """
         Args:
             training: (tf.placeholder) tf.bool

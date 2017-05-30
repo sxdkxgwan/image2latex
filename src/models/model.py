@@ -27,21 +27,12 @@ class Model(object):
         self.add_pred_op()
         self.add_loss_op()
         self.add_train_op()
-        self.add_init_op()
         self.logger.info("- done.")
 
 
     def add_placeholders_op(self):
         """
         Add placeholder attributes
-
-        Defines:
-            self.lr: float32, shape = ()
-            self.img: uint8, shape = (None, None, None)
-            self.formula: int32, shape = (None, None)
-            self.formula_length: int32, shape = (None, )
-            self.dropout: float32, shape = ()
-            self.training: bool, shape = ()
         """
         # hyper params
         self.lr = tf.placeholder(tf.float32, shape=(),
@@ -68,7 +59,6 @@ class Model(object):
         """
         Returns a dict
         """
-        # pad batch
         img = pad_batch_images(img)
 
         fd = {
@@ -92,7 +82,7 @@ class Model(object):
         """
         Defines self.pred
         """        
-        encoded_img = self.encoder(self.training, self.img)
+        encoded_img = self.encoder(self.training, self.img, self.dropout)
         train, test = self.decoder(self.training, encoded_img, self.formula, self.dropout)
 
         self.pred_train = train
@@ -117,15 +107,6 @@ class Model(object):
         tf.summary.scalar("loss", self.loss)
 
 
-    def l2_loss(self):
-        with tf.variable_scope("l2_loss"):
-            variables = tf.trainable_variables()
-            l2_loss = tf.add_n([tf.nn.l2_loss(v) for v in variables
-                        if 'bias' not in v.name ])
-
-        return l2_loss
-
-
     def add_train_op(self):
         """
         Defines self.train_op
@@ -138,12 +119,31 @@ class Model(object):
                 self.train_op = optimizer.minimize(self.loss)
 
 
-    def add_init_op(self):
+    def add_summary(self, sess): 
+        # tensorboard stuff
+        self.merged = tf.summary.merge_all()
+        self.file_writer = tf.summary.FileWriter(self.config.dir_output, sess.graph)
+
+
+    def initialize_sess(self, sess, saver=None, dir_reload=None):
         """
-        Defines:
-            self.init: op that initializes all variables
+        Initializes the variables in a session
+
+        Args:
+            sess: (tf.Session) instance
+            saver: (tf.saver) optional, to reload weights from
+            dir_reload: (string) path to directory with weights
         """
-        self.init = tf.global_variables_initializer()
+        if dir_reload is not None and saver is not None:
+            # restoring weights
+            print("Restoring parameters from {}".format(dir_reload))
+            saver.restore(sess, dir_reload)
+        else:
+            # initialize with random initializer
+            print("Initializing session with random weights")
+            sess.run(tf.global_variables_initializer()) # initialize variables
+        # tensorboard
+        self.add_summary(sess) 
 
 
     def run_epoch(self, sess, epoch, train_set, lr_schedule):
@@ -223,54 +223,6 @@ class Model(object):
         return np.argmax(predictions, axis=-1)
 
 
-    def add_summary(self, sess): 
-        # tensorboard stuff
-        self.merged = tf.summary.merge_all()
-        self.file_writer = tf.summary.FileWriter(self.config.dir_output, sess.graph)
-
-
-    def initialize_sess(self, sess, saver=None, dir_reload=None):
-        """
-        Initializes the variables in a session
-
-        Args:
-            sess: (tf.Session) instance
-            saver: (tf.saver) optional, to reload weights from
-            dir_reload: (string) path to directory with weights
-        """
-        if dir_reload is not None and saver is not None:
-            # restoring weights
-            print("Restoring parameters from {}".format(dir_reload))
-            saver.restore(sess, dir_reload)
-        else:
-            # initialize with random initializer
-            print("Initializing session with random weights")
-            sess.run(self.init) # initialize variables
-        # tensorboard
-        self.add_summary(sess) 
-
-
-    def train(self, train_set, val_set, lr_schedule):
-        """
-        Global train procedure
-        """
-        best_score = None
-        saver = tf.train.Saver()
-        with tf.Session() as sess:
-            self.initialize_sess(sess, saver, self.config.dir_reload)
-            self.evaluate_sess(sess, val_set, lr_schedule)
-
-            for epoch in range(self.config.n_epochs):
-                print("Epoch {}/{}".format(epoch+1, self.config.n_epochs))
-                self.run_epoch(sess, epoch, train_set, lr_schedule)
-                scores = self.evaluate_sess(sess, val_set, lr_schedule)
-
-                # save weights if we have new best perplexity on eval
-                if best_score is None or scores["perplexity"] < best_score:
-                    saver.save(sess, self.config.model_output)
-                    best_score = scores["perplexity"]
-
-
     def evaluate_sess(self, sess, val_set, lr_schedule=None, path_results=None):
         """
         Global eval procedure
@@ -307,3 +259,23 @@ class Model(object):
             self.logger.info("- Levenshtein dist: text {}, img {}".format(edit_txt, edit_img))
             self.logger.info("- Info: {}".format(info))
 
+
+    def train(self, train_set, val_set, lr_schedule):
+        """
+        Global train procedure
+        """
+        best_score = None
+        saver = tf.train.Saver()
+        with tf.Session() as sess:
+            self.initialize_sess(sess, saver, self.config.dir_reload)
+            self.evaluate_sess(sess, val_set, lr_schedule)
+
+            for epoch in range(self.config.n_epochs):
+                print("Epoch {}/{}".format(epoch+1, self.config.n_epochs))
+                self.run_epoch(sess, epoch, train_set, lr_schedule)
+                scores = self.evaluate_sess(sess, val_set, lr_schedule)
+
+                # save weights if we have new best perplexity on eval
+                if best_score is None or scores["perplexity"] < best_score:
+                    saver.save(sess, self.config.model_output)
+                    best_score = scores["perplexity"]
