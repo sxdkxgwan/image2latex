@@ -253,7 +253,7 @@ def evaluate_images_and_edit(path_in, path_out):
         os.makedirs(path_out)
 
     with open(path_in) as f:
-        total_txt = edit_txt = total_img = edit_img = 0
+        em_txt = em_img = total_txt = edit_txt = total_img = edit_img = 0
         ref, hypo = None, None
         for i, line in enumerate(f):
             if line == "\n":
@@ -273,6 +273,14 @@ def evaluate_images_and_edit(path_in, path_out):
 
                     edit_txt  += distance.levenshtein(tokens_ref, tokens_hypo)
                     edit_img  += img_edit_distance(path_out+"{}_ref.png".format(i/2 + 1), path_out+"{}_hypo.png".format(i/2 + 1))
+                    
+                    # exact matches = when edit distance == 0
+                    if edit_img == 0:
+                        em_img += 1
+                    if edit_txt == 0:
+                        em_txt += 1
+
+                    # increment total counts
                     total_txt += 1
                     total_img += 1
 
@@ -284,14 +292,22 @@ def evaluate_images_and_edit(path_in, path_out):
                         tokens_ref, tokens_hypo = ref.split(' '), hypo.split(' ')
                         
                         edit_txt += distance.levenshtein(tokens_ref, tokens_hypo)
+                        # exact matches
+                        if edit_txt == 0:
+                            em_txt += 1
+                        # increment total count
                         total_txt += 1
 
                     except Exception, e:
                         print(e)
 
 
-        edit_txt = edit_txt / float(max(total_txt, 1))
-        edit_img = edit_img / float(max(total_img, 1))
+        scores = dict()
+        scores["Levenshtein Text"] = edit_txt / float(max(total_txt, 1))
+        scores["Levenshtein Img"]  = edit_img / float(max(total_img, 1))
+        scores["EM Text"]          = em_txt / float(max(total_txt, 1))
+        scores["EM Img"]           = em_img / float(max(total_img, 1))
+
         info = "Unable to render LaTeX for {} out of {} images".format(total_txt - total_img, total_txt)
 
-        return edit_txt, edit_img, info
+        return scores, info

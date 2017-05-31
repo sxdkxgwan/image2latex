@@ -2,8 +2,14 @@ import tensorflow as tf
 import collections
 
 
-DecoderCellState = collections.namedtuple("DecoderCellState", 
-                        ("attention_cell_state", "embedding"))
+class DecoderCellState(collections.namedtuple("DecoderCellState", 
+                       ("attention_cell_state", "embedding"))):
+    pass
+
+
+class DecoderOutput(collections.namedtuple("DecoderOutput", 
+                        ("logits", "ids"))):
+    pass
 
 
 class DecoderCell(object):
@@ -13,7 +19,17 @@ class DecoderCell(object):
         self._dim_embeddings = embeddings.shape[-1].value
         self._start_token = start_token
         self._batch_size = batch_size
-        
+
+
+    @property
+    def output_dtype(self):
+        """
+        Needed for the custom dynamic_decode for the TensorArray of results
+        """
+        return DecoderOutput(
+            logits=self._attention_cell.output_dtype,
+            ids=tf.int32)
+
 
     def initial_state(self):
         """
@@ -32,10 +48,19 @@ class DecoderCell(object):
     def step(self, time, state):
         attention_cell_state, embedding = state
 
-        new_attention_cell_state, new_y = self._attention_cell.step(embedding, attention_cell_state)
+        logits, new_attention_cell_state = self._attention_cell.step(
+                                                    embedding, attention_cell_state)
 
-        idx           = tf.argmax(new_y, axis=-1)
-        new_embedding = tf.nn.embedding_lookup(self._embeddings, idx)
-        new_state     = DecoderCellState(new_attention_cell_state, new_embedding)
+        # get ids of words predicted and get embedding
+        ids = tf.cast(tf.argmax(logits, axis=-1), tf.int32)
+        new_embedding = tf.nn.embedding_lookup(self._embeddings, ids)
+
+        # create new state of decoder
+        new_state  = DecoderCellState(new_attention_cell_state, new_embedding)
+        new_output = DecoderOutput(logits, ids)
         
-        return (new_y, new_state)
+        return (new_output, new_state)
+
+
+    def finalize(self, final_outputs):
+        raise NotImplementedError

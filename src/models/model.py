@@ -93,19 +93,24 @@ class Model(object):
         """
         Defines self.loss
         """
-        losses = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.pred_train, 
-                                                                labels=self.formula)
-        mask = tf.sequence_mask(self.formula_length)
-        losses = tf.boolean_mask(losses, mask)
-        self.loss = tf.reduce_mean(losses)
-        
-        # to compute perplexity
-        self.ce_words = tf.reduce_sum(losses) # sum of cross entropy for each word
-        self.n_words = tf.reduce_sum(self.formula_length) # number of words
+        def get_losses(logits):
+            logits = logits[:, :tf.shape(self.formula)[1], :]
+            losses = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, 
+                                                                    labels=self.formula)
+            mask = tf.sequence_mask(self.formula_length)
+            losses = tf.boolean_mask(losses, mask)
+            return losses
 
+        # loss for training
+        self.loss = tf.reduce_mean(get_losses(self.pred_train))
+
+        # to compute perplexity for test
+        self.ce_words = tf.reduce_sum(get_losses(self.pred_test.logits)) # sum of CE for each word
+        self.n_words = tf.reduce_sum(self.formula_length) # number of words
+        
         # for tensorboard
         tf.summary.scalar("loss", self.loss)
-
+        
 
     def add_train_op(self):
         """
@@ -188,12 +193,11 @@ class Model(object):
         
         for img, formula in minibatches(val_set, self.config.batch_size):
             fd = self.get_feed_dict(img, training=False, formula=formula, dropout=1)
-            ce_words_eval, n_words_eval, predictions = sess.run(
-                    [self.ce_words, self.n_words, self.pred_test], feed_dict=fd)
+            ce_words_eval, n_words_eval, ids_eval = sess.run(
+                    [self.ce_words, self.n_words, self.pred_test.ids], feed_dict=fd)
             n_words += n_words_eval
             ce_words += ce_words_eval
-            predictions = self.generate_answer(predictions)
-            for form, pred in zip(formula, predictions):
+            for form, pred in zip(formula, ids_eval):
                 references.append([form])
                 hypotheses.append(pred)
 
@@ -211,16 +215,6 @@ class Model(object):
             lr_schedule.update(score=scores["perplexity"])
 
         return scores
-
-
-    def generate_answer(self, predictions):
-        """
-        Args:
-            predictions: array of shape (batch_size, max_formula_length, vocab_size)
-        Returns:
-            formula by choosing one word of the vocab at each time step
-        """
-        return np.argmax(predictions, axis=-1)
 
 
     def evaluate_sess(self, sess, val_set, lr_schedule=None, path_results=None):
@@ -255,8 +249,9 @@ class Model(object):
         with tf.Session() as sess:
             self.initialize_sess(sess, saver, dir_reload)
             self.evaluate_sess(sess, test_set, path_results=path_results)
-            edit_txt, edit_img, info = evaluate_images_and_edit(path_results, path_img)
-            self.logger.info("- Levenshtein dist: text {}, img {}".format(edit_txt, edit_img))
+            scores, info = evaluate_images_and_edit(path_results, path_img)
+            scores_to_print = ", ".join(["{} {:04.2f}".format(k, v) for k, v in scores.iteritems()])
+            self.logger.info("- {}".format(scores_to_print))
             self.logger.info("- Info: {}".format(info))
 
 
@@ -278,4 +273,3 @@ class Model(object):
                 # save weights if we have new best perplexity on eval
                 if best_score is None or scores["perplexity"] < best_score:
                     saver.save(sess, self.config.model_output)
-                    best_score = scores["perplexity"]

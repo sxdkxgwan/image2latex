@@ -44,7 +44,3 @@ class Encoder(object):
             # out = batch_normalization(inputs=out, training=training) 
 
             return out
-            
-
-
-

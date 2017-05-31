@@ -23,7 +23,10 @@ class Decoder(object):
             encoded_img: (tf.Tensor) shape = (N, H, W, C)
             formula: (tf.placeholder), shape = (?, ?)
         Returns:
-            pred: (tf.Tensor), shape = (?, max_length, vocab_size) scores of each class
+            pred_train: (tf.Tensor), shape = (?, ?, vocab_size) logits of each class
+            pret_test: (structure) 
+                - pred.test.logits, same as pred_train
+                - pred.test.ids, shape = (?, config.max_length_formula)
         """
         # get embeddings for training
         E = tf.get_variable("E", shape=[self.config.vocab_size, self.config.dim_embeddings], 

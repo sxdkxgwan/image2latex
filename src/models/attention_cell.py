@@ -7,7 +7,7 @@ AttentionState = collections.namedtuple("AttentionState", ("cell_state", "o"))
 
 
 class AttentionCell(RNNCell):
-    def __init__(self, cell, attention_mechanism, dropout, attn_cell_config):
+    def __init__(self, cell, attention_mechanism, dropout, attn_cell_config, dtype=tf.float32):
         """
         Args:
             training: (tf.placeholder) bool
@@ -26,6 +26,7 @@ class AttentionCell(RNNCell):
         self._num_units      = attn_cell_config.get("num_units", 512)
         self._num_proj       = attn_cell_config.get("num_proj", 512)
         self._dim_embeddings = attn_cell_config.get("dim_embeddings", 512)
+        self._dtype          = dtype
         
         # for RNNCell
         self._state_size = AttentionState(self._cell._state_size, self._dim_o)
@@ -39,6 +40,11 @@ class AttentionCell(RNNCell):
     @property
     def output_size(self):
         return self._num_proj
+
+
+    @property
+    def output_dtype(self):
+        return self._dtype
 
 
     def initial_state(self):
@@ -79,12 +85,12 @@ class AttentionCell(RNNCell):
 
             # new_o = new_h
             y_W_o  = tf.get_variable("y_W_o", shape=(self._dim_o, self._num_proj), dtype=tf.float32)
-            new_y  = tf.matmul(new_o, y_W_o)
+            logits  = tf.matmul(new_o, y_W_o)
 
             # new Attn cell state
             new_state = AttentionState(new_cell_state, new_o)
 
-            return new_state, new_y
+            return logits, new_state
 
 
     def __call__(self, embedding, state):
@@ -94,6 +100,6 @@ class AttentionCell(RNNCell):
             state: tuple: (h, o) where h is the hidden state and o is the vector 
                 used to make the prediction of the previous word
         """
-        new_state, new_y = self.step(embedding, state)
+        new_output, new_state = self.step(embedding, state)
         
-        return (new_y, new_state)   
+        return (new_output, new_state)   
