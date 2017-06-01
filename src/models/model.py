@@ -104,7 +104,7 @@ class Model(object):
         # loss for training
         self.loss = tf.reduce_mean(get_losses(self.pred_train))
 
-        # to compute perplexity for test
+        # # to compute perplexity for test
         self.ce_words = tf.reduce_sum(get_losses(self.pred_test.logits)) # sum of CE for each word
         self.n_words = tf.reduce_sum(self.formula_length) # number of words
         
@@ -195,6 +195,7 @@ class Model(object):
             fd = self.get_feed_dict(img, training=False, formula=formula, dropout=1)
             ce_words_eval, n_words_eval, ids_eval = sess.run(
                     [self.ce_words, self.n_words, self.pred_test.ids], feed_dict=fd)
+
             n_words += n_words_eval
             ce_words += ce_words_eval
             for form, pred in zip(formula, ids_eval):

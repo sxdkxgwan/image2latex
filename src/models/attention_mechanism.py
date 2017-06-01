@@ -62,9 +62,9 @@ class AttentionMechanism(object):
         att_beta   = tf.get_variable("att_beta", shape=(self._dim_e, 1), dtype=tf.float32)
 
         # compute attention over the image 
-        _img    = tf.reshape(img, shape=[self._batch_size*self._n_regions, self._n_channels])
+        _img    = tf.reshape(img, shape=[-1, self._n_channels])
         att_img = tf.matmul(_img, att_W_img)
-        att_img = tf.reshape(att_img, shape=[self._batch_size, self._n_regions, self._dim_e])
+        att_img = tf.reshape(att_img, shape=[-1, self._n_regions, self._dim_e])
 
         # compute attention over the hidden vector
         att_h = tf.matmul(h, att_W_h)
@@ -72,9 +72,9 @@ class AttentionMechanism(object):
 
         # sum the two contributions
         s = tf.tanh(att_img + att_h)
-        s = tf.reshape(s, shape=[self._batch_size*self._n_regions, self._dim_e])
+        s = tf.reshape(s, shape=[-1, self._dim_e])
         e = tf.matmul(s, att_beta)
-        e = tf.reshape(e, shape=[self._batch_size, self._n_regions])
+        e = tf.reshape(e, shape=[-1, self._n_regions])
 
         # compute weights
         a = tf.nn.softmax(e)

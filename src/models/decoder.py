@@ -2,10 +2,11 @@ import numpy as np
 import tensorflow as tf
 import tensorflow.contrib.layers as layers
 from tensorflow.contrib.rnn import GRUCell, LSTMCell
-from utils.tf import batch_normalization, dynamic_decode
+from .dynamic_decode import dynamic_decode
 from .attention_mechanism import AttentionMechanism
 from .attention_cell import AttentionCell
-from .decoder_cell import DecoderCell
+from .greedy_decoder_cell import GreedyDecoderCell
+from .beam_search_decoder_cell import BeamSearchDecoderCell
 
 
 class Decoder(object):
@@ -53,7 +54,8 @@ class Decoder(object):
         with tf.variable_scope("attn_cell", reuse=True):
             cell         = LSTMCell(self.config.attn_cell_config["num_units"], reuse=True)
             attn_cell    = AttentionCell(cell, attention_mechanism, dropout, self.config.attn_cell_config)
-            decoder_cell = DecoderCell(E, attn_cell, start_token, batch_size)
+            # decoder_cell = GreedyDecoderCell(E, attn_cell, batch_size, start_token)
+            decoder_cell = BeamSearchDecoderCell(E, attn_cell, batch_size, start_token, 2, self.config.id_END)
             test_outputs, _ = dynamic_decode(decoder_cell, self.config.max_length_formula)
         
         return train_outputs, test_outputs
