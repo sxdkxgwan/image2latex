@@ -93,6 +93,7 @@ class Config():
         "num_proj": None, # to be computed in __init__  because vocab size
         "dim_embeddings": dim_embeddings
     }
+    encoder_dim = 256
 
 
 
