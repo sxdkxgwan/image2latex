@@ -22,7 +22,7 @@ class Decoder(object):
         Args:
             training: (tf.placeholder) bool
             encoded_img: (tf.Tensor) shape = (N, H, W, C)
-            formula: (tf.placeholder), shape = (?, ?)
+            formula: (tf.placeholder), shape = (N, T)
         Returns:
             pred_train: (tf.Tensor), shape = (?, ?, vocab_size) logits of each class
             pret_test: (structure) 
@@ -54,8 +54,8 @@ class Decoder(object):
         with tf.variable_scope("attn_cell", reuse=True):
             cell         = LSTMCell(self.config.attn_cell_config["num_units"], reuse=True)
             attn_cell    = AttentionCell(cell, attention_mechanism, dropout, self.config.attn_cell_config)
-            # decoder_cell = GreedyDecoderCell(E, attn_cell, batch_size, start_token)
-            decoder_cell = BeamSearchDecoderCell(E, attn_cell, batch_size, start_token, 2, self.config.id_END)
-            test_outputs, _ = dynamic_decode(decoder_cell, self.config.max_length_formula)
+            decoder_cell = GreedyDecoderCell(E, attn_cell, batch_size, start_token)
+            # decoder_cell = BeamSearchDecoderCell(E, attn_cell, batch_size, start_token, 5, self.config.id_END)
+            test_outputs, _ = dynamic_decode(decoder_cell, self.config.max_length_formula+1)
         
         return train_outputs, test_outputs

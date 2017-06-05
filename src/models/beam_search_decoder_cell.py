@@ -112,6 +112,7 @@ class BeamSearchDecoderCell(object):
         log_probs = tf.expand_dims(state.log_probs, axis=-1) + step_log_probs
 
         # compute the best beams
+        # shape =  (batch_size, beam_size * vocab_size)
         log_probs_flat = tf.reshape(log_probs, [self._batch_size, -1])
         new_probs, indices = tf.nn.top_k(log_probs_flat, self._beam_size)
 
@@ -125,6 +126,11 @@ class BeamSearchDecoderCell(object):
 
         # compute end of beam
         new_finished = tf.logical_or(state.finished, tf.equal(new_ids, self._id_end))
+
+        new_cell_state = nest.map_structure(
+            lambda t: build_cell_state(t, new_parents, self._batch_size, self._beam_size),
+            new_cell_state)
+
 
         # create new state of decoder
         new_state  = BeamSearchDecoderCellState(
@@ -142,16 +148,29 @@ class BeamSearchDecoderCell(object):
         """
         Args:
             final_outputs: structure of tensors of shape 
-                    [T, batch_size, beam_size, ...]
+                    [T, batch_size, beam_size, d]
             final_state: instance of BeamSearchDecoderOutput
         """
+        # shape = [T, batch_size, beam_size]
         ids = final_outputs.ids
+        # shape = [T, batch_size, beam_size]
         parents = final_outputs.parents
+        # shape = [T, batch_size, beam_size, T]
         logits = final_outputs.logits
+
+        def create_ta(d):
+            return tf.TensorArray(
+            dtype=d,
+            size=0,
+            dynamic_size=True)
+
+        decoded_outputs = nest.map_structure(create_ta, self.output_dtype)
 
         return BeamSearchFinalOutput(
             logits=logits[:, :, 0, :],
             ids=ids[:, :, 0])
+
+        # raise NotImplementedError
         
 
 def merge_batch_beam(t):
@@ -225,3 +244,23 @@ def mask_probs(probs, id_end, finished):
     finished = tf.expand_dims(tf.cast(finished, probs.dtype), axis=-1)
 
     return (1. - finished) * probs + finished * one_hot
+
+
+def build_cell_state(t, new_parents, batch_size, beam_size):
+    """
+    Args:
+        t: tensor of shape = [batch_size, beam_size, d]
+        new_parents: tensor of shape = [batch_size, beam_size]
+
+    Returns:
+        new_t: tensor of same shape as t but new_t[:, i] = t[:, new_parents[:, i]]
+    """
+    assert t.shape.ndims == 3
+    d = t.shape[-1].value
+    range_  = tf.range(batch_size) * beam_size;
+    indices = tf.reshape(new_parents + range_, [-1])
+    output  = tf.gather(
+        tf.reshape(t, [batch_size*beam_size, -1]),
+        indices)
+
+    return tf.reshape(output, [batch_size, beam_size, d])

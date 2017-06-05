@@ -22,7 +22,10 @@ def dynamic_decode(decoder_cell, maximum_iterations):
         decoder_cell: (instance of DecoderCell) with step method
         maximum_iterations: (int)
     """
-    maximum_iterations = tf.convert_to_tensor(maximum_iterations, dtype=tf.int32)
+    try:
+        maximum_iterations = tf.convert_to_tensor(maximum_iterations, dtype=tf.int32)
+    except ValueError:
+        pass
 
     # create Tensor Array for outputs by mimicing the structure of decodercell output
     def create_ta(d):

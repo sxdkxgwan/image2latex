@@ -44,24 +44,22 @@ class Encoder(object):
             out = conv2d(inputs=out, filters=512, kernel_size=3, padding='VALID')
             # out = batch_normalization(inputs=out, training=training) 
 
-        with tf.variable_scope("bilstm_encoder"):
+        if self.config.encode_with_lstm:
+            with tf.variable_scope("bilstm_encoder"):
+                N = tf.shape(out)[0]
+                H_out = tf.shape(out)[1]
+                W_out = tf.shape(out)[2]
+                C_out = out.shape[-1].value
 
-            N = tf.shape(out)[0]
-            H_out = tf.shape(out)[1]
-            W_out = tf.shape(out)[2]
-            C_out = tf.shape(out)[3]
+                inputs = tf.reshape(out, shape=(N*H_out, W_out, C_out))
 
-            inputs = tf.reshape(out, shape=(N*H_out, W_out, C_out))
-            inputs.set_shape([None, None, 512])
+                cell_fw = LSTMCell(self.config.encoder_dim)
+                cell_bw = LSTMCell(self.config.encoder_dim)
 
-            cell_fw = LSTMCell(self.config.encoder_dim)
-            cell_bw = LSTMCell(self.config.encoder_dim)
+                outputs, _ = tf.nn.bidirectional_dynamic_rnn(cell_fw, cell_bw, inputs, dtype=tf.float32)
+                outputs_fw, outputs_bw = outputs
 
-            outputs, _ = tf.nn.bidirectional_dynamic_rnn(cell_fw, cell_bw, inputs, dtype = tf.float32)
-            outputs_fw, outputs_bw = outputs
-
-            out = tf.concat([outputs_fw, outputs_bw], axis=2)
-            out = tf.reshape(out, shape=(N, H_out, W_out, C_out))
-            out.set_shape([None, None, None, 512])
+                out = tf.concat([outputs_fw, outputs_bw], axis=2)
+                out = tf.reshape(out, shape=(N, H_out, W_out, C_out))
 
         return out

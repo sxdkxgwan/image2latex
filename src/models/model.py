@@ -105,7 +105,7 @@ class Model(object):
         self.loss = tf.reduce_mean(get_losses(self.pred_train))
 
         # # to compute perplexity for test
-        self.ce_words = tf.reduce_sum(get_losses(self.pred_test.logits)) # sum of CE for each word
+        self.ce_words = tf.reduce_sum(get_losses(self.pred_train)) # sum of CE for each word
         self.n_words = tf.reduce_sum(self.formula_length) # number of words
         
         # for tensorboard
@@ -196,6 +196,9 @@ class Model(object):
             ce_words_eval, n_words_eval, ids_eval = sess.run(
                     [self.ce_words, self.n_words, self.pred_test.ids], feed_dict=fd)
 
+            # test_ids, test_parents = sess.run([self.pred_test.ids, self.pred_test.parents], 
+            #                     feed_dict=fd)
+            
             n_words += n_words_eval
             ce_words += ce_words_eval
             for form, pred in zip(formula, ids_eval):

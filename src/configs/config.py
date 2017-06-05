@@ -93,11 +93,12 @@ class Config():
         "num_proj": None, # to be computed in __init__  because vocab size
         "dim_embeddings": dim_embeddings
     }
+    # encoder
     encoder_dim = 256
-
+    encode_with_lstm = False
 
 
 class Test(Config):
-    n_epochs = 70
-    max_iter = 1
+    n_epochs = 200
+    max_iter = 20
     max_length_formula = 20
