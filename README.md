@@ -1,5 +1,29 @@
 # Img2Latex
 
+## Install
+
+Install ghostsript and magick (from source depending on your linux distribution) and pdflatex for evaluation
+
+https://www.imagemagick.org/script/install-source.php
+
+
+```
+sudo pip -r requirements.txt
+sudo apt-get install texlive-latex-base
+sudo apt-get install texlive-latex-extra
+
+sudo apt-get install ghostscript
+sudo apt-get install libgs-dev
+
+wget http://www.imagemagick.org/download/ImageMagick.tar.gz
+tar -xvf ImageMagick.tar.gz
+cd ImageMagick-7.*
+./configure --with-gslib=yes 
+make
+sudo make install
+sudo ldconfig /usr/local/lib
+```
+
 
 ## Data and Preprocessing
 

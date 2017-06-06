@@ -220,11 +220,14 @@ def convert_to_png(formula, path_out, name):
         $$ %s $$
     \end{document}""" % (formula))
 
-    # call pdflatex to create pdf
-    call(["pdflatex", "-interaction=nonstopmode", "-output-directory", path_out, path_out+"{}.tex".format(name)])
+    try:
+        # call pdflatex to create pdf
+        call(["pdflatex", "-interaction=nonstopmode", "-output-directory", path_out, path_out+"{}.tex".format(name)])
 
-    # call magick to convert the pdf into a png file
-    call(["magick",  "convert",  "-density", "200", "-quality", "100", path_out+"{}.pdf".format(name), path_out+"{}.png".format(name)])
+        # call magick to convert the pdf into a png file
+        call(["magick",  "convert",  "-density", "200", "-quality", "100", path_out+"{}.pdf".format(name), path_out+"{}.png".format(name)])
+    except Exception, e:
+        print(e)
 
     # cleaning
     os.remove(path_out+"{}.aux".format(name))
