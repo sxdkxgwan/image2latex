@@ -32,7 +32,8 @@ class Decoder(object):
         """
         # get embeddings for training
         
-        if self.config.embeddings_init = "pretrained":
+        if self.config.pretrained_embeddings:
+            print("Reloading pretrained embeddings")
             npz_file = np.load(self.config.path_embeddings)
             embeddings = npz_file["arr-0"]
             assert(embeddings.shape == [self.config.vocab_size, self.config.dim_embeddings])
@@ -77,7 +78,7 @@ class Decoder(object):
                 beam_search_outputs, _ = dynamic_decode(decoder_cell, self.config.max_length_formula+1)
                 # concatenate beam search outputs with the greedy outputs
                 test_outputs = nest.map_structure(
-                    lambda t1, t2: tf.concat([tf.expand_dims(t1, axis=2), t2], axis=2),
-                    test_outputs, beam_search_outputs)
+                    lambda t1, t2: tf.concat([t1, tf.expand_dims(t2, axis=2)], axis=2),
+                    beam_search_outputs, test_outputs)
         
         return train_outputs, test_outputs
