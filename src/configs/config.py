@@ -63,6 +63,9 @@ class Config():
 
     # vocab things
     path_vocab    = "../data/latex_vocab.txt"
+    path_embeddings = "../data/embeddings.npz"
+    embeddings_init = "pretrained"
+    trainable_embeddings = True
     vocab_size    = None # to be computed in __init__
     id_PAD        = None # to be computed in __init__
     id_END        = None # to be computed in __init__

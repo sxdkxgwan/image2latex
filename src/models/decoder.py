@@ -30,8 +30,19 @@ class Decoder(object):
                 - pred.test.ids, shape = (?, config.max_length_formula)
         """
         # get embeddings for training
-        E = tf.get_variable("E", shape=[self.config.vocab_size, self.config.dim_embeddings], 
+        
+        if self.config.embeddings_init = "pretrained":
+            npz_file = np.load(self.config.path_embeddings)
+            embeddings = npz_file["arr-0"]
+            assert(embeddings.shape == [self.config.vocab_size, self.config.dim_embeddings])
+            E = tf.get_variable("E", shape=embeddings.shape,
+                                  dtype=tf.float32,
+                                  initializer=tf.constant_initializer(embeddings),
+                                  trainable=self.config.trainable_embeddings)
+        else:
+            E = tf.get_variable("E", shape=[self.config.vocab_size, self.config.dim_embeddings], 
             dtype=tf.float32, initializer=tf.random_uniform_initializer(minval=-1.0, maxval=1.0))
+
         start_token = tf.get_variable("start_token", shape=[self.config.dim_embeddings],
             dtype=tf.float32, initializer=tf.random_uniform_initializer(minval=-1.0, maxval=1.0))
 
