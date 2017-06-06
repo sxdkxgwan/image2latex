@@ -44,7 +44,7 @@ class Config():
 
 
     # directories
-    dir_output    = "results/"
+    dir_output    = "results_lstm_less_than_50/"
     dir_images    = "../data/images_processed"
     
     path_log            = dir_output + "log.txt"
@@ -73,7 +73,7 @@ class Config():
     max_shape_image = [160, 500, 1]
 
     # model training parameters
-    n_epochs      = 15
+    n_epochs      = 12
     batch_size    = 20
     dropout       = 1 # keep_prob
     max_iter      = None
@@ -84,7 +84,11 @@ class Config():
     start_decay   = 0 # start decaying from begining
     decay_rate    = 1 # decay rate if eval score doesn't improve
     
-    # model config
+    # encoder
+    encoder_dim = 256
+    encode_with_lstm = True
+
+    # decoder
     attn_cell_config = {
         "cell_type": "lstm",
         "num_units": 512,
@@ -93,12 +97,14 @@ class Config():
         "num_proj": None, # to be computed in __init__  because vocab size
         "dim_embeddings": dim_embeddings
     }
-    # encoder
-    encoder_dim = 256
-    encode_with_lstm = False
+    decoding = "greedy" # or "beam_search"
+    beam_size = 5
 
 
 class Test(Config):
     n_epochs = 2
     max_iter = 1
     max_length_formula = 20
+    decoding = "beam_search"
+    encode_with_lstm = False
+    dir_output = "test"

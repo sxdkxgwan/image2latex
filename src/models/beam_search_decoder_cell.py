@@ -1,6 +1,7 @@
 import tensorflow as tf
 import collections
 from tensorflow.python.util import nest
+from tensorflow.contrib.rnn import RNNCell
 
 
 class BeamSearchDecoderCellState(collections.namedtuple("BeamSearchDecoderCellState", 
@@ -61,6 +62,16 @@ class BeamSearchDecoderCell(object):
             logits=self._cell.output_dtype,
             ids=tf.int32,
             parents=tf.int32)
+
+
+    @property
+    def final_output_dtype(self):
+        """
+        For the finalize method
+        """
+        return BeamSearchFinalOutput(
+            logits=self._cell.output_dtype,
+            ids=tf.int32)
 
 
     def initial_state(self):
@@ -151,26 +162,11 @@ class BeamSearchDecoderCell(object):
                     [T, batch_size, beam_size, d]
             final_state: instance of BeamSearchDecoderOutput
         """
-        # shape = [T, batch_size, beam_size]
-        ids = final_outputs.ids
-        # shape = [T, batch_size, beam_size]
-        parents = final_outputs.parents
-        # shape = [T, batch_size, beam_size, T]
-        logits = final_outputs.logits
-
-        def create_ta(d):
-            return tf.TensorArray(
-            dtype=d,
-            size=0,
-            dynamic_size=True)
-
-        decoded_outputs = nest.map_structure(create_ta, self.output_dtype)
 
         return BeamSearchFinalOutput(
-            logits=logits[:, :, 0, :],
-            ids=ids[:, :, 0])
+            logits=final_outputs.logits[:, :, 0, :],
+            ids=final_outputs.ids[:, :, 0])
 
-        # raise NotImplementedError
         
 
 def merge_batch_beam(t):
@@ -264,3 +260,31 @@ def build_cell_state(t, new_parents, batch_size, beam_size):
         indices)
 
     return tf.reshape(output, [batch_size, beam_size, d])
+
+
+
+class BeamSearchFinalDecoderCell(RNNCell):
+    def __init__(self, vocab_size,):
+        self._vocab_size = vocab_size
+        self._state_size = BeamSearchDecoderOutput(
+            logits=self._vocab_size,
+            ids=1,
+            parents=1)
+
+
+    @property
+    def output_size(self):
+        return BeamSearchFinalOutput(
+            logits=self._vocab_size,
+            ids=1)
+
+
+    @property
+    def state_size(self):
+        return self._state_size
+
+
+    def step(input, state):
+        pass
+
+

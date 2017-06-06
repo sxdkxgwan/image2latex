@@ -60,6 +60,6 @@ class Encoder(object):
                 outputs_fw, outputs_bw = outputs
 
                 out = tf.concat([outputs_fw, outputs_bw], axis=2)
-                out = tf.reshape(out, shape=(N, H_out, W_out, C_out))
+                out = tf.reshape(out, shape=(N, H_out, W_out, 2*self.config.encoder_dim))
 
         return out

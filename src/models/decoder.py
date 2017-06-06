@@ -54,8 +54,17 @@ class Decoder(object):
         with tf.variable_scope("attn_cell", reuse=True):
             cell         = LSTMCell(self.config.attn_cell_config["num_units"], reuse=True)
             attn_cell    = AttentionCell(cell, attention_mechanism, dropout, self.config.attn_cell_config)
-            decoder_cell = GreedyDecoderCell(E, attn_cell, batch_size, start_token)
-            # decoder_cell = BeamSearchDecoderCell(E, attn_cell, batch_size, start_token, 5, self.config.id_END)
+
+            if self.config.decoding == "greedy":
+                decoder_cell = GreedyDecoderCell(E, attn_cell, batch_size, start_token)
+                
+            elif self.config.decoding == "beam_search":
+                decoder_cell = BeamSearchDecoderCell(E, attn_cell, batch_size, 
+                        start_token, self.config.beam_size, self.config.id_END)
+            else:
+                print("Unknown decoding option {} - use `greedy` or `beam_search`".format(self.config.decoding))
+                raise NotImplementedError
+
             test_outputs, _ = dynamic_decode(decoder_cell, self.config.max_length_formula+1)
         
         return train_outputs, test_outputs
