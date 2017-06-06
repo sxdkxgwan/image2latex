@@ -44,7 +44,7 @@ class Config():
 
 
     # directories
-    dir_output    = "results_lstm_less_than_50/"
+    dir_output    = "results/"
     dir_images    = "../data/images_processed"
     
     path_log            = dir_output + "log.txt"
@@ -102,9 +102,8 @@ class Config():
 
 
 class Test(Config):
-    n_epochs = 2
+    n_epochs = 70
     max_iter = 1
     max_length_formula = 20
     decoding = "beam_search"
-    encode_with_lstm = False
-    dir_output = "test"
+    encode_with_lstm = True

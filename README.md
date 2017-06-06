@@ -8,7 +8,7 @@ https://www.imagemagick.org/script/install-source.php
 
 
 ```
-sudo pip -r requirements.txt
+sudo pip install -r requirements.txt
 sudo apt-get install texlive-latex-base
 sudo apt-get install texlive-latex-extra
 

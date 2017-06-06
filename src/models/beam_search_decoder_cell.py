@@ -2,6 +2,8 @@ import tensorflow as tf
 import collections
 from tensorflow.python.util import nest
 from tensorflow.contrib.rnn import RNNCell
+from dynamic_decode import transpose_batch_time
+from greedy_decoder_cell import DecoderOutput
 
 
 class BeamSearchDecoderCellState(collections.namedtuple("BeamSearchDecoderCellState", 
@@ -36,11 +38,6 @@ class BeamSearchDecoderOutput(collections.namedtuple("BeamSearchDecoderOutput",
     pass
 
 
-class BeamSearchFinalOutput(collections.namedtuple("BeamSearchFinalOutput",
-    ("logits", "ids"))):
-    pass
-
-
 class BeamSearchDecoderCell(object):
     def __init__(self, embeddings, cell, batch_size, start_token, beam_size, id_end):
         self._embeddings = embeddings
@@ -69,9 +66,24 @@ class BeamSearchDecoderCell(object):
         """
         For the finalize method
         """
-        return BeamSearchFinalOutput(
+        return DecoderOutput(
             logits=self._cell.output_dtype,
             ids=tf.int32)
+
+
+    @property
+    def state_size(self):
+        return BeamSearchDecoderOutput(
+            logits=tf.TensorShape([self._beam_size, self._vocab_size]),
+            ids=tf.TensorShape([self._beam_size]),
+            parents=tf.TensorShape([self._beam_size]))
+
+
+    @property
+    def final_output_size(self):
+        return DecoderOutput(
+            logits=tf.TensorShape([self._beam_size, self._vocab_size]),
+            ids=tf.TensorShape([self._beam_size]))
 
 
     def initial_state(self):
@@ -124,7 +136,11 @@ class BeamSearchDecoderCell(object):
 
         # compute the best beams
         # shape =  (batch_size, beam_size * vocab_size)
-        log_probs_flat = tf.reshape(log_probs, [self._batch_size, -1])
+        log_probs_flat = tf.reshape(log_probs, [self._batch_size, self._beam_size * self._vocab_size])
+        log_probs_flat = tf.cond(
+            time > 0,
+            lambda: log_probs_flat,
+            lambda: log_probs[:, 0])
         new_probs, indices = tf.nn.top_k(log_probs_flat, self._beam_size)
 
         # of shape [batch_size, beam_size]
@@ -132,25 +148,26 @@ class BeamSearchDecoderCell(object):
         new_parents = indices // self._vocab_size
 
         # get ids of words predicted and get embedding
-        new_ids = tf.cast(tf.argmax(new_logits, axis=-1), tf.int32)
         new_embedding = tf.nn.embedding_lookup(self._embeddings, new_ids)
 
         # compute end of beam
         new_finished = tf.logical_or(state.finished, tf.equal(new_ids, self._id_end))
 
         new_cell_state = nest.map_structure(
-            lambda t: build_cell_state(t, new_parents, self._batch_size, self._beam_size),
+            lambda t: gather_helper(t, new_parents, self._batch_size, self._beam_size),
             new_cell_state)
 
 
         # create new state of decoder
         new_state  = BeamSearchDecoderCellState(
-            new_cell_state,
-            new_probs,
-            new_finished)
+            cell_state=new_cell_state,
+            log_probs=new_probs,
+            finished=new_finished)
         
         new_output = BeamSearchDecoderOutput(
-            new_logits, new_ids, new_parents)
+            logits=new_logits, 
+            ids=new_ids, 
+            parents=new_parents)
         
         return (new_output, new_state, new_embedding)
 
@@ -159,15 +176,67 @@ class BeamSearchDecoderCell(object):
         """
         Args:
             final_outputs: structure of tensors of shape 
-                    [T, batch_size, beam_size, d]
+                    [time dimension, batch_size, beam_size, d]
             final_state: instance of BeamSearchDecoderOutput
         """
-
-        return BeamSearchFinalOutput(
-            logits=final_outputs.logits[:, :, 0, :],
-            ids=final_outputs.ids[:, :, 0])
-
+        # reverse the time dimension and reshape to 3 dimensions
+        maximum_iterations = tf.shape(final_outputs.ids)[0]
+        final_outputs = nest.map_structure(
+            lambda t: tf.reverse(t, axis=[0]), final_outputs)
         
+        # initial states
+        def create_ta(d):
+            return tf.TensorArray(
+                dtype=d,
+                size=maximum_iterations)
+
+        initial_time = tf.constant(0, dtype=tf.int32)
+        initial_outputs_ta = nest.map_structure(create_ta, self.final_output_dtype)
+        initial_parents = tf.tile(
+            tf.expand_dims(tf.range(self._beam_size), axis=0),
+            multiples=[self._batch_size, 1])
+
+        def condition(time, outputs_ta, parents):
+            return tf.less(time, maximum_iterations)
+
+        # beam search decoding cell
+        def body(time, outputs_ta, parents):
+            # get ids, logits and parents predicted at this time step by decoder
+            input_t = nest.map_structure(
+                lambda t: t[time], final_outputs)
+
+            # extract the entries corresponding to parents
+            new_state = nest.map_structure(
+                lambda t: gather_helper(t, parents, self._batch_size, self._beam_size),
+                input_t)
+
+            # create new output
+            new_output = DecoderOutput(
+                logits=new_state.logits,
+                ids=new_state.ids)
+
+            # write beam ids
+            outputs_ta = nest.map_structure(lambda ta, out: ta.write(time, out),
+                                      outputs_ta, new_output)
+
+            return (time + 1), outputs_ta, parents
+        
+        res = tf.while_loop(
+            condition,
+            body,
+            loop_vars=[initial_time, initial_outputs_ta, initial_parents])
+
+        # unfold and stack the structure from the nested tas
+        final_outputs = nest.map_structure(lambda ta: ta.stack(), res[1])
+
+        # reverse time step
+        final_outputs = nest.map_structure(
+            lambda t: tf.reverse(t, axis=[0]), final_outputs)
+
+        return DecoderOutput(
+            logits=final_outputs.logits,
+            ids=final_outputs.ids)
+
 
 def merge_batch_beam(t):
     """
@@ -242,49 +311,24 @@ def mask_probs(probs, id_end, finished):
     return (1. - finished) * probs + finished * one_hot
 
 
-def build_cell_state(t, new_parents, batch_size, beam_size):
+def gather_helper(t, indices, batch_size, beam_size):
     """
     Args:
         t: tensor of shape = [batch_size, beam_size, d]
-        new_parents: tensor of shape = [batch_size, beam_size]
+        indices: tensor of shape = [batch_size, beam_size]
 
     Returns:
         new_t: tensor of same shape as t but new_t[:, i] = t[:, new_parents[:, i]]
     """
-    assert t.shape.ndims == 3
-    d = t.shape[-1].value
-    range_  = tf.range(batch_size) * beam_size;
-    indices = tf.reshape(new_parents + range_, [-1])
+    range_  = tf.expand_dims(tf.range(batch_size) * beam_size, axis=1);
+    indices = tf.reshape(indices + range_, [-1])
     output  = tf.gather(
         tf.reshape(t, [batch_size*beam_size, -1]),
         indices)
+    
+    if t.shape.ndims == 2:
+        return tf.reshape(output, [batch_size, beam_size])
 
-    return tf.reshape(output, [batch_size, beam_size, d])
-
-
-
-class BeamSearchFinalDecoderCell(RNNCell):
-    def __init__(self, vocab_size,):
-        self._vocab_size = vocab_size
-        self._state_size = BeamSearchDecoderOutput(
-            logits=self._vocab_size,
-            ids=1,
-            parents=1)
-
-
-    @property
-    def output_size(self):
-        return BeamSearchFinalOutput(
-            logits=self._vocab_size,
-            ids=1)
-
-
-    @property
-    def state_size(self):
-        return self._state_size
-
-
-    def step(input, state):
-        pass
-
-
+    elif t.shape.ndims == 3:
+        d = t.shape[-1].value
+        return tf.reshape(output, [batch_size, beam_size, d])

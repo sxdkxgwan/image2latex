@@ -16,13 +16,16 @@ def evaluate(references, hypotheses, rev_vocab, path, id_END):
 
     Args:
         references: list of lists of list (multiple references per hypothesis)
-        hypotheses: list of list
+        hypotheses: list of list of list (multiple hypotheses)
         rev_vocab: (dict) rev_vocab[idx] = word
         path: (string) path where to write results
     """
     hypotheses = truncate_end(hypotheses, id_END)
     write_answers(references, hypotheses, rev_vocab, path)
     scores = dict()
+    
+    # extract best hypothesis to compute scores
+    hypotheses = [hypos[0] for hypos in hypotheses]
     scores["BLEU-4"] = bleu_score(references, hypotheses)
     scores["EM"] = exact_match_score(references, hypotheses)
     return scores
@@ -34,13 +37,17 @@ def truncate_end(hypotheses, id_END):
     the first id_END token.
     """
     trunc_hypotheses = []
-    for hypo in hypotheses:
-        trunc_hypo = []
-        for id_ in hypo:
-            if id_ == id_END:
-                break
-            trunc_hypo.append(id_)
-        trunc_hypotheses.append(trunc_hypo)
+    for hypos in hypotheses:
+        trunc_hypos = []
+        for hypo in hypos:
+            trunc_hypo = []
+            for id_ in hypo:
+                if id_ == id_END:
+                    break
+                trunc_hypo.append(id_)
+            trunc_hypos.append(trunc_hypo)
+
+        trunc_hypotheses.append(trunc_hypos)
 
     return trunc_hypotheses
 
@@ -57,12 +64,16 @@ def write_answers(references, hypotheses, rev_vocab, path):
     assert len(references) == len(hypotheses)
 
     with open(path, "a") as f:
-        for refs, hypo in zip(references, hypotheses):
+        for refs, hypos in zip(references, hypotheses):
             ref = refs[0] # only take first ref
             ref = [rev_vocab[idx] for idx in ref]
-            hypo = [rev_vocab[idx] for idx in hypo]
             f.write(" ".join(ref) + "\n")
-            f.write(" ".join(hypo) + "\n\n")
+
+            for hypo in hypos:
+                hypo = [rev_vocab[idx] for idx in hypo]
+                f.write(" ".join(hypo) + "\n")
+
+            f.write("\n")
 
 
 def exact_match_score(references, hypotheses):

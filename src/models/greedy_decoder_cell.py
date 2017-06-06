@@ -2,7 +2,7 @@ import tensorflow as tf
 import collections
 
 
-class GreedyDecoderOutput(collections.namedtuple("GreedyDecoderOutput", 
+class DecoderOutput(collections.namedtuple("DecoderOutput", 
                         ("logits", "ids"))):
     pass
 
@@ -21,7 +21,7 @@ class GreedyDecoderCell(object):
         """
         Needed for the custom dynamic_decode for the TensorArray of results
         """
-        return GreedyDecoderOutput(
+        return DecoderOutput(
             logits=self._attention_cell.output_dtype,
             ids=tf.int32)
 
@@ -50,10 +50,10 @@ class GreedyDecoderCell(object):
         new_embedding = tf.nn.embedding_lookup(self._embeddings, ids)
 
         # create new state of decoder
-        new_output = GreedyDecoderOutput(logits, ids)
+        new_output = DecoderOutput(logits, ids)
         
         return (new_output, new_state, new_embedding)
 
 
     def finalize(self, final_outputs, final_state):
-        raise NotImplementedError
+        return final_outputs

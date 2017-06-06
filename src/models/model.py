@@ -196,12 +196,15 @@ class Model(object):
             ce_words_eval, n_words_eval, ids_eval = sess.run(
                     [self.ce_words, self.n_words, self.pred_test.ids], feed_dict=fd)
 
-            # test_ids, test_parents = sess.run([self.pred_test.ids, self.pred_test.parents], 
-            #                     feed_dict=fd)
-            
+            if self.config.decoding == "greedy":
+                ids_eval = np.expand_dims(ids_eval, axis=1)
+            elif self.config.decoding == "beam_search":
+                ids_eval = np.transpose(ids_eval, [0, 2, 1])
+
             n_words += n_words_eval
             ce_words += ce_words_eval
             for form, pred in zip(formula, ids_eval):
+                # pred is of shape (number of hypotheses, time)
                 references.append([form])
                 hypotheses.append(pred)
 

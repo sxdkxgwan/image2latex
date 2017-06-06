@@ -48,12 +48,13 @@ class AttentionMechanism(object):
         Computes attention
 
         Args:
-            h: (batch_size, num_units) hidden state 
+            h: (k * batch_size, num_units) hidden state 
         
         Returns:
-            c: (batch_size, channels) context vector
+            c: (k * batch_size, channels) context vector
         """
-        img = self._img
+        k = tf.shape(h)[0] / self._batch_size
+        img = tf.tile(self._img, multiples=[k, 1, 1])
 
         # parameters
         dim_h      = h.shape[-1].value

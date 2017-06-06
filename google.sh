@@ -1,1 +1,1 @@
-rsync -avz -e "ssh -i $HOME/.ssh/google_compute_engine" -rtv --exclude-from='.rsyncignore' .  gtl@104.198.104.6:~/img2latex/
+rsync -avz -e "ssh -i $HOME/.ssh/google_compute_engine" -rtv --exclude-from='.rsyncignore' .  gtl@35.185.209.76:~/img2latex/

@@ -62,10 +62,7 @@ def dynamic_decode(decoder_cell, maximum_iterations):
     final_outputs = nest.map_structure(lambda ta: ta.stack(), final_outputs_ta)
 
     # finalize the computation from the decoder cell
-    try:
-        final_outputs = decoder_cell.finalize(final_outputs, final_state)
-    except NotImplementedError:
-        pass
+    final_outputs = decoder_cell.finalize(final_outputs, final_state)
 
     # transpose the final output
     final_outputs = nest.map_structure(transpose_batch_time, final_outputs)

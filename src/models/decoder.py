@@ -1,5 +1,6 @@
 import numpy as np
 import tensorflow as tf
+from tensorflow.python.util import nest
 import tensorflow.contrib.layers as layers
 from tensorflow.contrib.rnn import GRUCell, LSTMCell
 from .dynamic_decode import dynamic_decode
@@ -55,16 +56,17 @@ class Decoder(object):
             cell         = LSTMCell(self.config.attn_cell_config["num_units"], reuse=True)
             attn_cell    = AttentionCell(cell, attention_mechanism, dropout, self.config.attn_cell_config)
 
-            if self.config.decoding == "greedy":
-                decoder_cell = GreedyDecoderCell(E, attn_cell, batch_size, start_token)
+            decoder_cell = GreedyDecoderCell(E, attn_cell, batch_size, start_token)
+            test_outputs, _ = dynamic_decode(decoder_cell, self.config.max_length_formula+1)
                 
-            elif self.config.decoding == "beam_search":
+            if self.config.decoding == "beam_search":
                 decoder_cell = BeamSearchDecoderCell(E, attn_cell, batch_size, 
                         start_token, self.config.beam_size, self.config.id_END)
-            else:
-                print("Unknown decoding option {} - use `greedy` or `beam_search`".format(self.config.decoding))
-                raise NotImplementedError
 
-            test_outputs, _ = dynamic_decode(decoder_cell, self.config.max_length_formula+1)
+                beam_search_outputs, _ = dynamic_decode(decoder_cell, self.config.max_length_formula+1)
+                # concatenate beam search outputs with the greedy outputs
+                test_outputs = nest.map_structure(
+                    lambda t1, t2: tf.concat([tf.expand_dims(t1, axis=2), t2], axis=2),
+                    test_outputs, beam_search_outputs)
         
         return train_outputs, test_outputs

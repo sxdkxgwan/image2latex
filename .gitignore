@@ -5,4 +5,4 @@
 *.gz
 data/
 *log.txt
-src/results/*
+src/results*
