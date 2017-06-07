@@ -77,6 +77,7 @@ class Decoder(object):
 
                 beam_search_outputs, _ = dynamic_decode(decoder_cell, self.config.max_length_formula+1)
                 # concatenate beam search outputs with the greedy outputs
+                # greedy outputs comes last
                 test_outputs = nest.map_structure(
                     lambda t1, t2: tf.concat([t1, tf.expand_dims(t2, axis=2)], axis=2),
                     beam_search_outputs, test_outputs)

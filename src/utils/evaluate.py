@@ -1,3 +1,4 @@
+import os
 from collections import Counter
 import numpy as np
 import nltk
@@ -71,7 +72,9 @@ def write_answers(references, hypotheses, rev_vocab, path):
 
             for hypo in hypos:
                 hypo = [rev_vocab[idx] for idx in hypo]
-                f.write(" ".join(hypo) + "\n")
+                to_write = " ".join(hypo)
+                if len(to_write) > 0:
+                    f.write(to_write + "\n")
 
             f.write("\n")
 
@@ -154,7 +157,8 @@ def img_edit_distance(file1, file2):
     # compute distance
     edit_distance = distance.levenshtein(seq1_int, seq2_int)
 
-    return edit_distance
+    return edit_distance, float(max(len(seq1_int), len(seq2_int)))
+
 
 
 def pad_image(img, output_path, pad_size=[8,8,8,8]):
@@ -267,61 +271,79 @@ def evaluate_images_and_edit(path_in, path_out):
         os.makedirs(path_out)
 
     with open(path_in) as f:
-        em_txt = em_img = total_txt = edit_txt = total_img = edit_img = 0
-        ref, hypo = None, None
+        em_txt = em_img = total_txt = edit_txt = total_img = edit_img = len_txt = len_img = 0
+        ref, hypo, hypo_score = None, None, None
+        ref_id, hypo_id, nb_errors = 0, 0, 0
         for i, line in enumerate(f):
             if line == "\n":
-                ref, hypo = None, None
-            if ref is None and hypo is None:
-                ref = line.strip()
-                continue
-            if ref is not None and hypo is None:
-                hypo = line.strip()
-                print("Generating formula {}".format(i/2 + 1))
-
-                try:
-                    convert_to_png(ref, path_out, "{}_ref".format(i/2 + 1))
-                    convert_to_png(hypo, path_out, "{}_hypo".format(i/2 + 1))
-                    
-                    tokens_ref, tokens_hypo = ref.split(' '), hypo.split(' ')
-
-                    edit_txt  += distance.levenshtein(tokens_ref, tokens_hypo)
-                    edit_img  += img_edit_distance(path_out+"{}_ref.png".format(i/2 + 1), path_out+"{}_hypo.png".format(i/2 + 1))
+                # if we reached the end of an hypo, record the best hypo
+                if hypo_score is not None:
+                    # rename the file of the best hypo an append best to it
+                    try:
+                        os.rename(
+                            path_out + "{}_hypo_{}.png".format(ref_id, hypo_score["id"]), 
+                            path_out + "{}_hypo_{}_best.png".format(ref_id, hypo_score["id"]))
+                    except Exception, e:
+                        print e
+                    edit_txt += hypo_score["d_txt"]
+                    edit_img += hypo_score["d_img"]
+                    len_img += hypo_score["l_img"]
+                    len_txt += hypo_score["l_txt"]
                     
                     # exact matches = when edit distance == 0
-                    if edit_img == 0:
+                    if hypo_score["d_img"] == 0:
                         em_img += 1
-                    if edit_txt == 0:
+                    if hypo_score["d_txt"] == 0:
                         em_txt += 1
 
                     # increment total counts
                     total_txt += 1
                     total_img += 1
 
+                hypo_id = 0
+                ref, hypo, hypo_score = None, None, None
+                continue
+
+            if ref is None and hypo is None:
+                ref = line.strip()
+                ref_id += 1
+                continue
+
+            if ref is not None:
+                hypo = line.strip()
+                hypo_id += 1
+                print("Generating formula {}".format(ref_id))
+
+                try:
+                    ref_name = "{}_ref".format(ref_id)
+                    hypo_name = "{}_hypo_{}".format(ref_id, hypo_id)
+                    convert_to_png(ref, path_out, ref_name)
+                    convert_to_png(hypo, path_out, hypo_name)
+                    
+                    tokens_ref, tokens_hypo = ref.split(' '), hypo.split(' ')
+
+                    d_txt  = distance.levenshtein(tokens_ref, tokens_hypo)
+                    d_img, l_img = img_edit_distance(path_out+"{}.png".format(ref_name), path_out+"{}.png".format(hypo_name))
+
+                    if hypo_score is None or hypo_score["d_img"] > d_img:
+                        hypo_score = {
+                            "id": hypo_id,
+                            "d_txt": d_txt,
+                            "d_img": d_img,
+                            "l_img": l_img,
+                            "l_txt": max(len(tokens_ref), len(tokens_hypo))
+                        }
+
                 except Exception, e:
-                    print("ERROR")
-                    print(e)
-
-                    try:
-                        tokens_ref, tokens_hypo = ref.split(' '), hypo.split(' ')
-                        
-                        edit_txt += distance.levenshtein(tokens_ref, tokens_hypo)
-                        # exact matches
-                        if edit_txt == 0:
-                            em_txt += 1
-                        # increment total count
-                        total_txt += 1
-
-                    except Exception, e:
-                        print(e)
+                    nb_errors += 1
 
 
         scores = dict()
-        scores["Levenshtein Text"] = edit_txt / float(max(total_txt, 1))
-        scores["Levenshtein Img"]  = edit_img / float(max(total_img, 1))
+        scores["Levenshtein Text"] = 1. - edit_txt / float(max(len_txt, 1))
+        scores["Levenshtein Img"]  = 1. - edit_img / float(max(len_img, 1))
         scores["EM Text"]          = em_txt / float(max(total_txt, 1))
         scores["EM Img"]           = em_img / float(max(total_img, 1))
 
-        info = "Unable to render LaTeX for {} out of {} images".format(total_txt - total_img, total_txt)
+        info = "Unable to render LaTeX for {} out of {} images".format(nb_errors, total_txt)
 
         return scores, info

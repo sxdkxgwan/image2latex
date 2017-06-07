@@ -105,8 +105,8 @@ class Config():
 
 
 class Test(Config):
-    n_epochs = 70
-    max_iter = 1
+    n_epochs = 200
+    max_iter = 20
     max_length_formula = 20
     decoding = "beam_search"
-    encode_with_lstm = True
+    encode_with_lstm = False
