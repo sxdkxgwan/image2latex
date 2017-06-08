@@ -106,7 +106,7 @@ class Config():
 class Test(Config):
     n_epochs = 200
     batch_size = 20
-    max_iter = 20
+    max_iter = 40
     max_length_formula = 20
     decoding = "greedy"
     encode_with_lstm = False

@@ -21,7 +21,7 @@ class DataGeneratorFile(object):
 class Dataset(object):
     def __init__(self, path_formulas, dir_images, path_matching,
                 img_prepro, form_prepro, max_iter=None, max_len=None,
-                iter_mode="data", bucket=True, batch_size=20):
+                bucket=True, bucket_size=20):
         """
         Args:
             path_formulas: (string) file of formulas, one formula per line
@@ -43,12 +43,12 @@ class Dataset(object):
                                       # for the first time
         self.max_iter      = max_iter # optional
         self.max_len       = max_len  # optional
-        self.iter_mode     = iter_mode
+        self.iter_mode     = "data"
 
         self.data_generator = DataGeneratorFile(self.path_matching)
 
         if bucket:
-            self.data_generator = self.bucket(batch_size)
+            self.data_generator = self.bucket(bucket_size)
 
 
     def bucket(self, bucket_size):
@@ -89,8 +89,8 @@ class Dataset(object):
                 bucketed_dataset += [(img_path, formula_id)]
 
         print("- done.")
-        self.iter_mode = old_mode
         self.length = idx
+        self.iter_mode = old_mode
         
         return bucketed_dataset
             
@@ -163,8 +163,7 @@ class Dataset(object):
 
             if self.iter_mode == "data":
                 yield img, formula
-
-            if self.iter_mode == "full":
+            elif self.iter_mode == "full":
                 yield img, formula, img_path, formula_id
 
 
