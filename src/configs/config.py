@@ -100,14 +100,14 @@ class Config():
         "num_proj": None, # to be computed in __init__  because vocab size
         "dim_embeddings": dim_embeddings
     }
-    decoding = "greedy" # or "beam_search"
+    decoding = "beam_search" # or "beam_search"
     beam_size = 5
 
 
 class Test(Config):
     n_epochs = 200
-    batch_size = 2
-    max_iter = 2
+    batch_size = 20
+    max_iter = 20
     max_length_formula = 20
     decoding = "greedy"
     encode_with_lstm = False
