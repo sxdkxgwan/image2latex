@@ -36,24 +36,30 @@ def dynamic_decode(decoder_cell, maximum_iterations):
 
     initial_time = tf.constant(0, dtype=tf.int32)
     initial_outputs_ta = nest.map_structure(create_ta, decoder_cell.output_dtype)
-    initial_state = decoder_cell.initial_state()
-    initial_inputs = decoder_cell.initial_inputs()
+    initial_state, initial_inputs, initial_finished = decoder_cell.initialize()
 
-    def condition(time, unused_outputs_ta, unused_state, unused_inputs):
-        return tf.less(time, maximum_iterations)
+    def condition(time, unused_outputs_ta, unused_state, unused_inputs, finished):
+        return tf.logical_not(tf.reduce_all(finished))
 
-    def body(time, outputs_ta, state, inputs):
-        new_output, new_state, new_inputs = decoder_cell.step(time, state, inputs)
+    def body(time, outputs_ta, state, inputs, finished):
+        new_output, new_state, new_inputs, new_finished = decoder_cell.step(
+            time, state, inputs, finished)
+
         outputs_ta = nest.map_structure(lambda ta, out: ta.write(time, out),
                                       outputs_ta, new_output)
 
-        return (time + 1, outputs_ta, new_state, new_inputs)
+        new_finished = tf.logical_or(
+            tf.greater_equal(time, maximum_iterations),
+            new_finished)
+
+        return (time + 1, outputs_ta, new_state, new_inputs, new_finished)
 
     with tf.variable_scope("rnn"):
         res = tf.while_loop(
             condition,
             body,
-            loop_vars=[initial_time, initial_outputs_ta, initial_state, initial_inputs])
+            loop_vars=[initial_time, initial_outputs_ta, initial_state, 
+                       initial_inputs, initial_finished])
 
     # get final outputs and states
     final_outputs_ta, final_state = res[1], res[2]

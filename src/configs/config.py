@@ -72,7 +72,7 @@ class Config():
 
     # preprocess images and formulas
     dim_embeddings = 80
-    max_length_formula = 50
+    max_length_formula = 150
     max_shape_image = [160, 500, 1]
 
     # model training parameters
@@ -89,7 +89,7 @@ class Config():
     
     # encoder
     encoder_dim = 256
-    encode_with_lstm = True
+    encode_with_lstm = False
 
     # decoder
     attn_cell_config = {
@@ -106,7 +106,8 @@ class Config():
 
 class Test(Config):
     n_epochs = 200
-    max_iter = 20
+    batch_size = 2
+    max_iter = 2
     max_length_formula = 20
-    decoding = "beam_search"
+    decoding = "greedy"
     encode_with_lstm = False

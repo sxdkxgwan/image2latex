@@ -7,7 +7,7 @@ from greedy_decoder_cell import DecoderOutput
 
 
 class BeamSearchDecoderCellState(collections.namedtuple("BeamSearchDecoderCellState", 
-                       ("cell_state", "log_probs", "finished"))):
+                       ("cell_state", "log_probs"))):
     """
     State of the Beam Search decoding
 
@@ -39,14 +39,14 @@ class BeamSearchDecoderOutput(collections.namedtuple("BeamSearchDecoderOutput",
 
 
 class BeamSearchDecoderCell(object):
-    def __init__(self, embeddings, cell, batch_size, start_token, beam_size, id_end):
+    def __init__(self, embeddings, cell, batch_size, start_token, beam_size, end_token):
         self._embeddings = embeddings
         self._cell = cell
         self._dim_embeddings = embeddings.shape[-1].value
         self._batch_size = batch_size
         self._start_token = start_token
         self._beam_size  = beam_size
-        self._id_end = id_end
+        self._end_token = end_token
         self._vocab_size = embeddings.shape[0].value
 
 
@@ -99,12 +99,9 @@ class BeamSearchDecoderCell(object):
         log_probs =  tf.zeros([self._batch_size, self._beam_size],
             dtype=self._cell.output_dtype)
 
-        finished = tf.zeros([self._batch_size, self._beam_size], dtype=tf.bool)
-
         return BeamSearchDecoderCellState(
             cell_state,
-            log_probs,
-            finished)
+            log_probs)
 
 
     def initial_inputs(self):
@@ -112,7 +109,14 @@ class BeamSearchDecoderCell(object):
                 multiples=[self._batch_size, self._beam_size, 1])
 
 
-    def step(self, time, state, embedding):
+    def initialize(self):
+        initial_state = self.initial_state()
+        initial_inputs = self.initial_inputs()
+        initial_finished = tf.zeros(shape=[self._batch_size, self._beam_size], dtype=tf.bool)
+        return initial_state, initial_inputs, initial_finished
+
+
+    def step(self, time, state, embedding, finished):
         # merge batch and beam dimension before callling step of cell
         cell_state = nest.map_structure(merge_batch_beam, state.cell_state)
         embedding = merge_batch_beam(embedding)
@@ -130,7 +134,7 @@ class BeamSearchDecoderCell(object):
         # shape = [batch_size, beam_size, vocab_size]
         step_log_probs = tf.nn.log_softmax(new_logits)
         # shape = [batch_size, beam_size, vocab_size]
-        step_log_probs = mask_probs(step_log_probs, self._id_end, state.finished)
+        step_log_probs = mask_probs(step_log_probs, self._end_token, finished)
         # shape = [batch_size, beam_size, vocab_size]
         log_probs = tf.expand_dims(state.log_probs, axis=-1) + step_log_probs
 
@@ -151,7 +155,7 @@ class BeamSearchDecoderCell(object):
         new_embedding = tf.nn.embedding_lookup(self._embeddings, new_ids)
 
         # compute end of beam
-        new_finished = tf.logical_or(state.finished, tf.equal(new_ids, self._id_end))
+        new_finished = tf.logical_or(finished, tf.equal(new_ids, self._end_token))
 
         new_cell_state = nest.map_structure(
             lambda t: gather_helper(t, new_parents, self._batch_size, self._beam_size),
@@ -161,15 +165,14 @@ class BeamSearchDecoderCell(object):
         # create new state of decoder
         new_state  = BeamSearchDecoderCellState(
             cell_state=new_cell_state,
-            log_probs=new_probs,
-            finished=new_finished)
+            log_probs=new_probs)
         
         new_output = BeamSearchDecoderOutput(
             logits=new_logits, 
             ids=new_ids, 
             parents=new_parents)
         
-        return (new_output, new_state, new_embedding)
+        return (new_output, new_state, new_embedding, new_finished)
 
 
     def finalize(self, final_outputs, final_state):
@@ -295,16 +298,16 @@ def tile_beam(t, beam_size):
     return tf.tile(t, multiples)
 
 
-def mask_probs(probs, id_end, finished):
+def mask_probs(probs, end_token, finished):
     """
     Args:
         probs: tensor of shape [batch_size, beam_size, vocab_size]
-        id_end: (int)
+        end_token: (int)
         finished: tensor of shape [batch_size, beam_size], dtype = tf.bool
     """
     # one hot of shape [vocab_size]
     vocab_size = probs.shape[-1].value
-    one_hot = tf.one_hot(id_end, vocab_size,
+    one_hot = tf.one_hot(end_token, vocab_size,
         on_value=0.,
         off_value=probs.dtype.min,
         dtype=probs.dtype)

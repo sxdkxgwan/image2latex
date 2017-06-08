@@ -20,7 +20,6 @@ class AttentionCell(RNNCell):
 
         # hyperparameters and shapes
         self._n_channels     = self._attention_mechanism._n_channels
-        self._batch_size     = self._attention_mechanism._batch_size
         self._dim_e          = attn_cell_config.get("dim_e", 512)
         self._dim_o          = attn_cell_config.get("dim_o", 512)
         self._num_units      = attn_cell_config.get("num_units", 512)
@@ -60,7 +59,7 @@ class AttentionCell(RNNCell):
     def step(self, embedding, attn_cell_state):
         """
         Args:
-            embedding: shape =  (batch, dim_embeddings) embeddings
+            embedding: shape =  (batch_size, dim_embeddings) embeddings
                 from previous time step
             state: hidden state from previous time step
         """

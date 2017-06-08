@@ -70,6 +70,7 @@ class Model(object):
         if formula is not None:
             formula, formula_length = pad_batch_formulas(formula, 
                     self.config.id_PAD, self.config.id_END)
+            # print img.shape, formula.shape
             fd[self.formula] = formula
             fd[self.formula_length] = formula_length
         if lr is not None:

@@ -5,7 +5,7 @@ class AttentionMechanism(object):
     """
     Class to compute attention over an image
     """
-    def __init__(self, img, dim_e):
+    def __init__(self, img, dim_e, tiles=1):
         """
         Store the image under the right shape.
 
@@ -16,10 +16,8 @@ class AttentionMechanism(object):
             img: (tf.Tensor) image
             dim_e: (int) dimension of the intermediary vector used to 
                 compute attention
-        """
-
-        """
-        TODO: check that the last dimension of the image is not dynamic
+            tiles: (int) default 1, input to context h may have size
+                    (tile * batch_size, ...)
         """
         # define self._img = (N, R, C)
         if len(img.shape) == 3:
@@ -33,14 +31,20 @@ class AttentionMechanism(object):
             print("Image shape not supported")
             raise NotImplementedError
 
-        # mean of image (for initial states)
-        self._img_mean = tf.reduce_mean(self._img, axis=1)
-
         # dimensions
-        self._batch_size = tf.shape(self._img)[0]
         self._n_regions  = tf.shape(self._img)[1]
         self._n_channels = self._img.shape[2].value
         self._dim_e      = dim_e
+        self._tiles      = tiles
+
+        # attention vector over the image
+        # more efficient to do it here than at every time step! 
+        # (50% faster on long sentences)
+        self._att_img = tf.layers.dense(
+            inputs=self._img,
+            units=self._dim_e,
+            use_bias=False,
+            name="att_img")
 
 
     def context(self, h):
@@ -48,40 +52,38 @@ class AttentionMechanism(object):
         Computes attention
 
         Args:
-            h: (k * batch_size, num_units) hidden state 
+            h: (batch_size, num_units) hidden state 
         
         Returns:
-            c: (k * batch_size, channels) context vector
+            c: (batch_size, channels) context vector
         """
-        k = tf.shape(h)[0] / self._batch_size
-        img = tf.tile(self._img, multiples=[k, 1, 1])
-
-        # parameters
-        dim_h      = h.shape[-1].value
-        att_W_img  = tf.get_variable("att_W_img", shape=(self._n_channels, self._dim_e), dtype=tf.float32)
-        att_W_h    = tf.get_variable("att_W_h", shape=(dim_h, self._dim_e), dtype=tf.float32)
-        att_beta   = tf.get_variable("att_beta", shape=(self._dim_e, 1), dtype=tf.float32)
-
-        # compute attention over the image 
-        _img    = tf.reshape(img, shape=[-1, self._n_channels])
-        att_img = tf.matmul(_img, att_W_img)
-        att_img = tf.reshape(att_img, shape=[-1, self._n_regions, self._dim_e])
+        if self._tiles > 1:
+            att_img = tf.tile(self._att_img, multiples=[self._tiles, 1, 1])
+            img     = tf.tile(self._img, multiples=[self._tiles, 1, 1])
+        else:
+            att_img = self._att_img
+            img     = self._img
 
         # compute attention over the hidden vector
-        att_h = tf.matmul(h, att_W_h)
-        att_h = tf.expand_dims(att_h, axis=1)
+        att_h = tf.layers.dense(
+            inputs=h,
+            units=self._dim_e,
+            use_bias=False)
 
         # sum the two contributions
-        s = tf.tanh(att_img + att_h)
-        s = tf.reshape(s, shape=[-1, self._dim_e])
-        e = tf.matmul(s, att_beta)
+        att_h = tf.expand_dims(att_h, axis=1)
+        att = tf.tanh(att_img + att_h)
+
+        # compute scalar product with beta vector
+        # works faster with a matmul than with a * and a tf.reduce_sum
+        att_beta = tf.get_variable("att_beta", shape=[self._dim_e, 1], dtype=tf.float32)
+        att_flat = tf.reshape(att, shape=[-1, self._dim_e])
+        e = tf.matmul(att_flat, att_beta)
         e = tf.reshape(e, shape=[-1, self._n_regions])
 
         # compute weights
         a = tf.nn.softmax(e)
         a = tf.expand_dims(a, axis=-1)
-
-        # compute context
         c = tf.reduce_sum(a * img, axis=1)
 
         return c
@@ -114,8 +116,10 @@ class AttentionMechanism(object):
         Creates new variables given by name.
         """
         # initial state
+         # mean of image (for initial states)
+        img_mean = tf.reduce_mean(self._img, axis=1)
         W = tf.get_variable("W_{}_0".format(name), shape=[self._n_channels, dim])
         b = tf.get_variable("b_{}_0".format(name), shape=[dim])
-        h = tf.tanh(tf.matmul(self._img_mean, W) + b)
+        h = tf.tanh(tf.matmul(img_mean, W) + b)
 
         return h
