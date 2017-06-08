@@ -21,7 +21,7 @@ class DataGeneratorFile(object):
 class Dataset(object):
     def __init__(self, path_formulas, dir_images, path_matching,
                 img_prepro, form_prepro, max_iter=None, max_len=None,
-                bucket=True, bucket_size=20):
+                iter_mode="data", bucket=True, batch_size=20):
         """
         Args:
             path_formulas: (string) file of formulas, one formula per line
@@ -43,19 +43,18 @@ class Dataset(object):
                                       # for the first time
         self.max_iter      = max_iter # optional
         self.max_len       = max_len  # optional
-        self.iter_mode     = "data"
+        self.iter_mode     = iter_mode
 
         self.data_generator = DataGeneratorFile(self.path_matching)
 
         if bucket:
-            self.data_generator = self.bucket(bucket_size)
+            self.data_generator = self.bucket(batch_size)
 
 
     def bucket(self, bucket_size):
         """
         Iterates over the listing and creates buckets of same shape
         images.
-
         Args:
             bucket_size: (int) size of the bucket
         
@@ -89,8 +88,8 @@ class Dataset(object):
                 bucketed_dataset += [(img_path, formula_id)]
 
         print("- done.")
-        self.length = idx
         self.iter_mode = old_mode
+        self.length = idx
         
         return bucketed_dataset
             
@@ -99,7 +98,6 @@ class Dataset(object):
         """
         Args:
             filename: (string) path of formulas, one formula per line
-
         Returns:
             dict: dict[idx] = one formula
         """
@@ -115,7 +113,6 @@ class Dataset(object):
     def get_max_shape(self):
         """
         Computes max shape of images in the dataset
-
         Returns:
             max_shape_image: tuple (max_heigh, max_width, max_channels) 
                 of images in the dataset
@@ -140,7 +137,6 @@ class Dataset(object):
     def __iter__(self):
         """
         Iterator over Dataset
-
         Yields:
             img: array
             formula: one formula
@@ -163,7 +159,8 @@ class Dataset(object):
 
             if self.iter_mode == "data":
                 yield img, formula
-            elif self.iter_mode == "full":
+
+            if self.iter_mode == "full":
                 yield img, formula, img_path, formula_id
 
 
