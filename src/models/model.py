@@ -94,19 +94,16 @@ class Model(object):
         """
         Defines self.loss
         """
-        def get_losses(logits):
-            logits = logits[:, :tf.shape(self.formula)[1], :]
-            losses = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, 
-                                                                    labels=self.formula)
-            mask = tf.sequence_mask(self.formula_length)
-            losses = tf.boolean_mask(losses, mask)
-            return losses
+        losses = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.pred_train, 
+                                                                labels=self.formula)
+        mask = tf.sequence_mask(self.formula_length)
+        losses = tf.boolean_mask(losses, mask)
 
         # loss for training
-        self.loss = tf.reduce_mean(get_losses(self.pred_train))
+        self.loss = tf.reduce_mean(losses)
 
         # # to compute perplexity for test
-        self.ce_words = tf.reduce_sum(get_losses(self.pred_train)) # sum of CE for each word
+        self.ce_words = tf.reduce_sum(losses) # sum of CE for each word
         self.n_words = tf.reduce_sum(self.formula_length) # number of words
         
         # for tensorboard

@@ -178,20 +178,3 @@ class Dataset(object):
             print("- done.")
 
         return self.length
-
-
-if __name__ == "__main__":
-    path_matching = "../../data/train_filter.lst"
-    dir_images    = "../../data/images_processed"
-    path_formulas = "../../data/norm.formulas.lst"
-    path_vocab    = "../../data/latex_vocab.txt"
-    batch_size    = 10
-    vocab         = load_vocab(path_vocab)
-    myset = Dataset(path_formulas=path_formulas, dir_images=dir_images,
-                    path_matching=path_matching, img_prepro=greyscale, 
-                    form_prepro=get_form_prepro(vocab))
-
-    # for x_batch, y_batch in minibatches(myset, batch_size):
-    #     x_batch = pad_batch_images(x_batch, myset.max_shape_image)
-    #     y_batch, y_length = pad_batch_formulas(y_batch, myset.max_length_formula)
-    #     print x_batch.shape, y_batch.shape

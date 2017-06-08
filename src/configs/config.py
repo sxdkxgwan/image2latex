@@ -44,7 +44,7 @@ class Config():
 
 
     # directories
-    dir_output    = "results/"
+    dir_output    = "results_50/"
     dir_images    = "../data/images_processed"
     
     path_log            = dir_output + "log.txt"
@@ -72,8 +72,7 @@ class Config():
 
     # preprocess images and formulas
     dim_embeddings = 80
-    max_length_formula = 150
-    max_shape_image = [160, 500, 1]
+    max_length_formula = 50
 
     # model training parameters
     n_epochs      = 12
@@ -85,7 +84,7 @@ class Config():
     lr_init       = 1e-3
     lr_min        = 1e-3
     start_decay   = 0 # start decaying from begining
-    decay_rate    = 1 # decay rate if eval score doesn't improve
+    decay_rate    = 0.5 # decay rate if eval score doesn't improve
     
     # encoder
     encoder_dim = 256
