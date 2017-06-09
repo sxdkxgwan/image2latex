@@ -8,6 +8,7 @@ from .attention_mechanism import AttentionMechanism
 from .attention_cell import AttentionCell
 from .greedy_decoder_cell import GreedyDecoderCell
 from .beam_search_decoder_cell import BeamSearchDecoderCell
+from utils.tf import weight_initializer
 
 
 class Decoder(object):
@@ -43,10 +44,10 @@ class Decoder(object):
                                   trainable=self.config.trainable_embeddings)
         else:
             E = tf.get_variable("E", shape=[self.config.vocab_size, self.config.dim_embeddings], 
-            dtype=tf.float32, initializer=tf.random_uniform_initializer(minval=-1.0, maxval=1.0))
+            dtype=tf.float32, initializer=embedding_initializer())
 
         start_token = tf.get_variable("start_token", shape=[self.config.dim_embeddings],
-            dtype=tf.float32, initializer=tf.random_uniform_initializer(minval=-1.0, maxval=1.0))
+            dtype=tf.float32, initializer=embedding_initializer())
 
         # embedding with start token
         batch_size        = tf.shape(formula)[0]
@@ -57,7 +58,7 @@ class Decoder(object):
 
 
         # attention cell
-        with tf.variable_scope("attn_cell", reuse=False):
+        with tf.variable_scope("attn_cell", reuse=False, initializer=weight_initializer()):
             attention_mechanism = AttentionMechanism(encoded_img, self.config.attn_cell_config["dim_e"])
             cell      = LSTMCell(self.config.attn_cell_config["num_units"])
             attn_cell = AttentionCell(cell, attention_mechanism, dropout, self.config.attn_cell_config)
@@ -127,3 +128,12 @@ def pad(t, d, time_diff):
         lambda: _pad(t, d),
         lambda: t)
 
+
+def embedding_initializer():
+    def _initializer(shape, dtype, partition_info=None):
+        E = tf.random_uniform(shape, minval=-1.0, maxval=1.0, dtype=dtype)
+        E = tf.nn.l2_normalize(E, -1)
+
+        return E
+
+    return _initializer

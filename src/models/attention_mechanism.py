@@ -41,12 +41,11 @@ class AttentionMechanism(object):
         # attention vector over the image
         # more efficient to do it here than at every time step! 
         # (50% faster on long sentences)
-        with tf.variable_scope(self._scope_name):
-            self._att_img = tf.layers.dense(
-                inputs=self._img,
-                units=self._dim_e,
-                use_bias=False,
-                name="att_img")
+        self._att_img = tf.layers.dense(
+            inputs=self._img,
+            units=self._dim_e,
+            use_bias=False,
+            name="att_img")
 
 
     def context(self, h):
