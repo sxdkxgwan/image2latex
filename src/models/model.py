@@ -208,6 +208,7 @@ class Model(object):
 
             if self.config.decoding == "greedy":
                 ids_eval = np.expand_dims(ids_eval, axis=1)
+                
             elif self.config.decoding == "beam_search":
                 ids_eval = np.transpose(ids_eval, [0, 2, 1])
 
@@ -266,7 +267,7 @@ class Model(object):
         with tf.Session() as sess:
             self.initialize_sess(sess, saver, dir_reload)
             self.evaluate_sess(sess, test_set, path_results=path_results)
-            scores, info = evaluate_images_and_edit(path_results, path_img)
+            scores, info = evaluate_images_and_edit(path_results, path_img, self.config.dir_output+"hist.png")
             scores_to_print = ", ".join(["{} {:04.2f}".format(k, v) for k, v in scores.iteritems()])
             self.logger.info("- {}".format(scores_to_print))
             self.logger.info("- Info: {}".format(info))

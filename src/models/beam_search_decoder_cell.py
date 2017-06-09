@@ -117,6 +117,13 @@ class BeamSearchDecoderCell(object):
 
 
     def step(self, time, state, embedding, finished):
+        """
+        Args:
+            time: tensorf or int
+            embedding: shape [batch_size, beam_size, d]
+            state: structure of shape [bach_size, beam_size, ...]
+            finished: structure of shape [batch_size, beam_size, ...]
+        """
         # merge batch and beam dimension before callling step of cell
         cell_state = nest.map_structure(merge_batch_beam, state.cell_state)
         embedding = merge_batch_beam(embedding)
@@ -155,6 +162,7 @@ class BeamSearchDecoderCell(object):
         new_embedding = tf.nn.embedding_lookup(self._embeddings, new_ids)
 
         # compute end of beam
+        finished = gather_helper(finished, new_parents, self._batch_size, self._beam_size)
         new_finished = tf.logical_or(finished, tf.equal(new_ids, self._end_token))
 
         new_cell_state = nest.map_structure(
@@ -181,64 +189,72 @@ class BeamSearchDecoderCell(object):
             final_outputs: structure of tensors of shape 
                     [time dimension, batch_size, beam_size, d]
             final_state: instance of BeamSearchDecoderOutput
-        """
-        # reverse the time dimension and reshape to 3 dimensions
-        maximum_iterations = tf.shape(final_outputs.ids)[0]
-        final_outputs = nest.map_structure(
-            lambda t: tf.reverse(t, axis=[0]), final_outputs)
-        
-        # initial states
-        def create_ta(d):
-            return tf.TensorArray(
-                dtype=d,
-                size=maximum_iterations)
 
-        initial_time = tf.constant(0, dtype=tf.int32)
-        initial_outputs_ta = nest.map_structure(create_ta, self.final_output_dtype)
-        initial_parents = tf.tile(
-            tf.expand_dims(tf.range(self._beam_size), axis=0),
-            multiples=[self._batch_size, 1])
-
-        def condition(time, outputs_ta, parents):
-            return tf.less(time, maximum_iterations)
-
-        # beam search decoding cell
-        def body(time, outputs_ta, parents):
-            # get ids, logits and parents predicted at this time step by decoder
-            input_t = nest.map_structure(
-                lambda t: t[time], final_outputs)
-
-            # extract the entries corresponding to parents
-            new_state = nest.map_structure(
-                lambda t: gather_helper(t, parents, self._batch_size, self._beam_size),
-                input_t)
-
-            # create new output
-            new_output = DecoderOutput(
-                logits=new_state.logits,
-                ids=new_state.ids)
-
-            # write beam ids
-            outputs_ta = nest.map_structure(lambda ta, out: ta.write(time, out),
-                                      outputs_ta, new_output)
-
-            return (time + 1), outputs_ta, parents
-        
-        res = tf.while_loop(
-            condition,
-            body,
-            loop_vars=[initial_time, initial_outputs_ta, initial_parents])
-
-        # unfold and stack the structure from the nested tas
-        final_outputs = nest.map_structure(lambda ta: ta.stack(), res[1])
-
-        # reverse time step
-        final_outputs = nest.map_structure(
-            lambda t: tf.reverse(t, axis=[0]), final_outputs)
+        Returns:
+            [time, batch, beam, ...] structure of Tensor
+        """        
 
         return DecoderOutput(
             logits=final_outputs.logits,
             ids=final_outputs.ids)
+        
+        # # reverse the time dimension
+        # maximum_iterations = tf.shape(final_outputs.ids)[0]
+        # final_outputs = nest.map_structure(
+        #     lambda t: tf.reverse(t, axis=[0]), final_outputs)
+        
+        # # initial states
+        # def create_ta(d):
+        #     return tf.TensorArray(
+        #         dtype=d,
+        #         size=maximum_iterations)
+
+        # initial_time = tf.constant(0, dtype=tf.int32)
+        # initial_outputs_ta = nest.map_structure(create_ta, self.final_output_dtype)
+        # initial_parents = tf.tile(
+        #     tf.expand_dims(tf.range(self._beam_size), axis=0),
+        #     multiples=[self._batch_size, 1])
+
+        # def condition(time, outputs_ta, parents):
+        #     return tf.less(time, maximum_iterations)
+
+        # # beam search decoding cell
+        # def body(time, outputs_ta, parents):
+        #     # get ids, logits and parents predicted at this time step by decoder
+        #     input_t = nest.map_structure(
+        #         lambda t: t[time], final_outputs)
+
+        #     # extract the entries corresponding to parents
+        #     new_state = nest.map_structure(
+        #         lambda t: gather_helper(t, parents, self._batch_size, self._beam_size),
+        #         input_t)
+
+        #     # create new output
+        #     new_output = DecoderOutput(
+        #         logits=new_state.logits,
+        #         ids=new_state.ids)
+
+        #     # write beam ids
+        #     outputs_ta = nest.map_structure(lambda ta, out: ta.write(time, out),
+        #                               outputs_ta, new_output)
+
+        #     return (time + 1), outputs_ta, parents
+        
+        # res = tf.while_loop(
+        #     condition,
+        #     body,
+        #     loop_vars=[initial_time, initial_outputs_ta, initial_parents])
+
+        # # unfold and stack the structure from the nested tas
+        # final_outputs = nest.map_structure(lambda ta: ta.stack(), res[1])
+
+        # # reverse time step
+        # final_outputs = nest.map_structure(
+        #     lambda t: tf.reverse(t, axis=[0]), final_outputs)
+
+        # return DecoderOutput(
+        #     logits=final_outputs.logits,
+        #     ids=final_outputs.ids)
 
 
 def merge_batch_beam(t):
@@ -250,12 +266,15 @@ def merge_batch_beam(t):
     Returns:
         t: tensorf of shape [batch_size * beam_size, ...]
     """
+    batch_size = tf.shape(t)[0]
+    beam_size = t.shape[1].value
+
     if t.shape.ndims == 2:
-        return tf.reshape(t, [-1, 1])
+        return tf.reshape(t, [batch_size*beam_size, 1])
     elif t.shape.ndims == 3:
-        return tf.reshape(t, [-1, t.shape[-1].value])
+        return tf.reshape(t, [batch_size*beam_size, t.shape[-1].value])
     elif t.shape.ndims == 4:
-        return tf.reshape(t, [-1, t.shape[-2].value, t.shape[-1].value])
+        return tf.reshape(t, [batch_size*beam_size, t.shape[-2].value, t.shape[-1].value])
     else:
         raise NotImplementedError
 

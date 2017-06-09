@@ -48,8 +48,8 @@ class Config():
     model_output        = dir_output + "model.weights/"
     path_results_final  = dir_output + "results.txt"
     path_results_img    = dir_output + "images/"
-    # dir_reload          = "results/session_init/model.weights/"
-    dir_reload          = None
+    dir_reload          = "results/session_init/model.weights/"
+    # dir_reload          = None
 
     path_matching_train = "../data/train_filter.lst"
     path_matching_val = "../data/val_filter.lst"
@@ -71,16 +71,16 @@ class Config():
     max_length_formula = 50
 
     # model training parameters
-    n_epochs      = 15
+    n_epochs      = 5
     batch_size    = 20
     dropout       = 1 # keep_prob
     max_iter      = None
 
     # learning rate stuff
-    lr_init       = 1e-3
-    lr_min        = 1e-4
-    start_decay   = 10 # start decaying from 11th epoch
-    end_decay     = 14 # end decay at 15th decay and stay at lr_min
+    lr_init       = 1e-4
+    lr_min        = 1e-5
+    start_decay   = 2 # start decaying from 11th epoch
+    end_decay     = 5 # end decay at 15th decay and stay at lr_min
     decay_rate    = 0.5 # decay rate if perf does not improve
     lr_warm       = 1e-4 # warm up with lower learning rate because of high gradients
     end_warm      = 2 # keep warm up for 2 epochs
@@ -99,13 +99,13 @@ class Config():
         "dim_embeddings": dim_embeddings
     }
     decoding = "beam_search" # or "beam_search"
-    beam_size = 5
+    beam_size = 2
 
 
 class Test(Config):
-    n_epochs = 200
-    batch_size = 20
-    max_iter = 40
+    n_epochs = 2
+    batch_size = 3
+    max_iter = 3
     max_length_formula = 20
     decoding = "beam_search"
     encode_with_lstm = False

@@ -60,8 +60,12 @@ class AttentionMechanism(object):
         """
         with tf.variable_scope(self._scope_name):
             if self._tiles > 1:
-                att_img = tf.tile(self._att_img, multiples=[self._tiles, 1, 1])
-                img     = tf.tile(self._img, multiples=[self._tiles, 1, 1])
+                att_img = tf.expand_dims(self._att_img, axis=1)
+                att_img = tf.tile(att_img, multiples=[1, self._tiles, 1, 1])
+                att_img = tf.reshape(att_img, shape=[-1, self._n_regions, self._dim_e])
+                img     = tf.expand_dims(self._img, axis=1)
+                img     = tf.tile(img, multiples=[1, self._tiles, 1, 1])
+                img     = tf.reshape(img, shape=[-1, self._n_regions, self._n_channels])
             else:
                 att_img = self._att_img
                 img     = self._img

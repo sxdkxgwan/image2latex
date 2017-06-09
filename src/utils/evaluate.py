@@ -46,8 +46,8 @@ def truncate_end(hypotheses, id_END):
         for hypo in hypos:
             trunc_hypo = []
             for id_ in hypo:
-                if id_ == id_END:
-                    break
+                # if id_ == id_END:
+                #     break
                 trunc_hypo.append(id_)
             trunc_hypos.append(trunc_hypo)
 
@@ -263,7 +263,7 @@ def convert_to_png(formula, path_out, name):
     downsample_image(img_path, img_path)
 
 
-def evaluate_images_and_edit(path_in, path_out):
+def evaluate_images_and_edit(path_in, path_out, fname):
     """
     Render latex formulas into png of reference and hypothesis
 
@@ -275,6 +275,11 @@ def evaluate_images_and_edit(path_in, path_out):
     """
     if not os.path.exists(path_out):
         os.makedirs(path_out)
+
+    counts = {
+    "d_txt": [],
+    "d_img": []
+    }
 
     with open(path_in) as f:
         references, hypotheses = [], []
@@ -296,6 +301,9 @@ def evaluate_images_and_edit(path_in, path_out):
                     edit_img += hypo_score["d_img"]
                     len_img += hypo_score["l_img"]
                     len_txt += hypo_score["l_txt"]
+
+                    counts["d_txt"].append(1.-hypo_score["d_txt"]/float(hypo_score["l_txt"]))
+                    counts["d_img"].append(1.-hypo_score["d_img"]/float(hypo_score["l_img"]))
                     
                     # exact matches = when edit distance == 0
                     if hypo_score["d_img"] == 0:
@@ -350,6 +358,7 @@ def evaluate_images_and_edit(path_in, path_out):
                 except Exception, e:
                     nb_errors += 1
 
+        plot_histograms(counts, fname)
 
         scores = dict()
         scores["Edit Text"] = 1. - edit_txt / float(max(len_txt, 1))
@@ -361,3 +370,29 @@ def evaluate_images_and_edit(path_in, path_out):
         info = "Unable to render LaTeX for {} out of {} images".format(nb_errors, total_rdr)
 
         return scores, info
+
+
+
+def plot_histograms(counts, fname):
+    import numpy as np
+    import matplotlib.mlab as mlab
+    import matplotlib.pyplot as plt
+
+    x0 = counts["d_txt"]
+    x1 = counts["d_img"]
+
+    fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 5))
+    ax0, ax1 = axes.flatten()
+
+    ax0.hist(x0, 10, histtype='bar', facecolor='green', rwidth=0.8)
+    ax0.set_xlabel('Edit Text')
+    ax0.set_ylabel('Counts')
+
+    ax1.hist(x1, 10, histtype='bar', facecolor='green', rwidth=0.8)
+    ax1.set_xlabel('Edit Image')
+
+    fig.tight_layout()
+    plt.savefig(fname)
+    plt.grid(True)
+    plt.title(r'$\mathrm{Counts of Edit Distances}$')
+    plt.close()
