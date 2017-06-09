@@ -48,7 +48,8 @@ class Config():
     model_output        = dir_output + "model.weights/"
     path_results_final  = dir_output + "results.txt"
     path_results_img    = dir_output + "images/"
-    dir_reload          = "results/session_init/model.weights/"
+    # dir_reload          = "results/session_init/model.weights/"
+    dir_reload          = None
 
     path_matching_train = "../data/train_filter.lst"
     path_matching_val = "../data/val_filter.lst"
@@ -73,13 +74,13 @@ class Config():
     n_epochs      = 15
     batch_size    = 20
     dropout       = 1 # keep_prob
-    max_iter      = 100
+    max_iter      = None
 
     # learning rate stuff
     lr_init       = 1e-3
     lr_min        = 1e-4
-    start_decay   = 11 # start decaying from 11th epoch
-    end_decay     = 15 # end decay at 15th decay and stay at lr_min
+    start_decay   = 10 # start decaying from 11th epoch
+    end_decay     = 14 # end decay at 15th decay and stay at lr_min
     decay_rate    = 0.5 # decay rate if perf does not improve
     lr_warm       = 1e-4 # warm up with lower learning rate because of high gradients
     end_warm      = 2 # keep warm up for 2 epochs

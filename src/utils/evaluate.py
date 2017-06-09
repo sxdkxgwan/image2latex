@@ -10,7 +10,7 @@ import distance
 from .general import run
 
 
-TIMEOUT = 20
+TIMEOUT = 10
 
 
 def evaluate(references, hypotheses, rev_vocab, path, id_END):
@@ -277,7 +277,8 @@ def evaluate_images_and_edit(path_in, path_out):
         os.makedirs(path_out)
 
     with open(path_in) as f:
-        em_txt = em_img = total_txt = edit_txt = total_img = edit_img = len_txt = len_img = 0
+        references, hypotheses = [], []
+        em_txt = em_img = total_txt = edit_txt = total_img = edit_img = len_txt = len_img = total_rdr = 0
         ref, hypo, hypo_score = None, None, None
         ref_id, hypo_id, nb_errors = 0, 0, 0
         for i, line in enumerate(f):
@@ -306,12 +307,15 @@ def evaluate_images_and_edit(path_in, path_out):
                     total_txt += 1
                     total_img += 1
 
+                    hypotheses.append(hypo_score["hypo"].split(" "))
+
                 hypo_id = 0
                 ref, hypo, hypo_score = None, None, None
                 continue
 
             if ref is None and hypo is None:
                 ref = line.strip()
+                references.append([ref.split(" ")])
                 ref_id += 1
                 continue
 
@@ -337,8 +341,11 @@ def evaluate_images_and_edit(path_in, path_out):
                             "d_txt": d_txt,
                             "d_img": d_img,
                             "l_img": l_img,
-                            "l_txt": max(len(tokens_ref), len(tokens_hypo))
+                            "l_txt": max(len(tokens_ref), len(tokens_hypo)),
+                            "hypo": hypo
                         }
+                        
+                    total_rdr += 1
 
                 except Exception, e:
                     nb_errors += 1
@@ -349,7 +356,8 @@ def evaluate_images_and_edit(path_in, path_out):
         scores["Edit Img"]  = 1. - edit_img / float(max(len_img, 1))
         scores["EM Text"]   = em_txt / float(max(total_txt, 1))
         scores["EM Img"]    = em_img / float(max(total_img, 1))
+        scores["BLEU-4"]    = bleu_score(references, hypotheses)
 
-        info = "Unable to render LaTeX for {} out of {} images".format(nb_errors, total_txt)
+        info = "Unable to render LaTeX for {} out of {} images".format(nb_errors, total_rdr)
 
         return scores, info
