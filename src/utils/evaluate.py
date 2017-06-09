@@ -3,11 +3,14 @@ from collections import Counter
 import numpy as np
 import nltk
 from utils.data_utils import reconstruct_formula, END
-from subprocess import call
 import os
 import PIL
 from PIL import Image
 import distance
+from .general import run
+
+
+TIMEOUT = 20
 
 
 def evaluate(references, hypotheses, rev_vocab, path, id_END):
@@ -237,10 +240,13 @@ def convert_to_png(formula, path_out, name):
 
     try:
         # call pdflatex to create pdf
-        call(["pdflatex", "-interaction=nonstopmode", "-output-directory", path_out, path_out+"{}.tex".format(name)])
+        run("pdflatex -interaction=nonstopmode -output-directory {} {}".format(path_out,
+            path_out+"{}.tex".format(name)), TIMEOUT)
 
         # call magick to convert the pdf into a png file
-        call(["magick",  "convert",  "-density", "200", "-quality", "100", path_out+"{}.pdf".format(name), path_out+"{}.png".format(name)])
+        run("magick convert -density 200 -quality 100 {} {}".format(path_out+"{}.pdf".format(name),
+            path_out+"{}.png".format(name)), TIMEOUT)
+
     except Exception, e:
         print(e)
 
@@ -339,10 +345,10 @@ def evaluate_images_and_edit(path_in, path_out):
 
 
         scores = dict()
-        scores["Levenshtein Text"] = 1. - edit_txt / float(max(len_txt, 1))
-        scores["Levenshtein Img"]  = 1. - edit_img / float(max(len_img, 1))
-        scores["EM Text"]          = em_txt / float(max(total_txt, 1))
-        scores["EM Img"]           = em_img / float(max(total_img, 1))
+        scores["Edit Text"] = 1. - edit_txt / float(max(len_txt, 1))
+        scores["Edit Img"]  = 1. - edit_img / float(max(len_img, 1))
+        scores["EM Text"]   = em_txt / float(max(total_txt, 1))
+        scores["EM Img"]    = em_img / float(max(total_img, 1))
 
         info = "Unable to render LaTeX for {} out of {} images".format(nb_errors, total_txt)
 

@@ -1,6 +1,7 @@
 import sys
 import numpy as np
 import tensorflow as tf
+import time
 import tensorflow.contrib.layers as layers
 from utils.general import Progbar, get_logger
 from utils.data_utils import minibatches, pad_batch_images, \
@@ -153,8 +154,12 @@ class Model(object):
         """
         Performs an epoch of training
         """
+        # for logging
+        tic = time.time()
+        losses = 0 
         nbatches = (len(train_set) + self.config.batch_size - 1) / self.config.batch_size
         prog = Progbar(target=nbatches)
+        # iterate over minibatches
         for i, (img, formula) in enumerate(minibatches(train_set, self.config.batch_size)):
             # get feed dict
             fd = self.get_feed_dict(img, training=True, formula=formula, lr=lr_schedule.lr,
@@ -162,12 +167,19 @@ class Model(object):
             # update step
             loss_eval, _, summary = sess.run([self.loss, self.train_op, self.merged], feed_dict=fd)
             self.file_writer.add_summary(summary, epoch*nbatches + i)
+            losses += loss_eval
 
             # logging
-            prog.update(i + 1, [("loss", loss_eval), ("lr", lr_schedule.lr)])
+            prog.update(i + 1, 
+                    values=[("loss", loss_eval), ("perplexity", np.exp(loss_eval))],
+                    exact=[("lr", lr_schedule.lr)])
 
             # update learning rate
-            lr_schedule.update(t=epoch*nbatches + i)
+            lr_schedule.update(batch_no=epoch*nbatches + i)
+        
+        toc = time.time()
+        self.logger.info("Epoch {} - time: {:04.2f}, loss: {:04.4f}, lr: {:04.5f}".format(
+                        epoch, toc-tic, losses / float(max(i, 1)), lr_schedule.lr))
 
 
     def run_evaluate(self, sess, val_set, lr_schedule=None, path_results=None):

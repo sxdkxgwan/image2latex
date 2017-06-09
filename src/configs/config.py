@@ -19,12 +19,8 @@ class Config():
         if not os.path.exists(self.dir_output):
             os.makedirs(self.dir_output)
         else:
-            # remove results directory if not same as reload directory
-            if self.dir_reload is None or (self.model_output != self.dir_reload):
-                # sanity check before removing dir
-                assert("results" in self.dir_output)
-                print("Removing {}".format(self.dir_output))
-                shutil.rmtree(self.dir_output)
+            print("ERROR: Results directory from previous experience. Abort.")
+            raise Exception
 
         if not os.path.exists(self.model_output):
             os.makedirs(self.model_output)
@@ -44,7 +40,7 @@ class Config():
 
 
     # directories
-    dir_output    = "results_50/"
+    dir_output    = "results/results_50/"
     dir_images    = "../data/images_processed"
     
     path_log            = dir_output + "log.txt"
@@ -52,8 +48,7 @@ class Config():
     model_output        = dir_output + "model.weights/"
     path_results_final  = dir_output + "results.txt"
     path_results_img    = dir_output + "images/"
-    # dir_reload          = dir_output + "model.weights/" # set to None if no reload
-    dir_reload          = None
+    dir_reload          = "results/session_init/model.weights/"
 
     path_matching_train = "../data/train_filter.lst"
     path_matching_val = "../data/val_filter.lst"
@@ -75,17 +70,20 @@ class Config():
     max_length_formula = 50
 
     # model training parameters
-    n_epochs      = 12
+    n_epochs      = 15
     batch_size    = 20
     dropout       = 1 # keep_prob
-    max_iter      = None
+    max_iter      = 100
 
     # learning rate stuff
     lr_init       = 1e-3
-    lr_min        = 1e-3
-    start_decay   = 0 # start decaying from begining
-    decay_rate    = 0.5 # decay rate if eval score doesn't improve
-    
+    lr_min        = 1e-4
+    start_decay   = 11 # start decaying from 11th epoch
+    end_decay     = 15 # end decay at 15th decay and stay at lr_min
+    decay_rate    = 0.5 # decay rate if perf does not improve
+    lr_warm       = 1e-4 # warm up with lower learning rate because of high gradients
+    end_warm      = 2 # keep warm up for 2 epochs
+
     # encoder
     encoder_dim = 256
     encode_with_lstm = False
@@ -108,5 +106,5 @@ class Test(Config):
     batch_size = 20
     max_iter = 40
     max_length_formula = 20
-    decoding = "greedy"
+    decoding = "beam_search"
     encode_with_lstm = False

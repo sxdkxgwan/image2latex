@@ -30,11 +30,13 @@ if __name__ == "__main__":
 
     # test_set = train_set = val_set # for test purposes
 
-    # set n_steps to None if no exponential decay
-    # n_steps     = ((len(train_set) + config.batch_size - 1) // config.batch_size) * config.n_epochs
-    n_steps = None
-    lr_schedule = LRSchedule(config.lr_init, config.lr_min, config.start_decay, 
-                                      config.decay_rate, n_steps)
+    n_batches_epoch = (len(train_set) + config.batch_size - 1) // config.batch_size
+    
+    lr_schedule = LRSchedule(lr_init=config.lr_init, lr_min=config.lr_min, 
+                            start_decay=config.start_decay*n_batches_epoch,
+                            end_decay=config.end_decay*n_batches_epoch,
+                            lr_warm=config.lr_warm,
+                            end_warm=config.end_warm*n_batches_epoch)
 
     # Build model
     model = Model(config)
