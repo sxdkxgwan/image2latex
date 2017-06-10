@@ -458,7 +458,7 @@ def plot_histograms(counts, fname):
     import matplotlib.mlab as mlab
     import matplotlib.pyplot as plt
 
-    bins = np.arange(0, 1, 0.1) + 0.05
+    bins = np.arange(-0.1, 1.1, 0.1) + 0.05
 
     x0 = counts["d_txt"]
     x1 = counts["d_img"]
