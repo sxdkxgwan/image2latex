@@ -8,6 +8,9 @@ import PIL
 from PIL import Image
 import distance
 from .general import run
+import matplotlib
+# Force matplotlib to not use any Xwindows backend.
+matplotlib.use('Agg')
 
 
 TIMEOUT = 10
@@ -415,10 +418,6 @@ def evaluate_images_and_edit(path_in, path_out, path_fig, prefix=""):
                 except Exception, e:
                     nb_errors += 1
 
-        plot_histograms(counts, path_fig + str(prefix) + "_edit_hist")
-        plot_histograms(counts_best, path_fig + str(prefix) + "_edit_hist_best")
-        plot_histogram(ids_best, path_fig + str(prefix) + "_ids")
-
         scores = dict()
         # scores for the first proposal
         scores["Edit Text"] = 1. - edit_txt / float(max(len_txt, 1))
@@ -435,6 +434,14 @@ def evaluate_images_and_edit(path_in, path_out, path_fig, prefix=""):
         scores["BLEU Best"]    = bleu_score(references, hypotheses_best)
 
         info = "Unable to render LaTeX for {} out of {} images".format(nb_errors, total_rdr)
+
+        print(scores)
+        print(info)
+
+        plot_histograms(counts, path_fig + str(prefix) + "_edit_hist")
+        plot_histograms(counts_best, path_fig + str(prefix) + "_edit_hist_best")
+        plot_histogram(ids_best, path_fig + str(prefix) + "_ids")
+
 
         return scores, info
 

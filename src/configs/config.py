@@ -46,7 +46,7 @@ class Config():
 
 
     # directories
-    dir_output    = "results/results_full/"
+    dir_output    = "results/test/"
     dir_images    = "../data/images_processed"
     
     path_log            = dir_output + "log.txt"
@@ -55,7 +55,7 @@ class Config():
     model_output        = dir_output + "model.weights/"
     path_results_final  = dir_output + "results.txt"
     path_results_img    = dir_output + "images/"
-    dir_reload          = "results/session_init/model.weights/"
+    dir_reload          = "results/session_full/model.weights/"
     # dir_reload          = None
 
     path_matching_train = "../data/train_filter.lst"
@@ -105,7 +105,7 @@ class Config():
         "num_proj": None, # to be computed in __init__  because vocab size
         "dim_embeddings": dim_embeddings
     }
-    decoding = "beam_search" # or "beam_search"
+    decoding = "greedy" # "greedy" or "beam_search"
     beam_size = 5
 
 

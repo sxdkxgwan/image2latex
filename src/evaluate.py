@@ -16,10 +16,10 @@ if __name__ == "__main__":
     # get dataset
     test_set  =  Dataset(path_formulas=config.path_formulas, dir_images=config.dir_images,
                     path_matching=config.path_matching_test, img_prepro=greyscale, 
-                    form_prepro=get_form_prepro(config.vocab), max_len=max_length,
+                    form_prepro=get_form_prepro(config.vocab), max_len=config.max_length_formula,
                     max_iter=config.max_iter)
 
     # Build model
     model = Model(config)
     model.build()
-    model.evaluate(test_set, config.model_output, config.path_results_final, config.path_results_img)
+    model.evaluate(test_set, config.dir_reload, config.path_results_final, config.path_results_img)
