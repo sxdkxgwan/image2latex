@@ -46,7 +46,7 @@ class Config():
 
 
     # directories
-    dir_output    = "results/results_50/"
+    dir_output    = "results/results_full/"
     dir_images    = "../data/images_processed"
     
     path_log            = dir_output + "log.txt"
@@ -54,7 +54,7 @@ class Config():
     path_plot           = dir_output + "plots/"
     model_output        = dir_output + "model.weights/"
     path_results_final  = dir_output + "results.txt"
-    path_results_img    = dir_output + "images/images"
+    path_results_img    = dir_output + "images/"
     dir_reload          = "results/session_init/model.weights/"
     # dir_reload          = None
 
@@ -75,19 +75,19 @@ class Config():
 
     # preprocess images and formulas
     dim_embeddings = 80
-    max_length_formula = 50
+    max_length_formula = 150
 
     # model training parameters
-    n_epochs      = 5
+    n_epochs      = 7
     batch_size    = 20
     dropout       = 1 # keep_prob
     max_iter      = None
 
     # learning rate stuff
     lr_init       = 1e-4
-    lr_min        = 5e-5
-    start_decay   = 2 # start decaying from 11th epoch
-    end_decay     = 5 # end decay at 15th decay and stay at lr_min
+    lr_min        = 1e-5
+    start_decay   = 2 # start decaying
+    end_decay     = 5 # end decay
     decay_rate    = 0.5 # decay rate if perf does not improve
     lr_warm       = 5e-4 # warm up with lower learning rate because of high gradients
     end_warm      = 2 # keep warm up for 2 epochs
@@ -111,8 +111,8 @@ class Config():
 
 class Test(Config):
     n_epochs = 2
-    batch_size = 5
-    max_iter = 5
+    batch_size = 2
+    max_iter = 2
     max_length_formula = 20
     decoding = "beam_search"
     encode_with_lstm = False

@@ -271,6 +271,7 @@ class Model(object):
         with tf.Session() as sess:
             self.initialize_sess(sess, saver, dir_reload)
             # if we haven't written the results.txt file yet
+            self.config.logger.info("Evaluation on Test set:")
             scores_sess = self.evaluate_sess(sess, test_set, path_results=path_results)
 
             scores, info = evaluate_images_and_edit(path_results, path_img, 
@@ -302,4 +303,5 @@ class Model(object):
 
                 # save weights if we have new best perplexity on eval
                 if best_score is None or scores["perplexity"] < best_score:
+                    self.config.logger.info("- Found new best perplexity. Saving model.")
                     saver.save(sess, self.config.model_output)

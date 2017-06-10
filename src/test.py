@@ -30,7 +30,7 @@ if __name__ == "__main__":
         model = Model(config)
         model.build()
         scores = model.evaluate(test_set, config.dir_reload, config.path_results_final, 
-            config.path_results_img + "_" + str(max_length) + "/")
+            config.path_results_img + "images_" + str(max_length) + "/")
 
         if all_scores is None:
             all_scores = dict()

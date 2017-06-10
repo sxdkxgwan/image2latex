@@ -239,8 +239,10 @@ def convert_to_png(formula, path_out, name):
     \end{document}""" % (formula))
 
     try:
+        print "pdflatex -interaction=nonstopmode -output-directory={} {}".format(path_out,
+            path_out+"{}.tex".format(name))
         # call pdflatex to create pdf
-        run("pdflatex -interaction=nonstopmode -output-directory {} {}".format(path_out,
+        run("pdflatex -interaction=nonstopmode -output-directory={} {}".format(path_out,
             path_out+"{}.tex".format(name)), TIMEOUT)
 
         # call magick to convert the pdf into a png file
@@ -291,7 +293,8 @@ def evaluate_images_and_edit(path_in, path_out, path_fig, prefix=""):
 
     with open(path_in) as f:
         # to store the results: "best" is the best among multiple hypotheses
-        references, hypotheses, hypotheses_best = [], [], []
+        references, references_best, hypotheses, hypotheses_best = [], [], [], []
+        current_ref = None
         em_txt = em_img = 0
         em_txt_best = em_img_best = 0
         total_txt_best = edit_txt_best = len_txt_best = 0
@@ -307,7 +310,7 @@ def evaluate_images_and_edit(path_in, path_out, path_fig, prefix=""):
         for i, line in enumerate(f):
             if line == "\n":
                 # if we reached the end of an hypo, record the best hypo
-                if hypo_score_best is not None:
+                if hypo_score_best is not None and current_ref is not None:
                     # rename the file of the best hypo an append best to it
                     try:
                         os.rename(
@@ -337,8 +340,9 @@ def evaluate_images_and_edit(path_in, path_out, path_fig, prefix=""):
                     total_img_best += 1
 
                     hypotheses_best.append(hypo_score_best["hypo"].split(" "))
+                    references_best.append([current_ref.split(" ")])
 
-                if hypo_score is not None:
+                if hypo_score is not None and current_ref is not None:
                     edit_txt += hypo_score["d_txt"]
                     edit_img += hypo_score["d_img"]
                     len_img += hypo_score["l_img"]
@@ -358,6 +362,7 @@ def evaluate_images_and_edit(path_in, path_out, path_fig, prefix=""):
                     total_img += 1
 
                     hypotheses.append(hypo_score["hypo"].split(" "))
+                    references.append([current_ref.split(" ")])
 
 
                 hypo_id = 0
@@ -366,7 +371,7 @@ def evaluate_images_and_edit(path_in, path_out, path_fig, prefix=""):
 
             if ref is None and hypo is None:
                 ref = line.strip()
-                references.append([ref.split(" ")])
+                current_ref = ref
                 ref_id += 1
                 continue
 
