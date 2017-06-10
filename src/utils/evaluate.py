@@ -46,8 +46,8 @@ def truncate_end(hypotheses, id_END):
         for hypo in hypos:
             trunc_hypo = []
             for id_ in hypo:
-                # if id_ == id_END:
-                #     break
+                if id_ == id_END:
+                    break
                 trunc_hypo.append(id_)
             trunc_hypos.append(trunc_hypo)
 
@@ -263,7 +263,7 @@ def convert_to_png(formula, path_out, name):
     downsample_image(img_path, img_path)
 
 
-def evaluate_images_and_edit(path_in, path_out, fname):
+def evaluate_images_and_edit(path_in, path_out, path_fig, prefix=""):
     """
     Render latex formulas into png of reference and hypothesis
 
@@ -276,27 +276,69 @@ def evaluate_images_and_edit(path_in, path_out, fname):
     if not os.path.exists(path_out):
         os.makedirs(path_out)
 
+    counts_best = {
+    "d_txt": [],
+    "d_img": []
+    }
+
     counts = {
     "d_txt": [],
     "d_img": []
     }
 
+
+    ids_best = []
+
     with open(path_in) as f:
-        references, hypotheses = [], []
-        em_txt = em_img = total_txt = edit_txt = total_img = edit_img = len_txt = len_img = total_rdr = 0
-        ref, hypo, hypo_score = None, None, None
-        ref_id, hypo_id, nb_errors = 0, 0, 0
+        # to store the results: "best" is the best among multiple hypotheses
+        references, hypotheses, hypotheses_best = [], [], []
+        em_txt = em_img = 0
+        em_txt_best = em_img_best = 0
+        total_txt_best = edit_txt_best = len_txt_best = 0
+        total_img_best = edit_img_best = len_img_best = 0
+        total_txt = edit_txt = len_txt = 0
+        total_img = edit_img = len_img = 0
+
+        nb_errors = total_rdr = 0
+        ref, hypo, hypo_score, hypo_score_best = None, None, None, None
+
+        ref_id, hypo_id = 0, 0
+
         for i, line in enumerate(f):
             if line == "\n":
                 # if we reached the end of an hypo, record the best hypo
-                if hypo_score is not None:
+                if hypo_score_best is not None:
                     # rename the file of the best hypo an append best to it
                     try:
                         os.rename(
-                            path_out + "{}_hypo_{}.png".format(ref_id, hypo_score["id"]), 
-                            path_out + "{}_hypo_{}_best.png".format(ref_id, hypo_score["id"]))
+                            path_out + "{}_hypo_{}.png".format(ref_id, hypo_score_best["id"]), 
+                            path_out + "{}_hypo_{}_best.png".format(ref_id, hypo_score_best["id"]))
                     except Exception, e:
                         print e
+
+                    ids_best.append(hypo_score_best["id"])
+
+                    edit_txt_best += hypo_score_best["d_txt"]
+                    edit_img_best += hypo_score_best["d_img"]
+                    len_img_best += hypo_score_best["l_img"]
+                    len_txt_best += hypo_score_best["l_txt"]
+
+                    counts_best["d_txt"].append(1.-hypo_score_best["d_txt"]/float(hypo_score_best["l_txt"]))
+                    counts_best["d_img"].append(1.-hypo_score_best["d_img"]/float(hypo_score_best["l_img"]))
+                    
+                    # exact matches = when edit distance == 0
+                    if hypo_score_best["d_img"] == 0:
+                        em_img_best += 1
+                    if hypo_score_best["d_txt"] == 0:
+                        em_txt_best += 1
+
+                    # increment total counts
+                    total_txt_best += 1
+                    total_img_best += 1
+
+                    hypotheses_best.append(hypo_score_best["hypo"].split(" "))
+
+                if hypo_score is not None:
                     edit_txt += hypo_score["d_txt"]
                     edit_img += hypo_score["d_img"]
                     len_img += hypo_score["l_img"]
@@ -317,8 +359,9 @@ def evaluate_images_and_edit(path_in, path_out, fname):
 
                     hypotheses.append(hypo_score["hypo"].split(" "))
 
+
                 hypo_id = 0
-                ref, hypo, hypo_score = None, None, None
+                ref, hypo, hypo_score, hypo_score_best = None, None, None, None
                 continue
 
             if ref is None and hypo is None:
@@ -343,9 +386,18 @@ def evaluate_images_and_edit(path_in, path_out, fname):
                     d_txt  = distance.levenshtein(tokens_ref, tokens_hypo)
                     d_img, l_img = img_edit_distance(path_out+"{}.png".format(ref_name), path_out+"{}.png".format(hypo_name))
 
-                    if hypo_score is None or hypo_score["d_img"] > d_img:
-                        hypo_score = {
+                    if hypo_score_best is None or hypo_score_best["d_img"] > d_img:
+                        hypo_score_best = {
                             "id": hypo_id,
+                            "d_txt": d_txt,
+                            "d_img": d_img,
+                            "l_img": l_img,
+                            "l_txt": max(len(tokens_ref), len(tokens_hypo)),
+                            "hypo": hypo
+                        }
+
+                    if hypo_score is None and hypo_id == 1:
+                        hypo_score = {
                             "d_txt": d_txt,
                             "d_img": d_img,
                             "l_img": l_img,
@@ -358,19 +410,42 @@ def evaluate_images_and_edit(path_in, path_out, fname):
                 except Exception, e:
                     nb_errors += 1
 
-        plot_histograms(counts, fname)
+        plot_histograms(counts, path_fig + str(prefix) + "_edit_hist")
+        plot_histograms(counts_best, path_fig + str(prefix) + "_edit_hist_best")
+        plot_histogram(ids_best, path_fig + str(prefix) + "_ids")
 
         scores = dict()
+        # scores for the first proposal
         scores["Edit Text"] = 1. - edit_txt / float(max(len_txt, 1))
         scores["Edit Img"]  = 1. - edit_img / float(max(len_img, 1))
         scores["EM Text"]   = em_txt / float(max(total_txt, 1))
         scores["EM Img"]    = em_img / float(max(total_img, 1))
-        scores["BLEU-4"]    = bleu_score(references, hypotheses)
+        scores["BLEU"]    = bleu_score(references, hypotheses)
+
+        # scores for the best proposals
+        scores["Edit Text Best"] = 1. - edit_txt_best / float(max(len_txt_best, 1))
+        scores["Edit Img Best"]  = 1. - edit_img_best / float(max(len_img_best, 1))
+        scores["EM Text Best"]   = em_txt_best / float(max(total_txt_best, 1))
+        scores["EM Img Best"]    = em_img_best / float(max(total_img_best, 1))
+        scores["BLEU Best"]    = bleu_score(references, hypotheses_best)
 
         info = "Unable to render LaTeX for {} out of {} images".format(nb_errors, total_rdr)
 
         return scores, info
 
+
+def plot_histogram(counts, fname, xlabel="proposal"):
+    import numpy as np
+    import matplotlib.mlab as mlab
+    import matplotlib.pyplot as plt
+
+    bins = np.arange(0, 7) + 0.5
+    plt.figure()
+    plt.hist(counts, bins, histtype='bar', facecolor='green', rwidth=0.8)
+    plt.xlabel(xlabel)
+    plt.ylabel("Counts")
+    plt.savefig(fname + ".png")
+    plt.close()
 
 
 def plot_histograms(counts, fname):
@@ -378,21 +453,35 @@ def plot_histograms(counts, fname):
     import matplotlib.mlab as mlab
     import matplotlib.pyplot as plt
 
+    bins = np.arange(0, 1, 0.1) + 0.05
+
     x0 = counts["d_txt"]
     x1 = counts["d_img"]
 
     fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 5))
     ax0, ax1 = axes.flatten()
 
-    ax0.hist(x0, 10, histtype='bar', facecolor='green', rwidth=0.8)
+    ax0.hist(x0, bins, histtype='bar', facecolor='green', rwidth=0.8)
     ax0.set_xlabel('Edit Text')
     ax0.set_ylabel('Counts')
 
-    ax1.hist(x1, 10, histtype='bar', facecolor='green', rwidth=0.8)
+    ax1.hist(x1, bins, histtype='bar', facecolor='green', rwidth=0.8)
     ax1.set_xlabel('Edit Image')
 
     fig.tight_layout()
-    plt.savefig(fname)
-    plt.grid(True)
-    plt.title(r'$\mathrm{Counts of Edit Distances}$')
+    plt.savefig(fname + ".png")
     plt.close()
+
+
+def simple_plots(xs, ys, path_fig):
+    import numpy as np
+    import matplotlib.mlab as mlab
+    import matplotlib.pyplot as plt
+
+    for k, v in ys.iteritems():
+        plt.figure()
+        plt.plot(xs, v)
+        plt.xlabel("Max Length")
+        plt.ylabel(k)
+        plt.savefig("_".join([path_fig] + k.split(" ")) + ".png")
+        plt.close()

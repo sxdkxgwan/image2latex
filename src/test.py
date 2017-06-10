@@ -5,40 +5,40 @@ from utils.preprocess import greyscale, get_form_prepro, compose
 from utils.data_utils import minibatches, pad_batch_formulas, \
     pad_batch_images
 from utils.lr_schedule import LRSchedule
+import tensorflow as tf
+from utils.evaluate import simple_plots
 
 
 if __name__ == "__main__":
     # Load config
     # config = Config()
-    config = Test() # for test purposes
+    config = Test()
 
-    # Load datasets
-    train_set =  Dataset(path_formulas=config.path_formulas, dir_images=config.dir_images,
-                    path_matching=config.path_matching_train, img_prepro=greyscale, 
-                    form_prepro=get_form_prepro(config.vocab), max_len=config.max_length_formula,
-                    max_iter=config.max_iter)
+    max_lengths = [20, 30]
+    all_scores = None
 
-    val_set   =  Dataset(path_formulas=config.path_formulas, dir_images=config.dir_images,
-                    path_matching=config.path_matching_val, img_prepro=greyscale, 
-                    form_prepro=get_form_prepro(config.vocab), max_len=config.max_length_formula,
-                    max_iter=config.max_iter)
+    for i, max_length in enumerate(max_lengths):
+        config.logger.info("TEST: max-length = {}".format(max_length))
 
-    test_set  =  Dataset(path_formulas=config.path_formulas, dir_images=config.dir_images,
-                    path_matching=config.path_matching_test, img_prepro=greyscale, 
-                    form_prepro=get_form_prepro(config.vocab), max_len=config.max_length_formula,
-                    max_iter=config.max_iter)
+        # get dataset
+        test_set  =  Dataset(path_formulas=config.path_formulas, dir_images=config.dir_images,
+                        path_matching=config.path_matching_test, img_prepro=greyscale, 
+                        form_prepro=get_form_prepro(config.vocab), max_len=max_length,
+                        max_iter=config.max_iter)
 
-    test_set = train_set = val_set # for test purposes
+        # Build model
+        model = Model(config)
+        model.build()
+        scores = model.evaluate(test_set, config.dir_reload, config.path_results_final, 
+            config.path_results_img + "_" + str(max_length) + "/")
 
-    n_batches_epoch = (len(train_set) + config.batch_size - 1) // config.batch_size
-    
-    lr_schedule = LRSchedule(lr_init=config.lr_init, lr_min=config.lr_min, 
-                            start_decay=config.start_decay*n_batches_epoch,
-                            end_decay=config.end_decay*n_batches_epoch,
-                            lr_warm=config.lr_warm,
-                            end_warm=config.end_warm*n_batches_epoch)
+        if all_scores is None:
+            all_scores = dict()
+            for k, v in scores.iteritems():
+                all_scores[k] = [v]
+        else:
+            for k, v in scores.iteritems():
+                all_scores[k].append(v)
 
-    # Build model
-    model = Model(config)
-    model.build()
-    model.evaluate(test_set, config.dir_reload, config.path_results_final, config.path_results_img)
+    simple_plots(max_lengths, all_scores, config.path_plot)
+

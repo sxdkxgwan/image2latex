@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 import time
 import tensorflow.contrib.layers as layers
-from utils.general import Progbar, get_logger
+from utils.general import Progbar
 from utils.data_utils import minibatches, pad_batch_images, \
     pad_batch_formulas, load_vocab
 from encoder import Encoder
@@ -13,8 +13,9 @@ from utils.evaluate import evaluate, write_answers, evaluate_images_and_edit
 
 class Model(object):
     def __init__(self, config):
+        # saveguard if previous model was defined
+        tf.reset_default_graph()
         self.config = config
-        self.logger = get_logger(config.path_log)
         self.encoder = Encoder(config)
         self.decoder = Decoder(config)
 
@@ -23,12 +24,12 @@ class Model(object):
         """
         Builds model
         """
-        self.logger.info("Building model...")
+        self.config.logger.info("Building model...")
         self.add_placeholders_op()
         self.add_pred_op()
         self.add_loss_op()
         self.add_train_op()
-        self.logger.info("- done.")
+        self.config.logger.info("- done.")
 
 
     def add_placeholders_op(self):
@@ -178,7 +179,7 @@ class Model(object):
             lr_schedule.update(batch_no=epoch*nbatches + i)
         
         toc = time.time()
-        self.logger.info("Epoch {} - time: {:04.2f}, loss: {:04.4f}, lr: {:04.5f}".format(
+        self.config.logger.info("Epoch {} - time: {:04.2f}, loss: {:04.4f}, lr: {:04.5f}".format(
                         epoch, toc-tic, losses / float(max(i, 1)), lr_schedule.lr))
 
 
@@ -250,7 +251,7 @@ class Model(object):
         # logging
         sys.stdout.write("\r")
         sys.stdout.flush()
-        self.logger.info("- Eval: {}".format(scores_to_print))
+        self.config.logger.info("- Eval: {}".format(scores_to_print))
 
         return scores
 
@@ -263,14 +264,25 @@ class Model(object):
             test_set: (Dataset)
             dir_reload: (string) path to directory with weights
         """
+        # erase previous results from result path
+        with open(path_results, "w") as f:
+            pass
         saver = tf.train.Saver()
         with tf.Session() as sess:
             self.initialize_sess(sess, saver, dir_reload)
-            self.evaluate_sess(sess, test_set, path_results=path_results)
-            scores, info = evaluate_images_and_edit(path_results, path_img, self.config.dir_output+"hist.png")
+            # if we haven't written the results.txt file yet
+            scores_sess = self.evaluate_sess(sess, test_set, path_results=path_results)
+
+            scores, info = evaluate_images_and_edit(path_results, path_img, 
+                self.config.path_plot, test_set.max_len)
             scores_to_print = ", ".join(["{} {:04.2f}".format(k, v) for k, v in scores.iteritems()])
-            self.logger.info("- {}".format(scores_to_print))
-            self.logger.info("- Info: {}".format(info))
+            self.config.logger.info("- {}".format(scores_to_print))
+            self.config.logger.info("- Info: {}".format(info))
+            
+            for k, v in scores_sess.iteritems():
+                scores[k] = v
+                
+            return scores
 
 
     def train(self, train_set, val_set, lr_schedule):

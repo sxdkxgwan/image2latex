@@ -1,5 +1,6 @@
 import shutil
 from utils.data_utils import load_vocab, PAD, END
+from utils.general import get_logger
 import os
 
 
@@ -25,6 +26,9 @@ class Config():
         if not os.path.exists(self.model_output):
             os.makedirs(self.model_output)
 
+        if not os.path.exists(self.path_plot):
+            os.makedirs(self.path_plot)
+
         # initializer file for answers by erasing previous files
         with open(self.path_results, "w") as f:
             pass
@@ -37,6 +41,8 @@ class Config():
         self.attn_cell_config["num_proj"] = self.vocab_size
         self.id_PAD = self.vocab[PAD]
         self.id_END = self.vocab[END]
+        self.logger = get_logger(self.path_log)
+
 
 
     # directories
@@ -45,9 +51,10 @@ class Config():
     
     path_log            = dir_output + "log.txt"
     path_results        = dir_output + "results_val.txt"
+    path_plot           = dir_output + "plots/"
     model_output        = dir_output + "model.weights/"
     path_results_final  = dir_output + "results.txt"
-    path_results_img    = dir_output + "images/"
+    path_results_img    = dir_output + "images/images"
     dir_reload          = "results/session_init/model.weights/"
     # dir_reload          = None
 
@@ -78,11 +85,11 @@ class Config():
 
     # learning rate stuff
     lr_init       = 1e-4
-    lr_min        = 1e-5
+    lr_min        = 5e-5
     start_decay   = 2 # start decaying from 11th epoch
     end_decay     = 5 # end decay at 15th decay and stay at lr_min
     decay_rate    = 0.5 # decay rate if perf does not improve
-    lr_warm       = 1e-4 # warm up with lower learning rate because of high gradients
+    lr_warm       = 5e-4 # warm up with lower learning rate because of high gradients
     end_warm      = 2 # keep warm up for 2 epochs
 
     # encoder
@@ -99,13 +106,13 @@ class Config():
         "dim_embeddings": dim_embeddings
     }
     decoding = "beam_search" # or "beam_search"
-    beam_size = 2
+    beam_size = 5
 
 
 class Test(Config):
     n_epochs = 2
-    batch_size = 3
-    max_iter = 3
+    batch_size = 5
+    max_iter = 5
     max_length_formula = 20
     decoding = "beam_search"
     encode_with_lstm = False
