@@ -8,7 +8,7 @@ from utils.data_utils import minibatches, pad_batch_images, \
     pad_batch_formulas, load_vocab
 from encoder import Encoder
 from decoder import Decoder
-from utils.evaluate import evaluate, write_answers, evaluate_images_and_edit
+from utils.evaluate import write_answers, evaluate
 
 
 class Model(object):
@@ -256,9 +256,10 @@ class Model(object):
         return scores
 
 
-    def evaluate(self, test_set, dir_reload, path_results, path_img):
+    def evaluate(self, test_set, dir_reload, path_results):
         """
-        Evaluate on test set and reloads weights from dir_reload
+        Evaluate on test set and reloads weights from dir_reload.
+        Writes a file with the predicted formulas
 
         Args:
             test_set: (Dataset)
@@ -274,16 +275,7 @@ class Model(object):
             self.config.logger.info("Evaluation on Test set:")
             scores_sess = self.evaluate_sess(sess, test_set, path_results=path_results)
 
-            scores, info = evaluate_images_and_edit(path_results, path_img, 
-                self.config.path_plot, test_set.max_len)
-            scores_to_print = ", ".join(["{} {:04.2f}".format(k, v) for k, v in scores.iteritems()])
-            self.config.logger.info("- {}".format(scores_to_print))
-            self.config.logger.info("- Info: {}".format(info))
-            
-            for k, v in scores_sess.iteritems():
-                scores[k] = v
-                
-            return scores
+            return scores_sess
 
 
     def train(self, train_set, val_set, lr_schedule):

@@ -1,21 +1,44 @@
+import time
+import os
 import numpy as np
 from scipy.misc import imread
 from preprocess import greyscale, get_form_prepro
-import time
 from data_utils import minibatches, pad_batch_images, \
     load_vocab, pad_batch_formulas, render
+from utils.images import convert_to_png
 
 
 class DataGeneratorFile(object):
     def __init__(self, filename):
+        """
+        Args:
+            filename: (string of path to file) where we have
+                multiple instances per example
+                    aqmsldfj.png 1 qmsdljfs.png 2
+                    qsfamsqsdf.png 4 qaezqd.png 5
+        Returns:
+            iterator that returns
+                tuple img_path, formula_id if n == 2
+                tuple list of tuples path, id if n != 2
+        """
         self._filename = filename
 
-
     def __iter__(self):
+        """
+        Return type tuple or list of tuples if more than one instance
+        per example
+        """
         with open(self._filename) as f:
             for line in f:
-                img_path, formula_id = line.strip().split(' ')
-                yield img_path, formula_id
+                line = line.strip().split(' ')
+                instances = []
+                for i in range(len(line)/2):
+                    instances.append((line[2*i], line[2*i+1]))
+
+                if len(instances) == 1:
+                    yield instances[0]
+                else:
+                    yield instances
 
 
 class Dataset(object):
@@ -134,34 +157,65 @@ class Dataset(object):
         return max_shape, max_length
 
 
+    def _process_instance(self, img_path, formula_id):
+        # formula
+        formula = self.form_prepro(self.formulas[int(formula_id)])
+        
+        # image 
+        img = imread(self.dir_images + "/" + img_path)
+        img = self.img_prepro(img)
+
+        return img, formula
+
+
+
     def __iter__(self):
         """
         Iterator over Dataset
         Yields:
-            img: array
-            formula: one formula
+            tuple of 
+                img: array
+                formula: one formula
+            or list of those tuples
         """
         n_iter = 0
-        for img_path, formula_id in self.data_generator:
+        # instances is a tuple (img path, formula id) or a list of those
+        for example in self.data_generator:
             if self.max_iter is not None and n_iter >= self.max_iter:
                 break
 
-            # formula
-            formula = self.form_prepro(self.formulas[int(formula_id)])
-            if self.max_len is not None and len(formula) > self.max_len:
-                continue
+            # just one training instance per line
+            if type(example) is tuple:
+                img_path, formula_id = example
+                img, formula = self._process_instance(img_path, formula_id)
 
-            # image 
-            img = imread(self.dir_images + "/" + img_path)
-            img = self.img_prepro(img)
+                if self.iter_mode == "data":
+                    result = (img, formula)
+                elif self.iter_mode == "full":
+                    result = (img, formula, img_path, formula_id)
+
+                # filter on the formula length
+                if self.max_len is not None and len(formula) > self.max_len:
+                    continue
+
+            # multiple instances of the same example per line
+            elif type(example) is list:
+                result = []
+                for instance in example:
+                    img_path, formula_id = instance
+                    img, formula = self._process_instance(img_path, formula_id)
+
+                    if self.iter_mode == "data":
+                        result.append((img, formula))
+                    elif self.iter_mode == "full":
+                        result.append((img, formula, img_path, formula_id))
+
+                # filter on the first formula length
+                if self.max_len is not None and len(result[0][1]) > self.max_len:
+                    continue
 
             n_iter += 1
-
-            if self.iter_mode == "data":
-                yield img, formula
-                
-            elif self.iter_mode == "full":
-                yield img, formula, img_path, formula_id
+            yield result
 
 
     def __len__(self):
@@ -174,3 +228,33 @@ class Dataset(object):
             print("- done.")
 
         return self.length
+
+
+
+    def generate_from_formulas(self, single=True):
+        """
+        Generate images from the formulas and writes the correspondance in a 
+        matchin file.
+        TODO: separate the rendering and the matching.
+        TODO: exploit parallelism to render the images.
+        """
+        if not os.path.exists(self.dir_images):
+            os.makedirs(self.dir_images)
+
+        with open(self.path_matching, "a") as f:
+            example = []
+            for idx, formula in self.formulas.iteritems():
+
+                # new example if 1. empty formula or 2. single mode
+                if (single or (not single and len(formula) == 0)) and len(example) > 0:
+                    f.write(" ".join(example) + "\n")
+                    example = []
+
+                elif len(formula) > 0:
+                    try:
+                        img_path = convert_to_png(formula, self.dir_images, idx)
+                        if img_path[-4:] == ".png":
+                            example.append("{} {}".format(img_path, idx))
+
+                    except Exception, e:
+                        print e

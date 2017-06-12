@@ -1,17 +1,15 @@
 import os
-from collections import Counter
+import sys
 import numpy as np
 import nltk
-from utils.data_utils import reconstruct_formula, END
-import os
-import PIL
-from PIL import Image
 import distance
-from .general import run
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
+import matplotlib.mlab as mlab
+import matplotlib.pyplot as plt
 
+from .images import convert_to_png
 
 TIMEOUT = 10
 
@@ -115,370 +113,208 @@ def bleu_score(references, hypotheses):
     return BLEU_4
 
 
-def img_edit_distance(file1, file2):
+
+def edit_distance(ref, hypo):
+    """
+    Computes Levenshtein distance between two sequences.
+
+    Args:
+        ref, hypo: two lists of tokens
+
+    Returns:
+        levenshtein distance
+        max length of the two sequences
+    """
+    d_leven = distance.levenshtein(ref, hypo)
+    max_len = float(max(len(ref), len(hypo)))
+
+    return d_leven, max_len
+
+
+def img_edit_distance(img1, img2):
     """
     Computes Levenshtein distance between two images.
     Slice the images into columns and consider one column as a character.
 
     Code strongly inspired by Harvard's evaluation scripts.
-
     Args:
-        file1: (string) path to image (reference)
-        file2: (string) path to image (hypothesis)
+        im1, im2: np arrays of shape (H, W, 1)
+
     Returns:
         column wise levenshtein distance
+        max length of the two sequences
     """
-    # load the image
-    im1 = Image.open(file1).convert('L')
-    im2 = Image.open(file2).convert('L')
+    # load the image (H, W)
+    img1, img2 = np.squeeze(img1), np.squeeze(img2)
 
     # transpose and convert to 0 or 1
-    img_data1 = np.asarray(im1, dtype=np.uint8) # height, width
-    img_data1 = np.transpose(img_data1)
-    h1 = img_data1.shape[1]
-    w1 = img_data1.shape[0]
-    img_data1 = (img_data1<=128).astype(np.uint8)
+    img1 = np.transpose(img1)
+    h1 = img1.shape[1]
+    w1 = img1.shape[0]
+    img1 = (img1<=128).astype(np.uint8)
 
-    img_data2 = np.asarray(im2, dtype=np.uint8) # height, width
-    img_data2 = np.transpose(img_data2)
-    h2 = img_data2.shape[1]
-    w2 = img_data2.shape[0]
-    img_data2 = (img_data2<=128).astype(np.uint8)
+    img2 = np.transpose(img2)
+    h2 = img2.shape[1]
+    w2 = img2.shape[0]
+    img2 = (img2<=128).astype(np.uint8)
 
     # create binaries for each column
     if h1 == h2:
-        seq1 = [''.join([str(i) for i in item]) for item in img_data1]
-        seq2 = [''.join([str(i) for i in item]) for item in img_data2]
+        seq1 = [''.join([str(i) for i in item]) for item in img1]
+        seq2 = [''.join([str(i) for i in item]) for item in img2]
     elif h1 > h2:# pad h2
-        seq1 = [''.join([str(i) for i in item]) for item in img_data1]
-        seq2 = [''.join([str(i) for i in item])+''.join(['0']*(h1-h2)) for item in img_data2]
+        seq1 = [''.join([str(i) for i in item]) for item in img1]
+        seq2 = [''.join([str(i) for i in item])+''.join(['0']*(h1-h2)) for item in img2]
     else:
-        seq1 = [''.join([str(i) for i in item])+''.join(['0']*(h2-h1)) for item in img_data1]
-        seq2 = [''.join([str(i) for i in item]) for item in img_data2]
+        seq1 = [''.join([str(i) for i in item])+''.join(['0']*(h2-h1)) for item in img1]
+        seq2 = [''.join([str(i) for i in item]) for item in img2]
 
     # convert each column binary into int
     seq1_int = [int(item,2) for item in seq1]
     seq2_int = [int(item,2) for item in seq2]
 
-    # compute distance
-    edit_distance = distance.levenshtein(seq1_int, seq2_int)
-
-    return edit_distance, float(max(len(seq1_int), len(seq2_int)))
+    return edit_distance(seq1_int, seq2_int)
 
 
-
-def pad_image(img, output_path, pad_size=[8,8,8,8]):
-    """
-    Pads image with pad size
-
-    Args:
-        img: (string) path to image
-        output_path: (string) path to output image
-    """
-    PAD_TOP, PAD_LEFT, PAD_BOTTOM, PAD_RIGHT = pad_size
-    old_im = Image.open(img)
-    old_size = (old_im.size[0]+PAD_LEFT+PAD_RIGHT, old_im.size[1]+PAD_TOP+PAD_BOTTOM)
-    new_size = old_size
-    new_im = Image.new("RGB", new_size, (255,255,255))
-    new_im.paste(old_im, (PAD_LEFT,PAD_TOP))
-    new_im.save(output_path)
-
-
-def crop_image(img, output_path):
-    """
-    Crops image to content
-
-    Args:
-        img: (string) path to image
-        output_path: (string) path to output image
-    """
-    old_im = Image.open(img).convert('L')
-    img_data = np.asarray(old_im, dtype=np.uint8) # height, width
-    nnz_inds = np.where(img_data!=255)
-    if len(nnz_inds[0]) == 0:
-        old_im.save(output_path)
-        return False
-
-    y_min = np.min(nnz_inds[0])
-    y_max = np.max(nnz_inds[0])
-    x_min = np.min(nnz_inds[1])
-    x_max = np.max(nnz_inds[1])
-    old_im = old_im.crop((x_min, y_min, x_max+1, y_max+1))
-    old_im.save(output_path)
-    return True
-
-
-def downsample_image(img, output_path, ratio=2):
-    """
-    Downsample image by ratio
-    """
-    assert ratio>=1, ratio
-    if ratio == 1:
-        return True
-    old_im = Image.open(img)
-    old_size = old_im.size
-    new_size = (int(old_size[0]/ratio), int(old_size[1]/ratio))
-
-    new_im = old_im.resize(new_size, PIL.Image.LANCZOS)
-    new_im.save(output_path)
-    return True
-
-
-def convert_to_png(formula, path_out, name):
-    """
-    Convert latex to png image
-
-    Args:
-        formula: (string) of latex
-        path_out: (string) path to output directory
-        name: (string) name of file
-    """
-    # write formula into a .tex file
-    with open(path_out + "{}.tex".format(name), "w") as f:
-        f.write(
-    r"""\documentclass[preview]{standalone}
-    \begin{document}
-        $$ %s $$
-    \end{document}""" % (formula))
-
-    try:
-        print "pdflatex -interaction=nonstopmode -output-directory={} {}".format(path_out,
-            path_out+"{}.tex".format(name))
-        # call pdflatex to create pdf
-        run("pdflatex -interaction=nonstopmode -output-directory={} {}".format(path_out,
-            path_out+"{}.tex".format(name)), TIMEOUT)
-
-        # call magick to convert the pdf into a png file
-        run("magick convert -density 200 -quality 100 {} {}".format(path_out+"{}.pdf".format(name),
-            path_out+"{}.png".format(name)), TIMEOUT)
-
-    except Exception, e:
-        print(e)
-
-    # cleaning
-    os.remove(path_out+"{}.aux".format(name))
-    os.remove(path_out+"{}.log".format(name))
-    os.remove(path_out+"{}.pdf".format(name))
-    os.remove(path_out+"{}.tex".format(name))
-
-    # crop, pad and downsample
-    img_path = path_out + "{}.png".format(name)
-    crop_image(img_path, img_path)
-    pad_image(img_path, img_path)
-    downsample_image(img_path, img_path)
-
-
-def evaluate_images_and_edit(path_in, path_out, path_fig, prefix=""):
+def evaluate_dataset(test_set, dir_plots, prefix=""):
     """
     Render latex formulas into png of reference and hypothesis
 
     Args:
-        path: path of results.txt
+        test_set: iterable that yields
+            list of tuples (np array, formula)
+        dir_plots: where to save histograms
+
     Returns:
         levenhstein distance between formulas
         levenhstein distance between columns of rendered images
     """
-    if not os.path.exists(path_out):
-        os.makedirs(path_out)
+    print("Evaluating dataset reconstruction...")
+    def _initialize_results():
+        return {
+            "em_txt": 0,
+            "em_img": 0,
+            "edit_txt": 0,
+            "edit_img": 0,
+            "len_txt": 0,
+            "len_img": 0,
+            "nb_examples": 0,
+            "distrib_edit_txt": [],
+            "distrib_edit_img": [],
+            "distrib_ids": [],
+        }
 
-    counts_best = {
-    "d_txt": [],
-    "d_img": []
-    }
+    def _update_results(results, data):
+        # increment counts for averages
+        results["edit_txt"] += data["edit_txt"]
+        results["edit_img"] += data["edit_img"]
+        results["len_txt"] += data["len_txt"]
+        results["len_img"] += data["len_img"]
 
-    counts = {
-    "d_txt": [],
-    "d_img": []
-    }
+        # compute exact matches
+        if data["edit_img"] == 0:
+            results["em_img"] += 1
+        if data["edit_txt"] == 0:
+            results["em_txt"] += 1
 
+        # for statistics per image
+        norm_edit_img = 1. -  data["edit_img"] / float(data["len_img"])
+        norm_edit_txt = 1. -  data["edit_txt"] / float(data["len_txt"])
+        results["distrib_edit_txt"].append(norm_edit_txt)
+        results["distrib_edit_img"].append(norm_edit_img)
+        results["distrib_ids"].append(data["id"])
 
-    ids_best = []
-
-    with open(path_in) as f:
-        # to store the results: "best" is the best among multiple hypotheses
-        references, references_best, hypotheses, hypotheses_best = [], [], [], []
-        current_ref = None
-        em_txt = em_img = 0
-        em_txt_best = em_img_best = 0
-        total_txt_best = edit_txt_best = len_txt_best = 0
-        total_img_best = edit_img_best = len_img_best = 0
-        total_txt = edit_txt = len_txt = 0
-        total_img = edit_img = len_img = 0
-
-        nb_errors = total_rdr = 0
-        ref, hypo, hypo_score, hypo_score_best = None, None, None, None
-
-        ref_id, hypo_id = 0, 0
-
-        for i, line in enumerate(f):
-            if line == "\n":
-                # if we reached the end of an hypo, record the best hypo
-                if hypo_score_best is not None and current_ref is not None:
-                    # rename the file of the best hypo an append best to it
-                    try:
-                        os.rename(
-                            path_out + "{}_hypo_{}.png".format(ref_id, hypo_score_best["id"]), 
-                            path_out + "{}_hypo_{}_best.png".format(ref_id, hypo_score_best["id"]))
-                    except Exception, e:
-                        print e
-
-                    ids_best.append(hypo_score_best["id"])
-
-                    edit_txt_best += hypo_score_best["d_txt"]
-                    edit_img_best += hypo_score_best["d_img"]
-                    len_img_best += hypo_score_best["l_img"]
-                    len_txt_best += hypo_score_best["l_txt"]
-
-                    counts_best["d_txt"].append(1.-hypo_score_best["d_txt"]/float(hypo_score_best["l_txt"]))
-                    counts_best["d_img"].append(1.-hypo_score_best["d_img"]/float(hypo_score_best["l_img"]))
-                    
-                    # exact matches = when edit distance == 0
-                    if hypo_score_best["d_img"] == 0:
-                        em_img_best += 1
-                    if hypo_score_best["d_txt"] == 0:
-                        em_txt_best += 1
-
-                    # increment total counts
-                    total_txt_best += 1
-                    total_img_best += 1
-
-                    hypotheses_best.append(hypo_score_best["hypo"].split(" "))
-                    references_best.append([current_ref.split(" ")])
-
-                if hypo_score is not None and current_ref is not None:
-                    edit_txt += hypo_score["d_txt"]
-                    edit_img += hypo_score["d_img"]
-                    len_img += hypo_score["l_img"]
-                    len_txt += hypo_score["l_txt"]
-
-                    counts["d_txt"].append(1.-hypo_score["d_txt"]/float(hypo_score["l_txt"]))
-                    counts["d_img"].append(1.-hypo_score["d_img"]/float(hypo_score["l_img"]))
-                    
-                    # exact matches = when edit distance == 0
-                    if hypo_score["d_img"] == 0:
-                        em_img += 1
-                    if hypo_score["d_txt"] == 0:
-                        em_txt += 1
-
-                    # increment total counts
-                    total_txt += 1
-                    total_img += 1
-
-                    hypotheses.append(hypo_score["hypo"].split(" "))
-                    references.append([current_ref.split(" ")])
+        # record that we added an example
+        results["nb_examples"] += 1
 
 
-                hypo_id = 0
-                ref, hypo, hypo_score, hypo_score_best = None, None, None, None
-                continue
 
-            if ref is None and hypo is None:
-                ref = line.strip()
-                current_ref = ref
-                ref_id += 1
-                continue
+    results, results_best = _initialize_results(), _initialize_results()
+    references, hypotheses, hypotheses_best = [], [], []
 
-            if ref is not None:
-                hypo = line.strip()
-                hypo_id += 1
-                print("Generating formula {}".format(ref_id))
+    # iterate over examples
+    for idx, example in enumerate(test_set):
+        sys.stdout.write("\rAt example {}".format(idx))
+        sys.stdout.flush()
+        ref = example[0] # ref is the first element
+        hypos = example[1:]
+        img_ref, formula_ref = ref
+        references.append([formula_ref])
+        hypo_best = None
 
-                try:
-                    ref_name = "{}_ref".format(ref_id)
-                    hypo_name = "{}_hypo_{}".format(ref_id, hypo_id)
-                    convert_to_png(ref, path_out, ref_name)
-                    convert_to_png(hypo, path_out, hypo_name)
-                    
-                    tokens_ref, tokens_hypo = ref.split(' '), hypo.split(' ')
+        # enumerate the different hypotheses
+        for idx, hypo in enumerate(hypos):
+            img_hypo, formula_hypo = hypo
+            edit_img, len_img = img_edit_distance(img_ref, img_hypo)
+            edit_txt, len_txt = edit_distance(formula_ref, formula_hypo)
+            # the first hypothesis is the one our system would propose
+            if idx == 0:
+                hypo_best = {"edit_img": edit_img, "edit_txt": edit_txt,
+                             "len_img": len_img, "len_txt": len_txt, 
+                             "id": idx + 1, "formula": formula_hypo}
+                hypotheses.append(formula_hypo)
+                _update_results(results, hypo_best)
 
-                    d_txt  = distance.levenshtein(tokens_ref, tokens_hypo)
-                    d_img, l_img = img_edit_distance(path_out+"{}.png".format(ref_name), path_out+"{}.png".format(hypo_name))
+            # let's look at the other hypothesis (maybe we missed a better one)
+            elif edit_img < hypo_best["edit_img"]:
+                hypo_best = {"edit_img": edit_img, "edit_txt": edit_txt,
+                             "len_img": len_img, "len_txt": len_txt,
+                             "id": idx + 1, "formula": formula_hypo}
 
-                    if hypo_score_best is None or hypo_score_best["d_img"] > d_img:
-                        hypo_score_best = {
-                            "id": hypo_id,
-                            "d_txt": d_txt,
-                            "d_img": d_img,
-                            "l_img": l_img,
-                            "l_txt": max(len(tokens_ref), len(tokens_hypo)),
-                            "hypo": hypo
-                        }
+        # record the best hypothesis
+        _update_results(results_best, hypo_best)
+        hypotheses_best.append(hypo_best["formula"])
+            
+    # generate final scores
+    scores = dict()
 
-                    if hypo_score is None and hypo_id == 1:
-                        hypo_score = {
-                            "d_txt": d_txt,
-                            "d_img": d_img,
-                            "l_img": l_img,
-                            "l_txt": max(len(tokens_ref), len(tokens_hypo)),
-                            "hypo": hypo
-                        }
-                        
-                    total_rdr += 1
+    # scores for the first proposal
+    scores["Edit Text"] = 1. - results["edit_txt"] / float(max(results["len_txt"], 1))
+    scores["Edit Img"]  = 1. - results["edit_img"] / float(max(results["len_img"], 1))
+    scores["EM Text"]   = results["em_txt"] / float(max(results["nb_examples"], 1))
+    scores["EM Img"]    = results["em_img"] / float(max(results["nb_examples"], 1))
+    scores["BLEU"]      = bleu_score(references, hypotheses)
 
-                except Exception, e:
-                    nb_errors += 1
+    # scores for the best proposals
+    scores["Edit Text Best"] = 1. - results_best["edit_txt"] / float(max(results_best["len_txt"], 1))
+    scores["Edit Img Best"]  = 1. - results_best["edit_img"] / float(max(results_best["len_img"], 1))
+    scores["EM Text Best"]   = results_best["em_txt"] / float(max(results_best["nb_examples"], 1))
+    scores["EM Img Best"]    = results_best["em_img"] / float(max(results_best["nb_examples"], 1))
+    scores["BLEU Best"]      = bleu_score(references, hypotheses_best)
 
-        scores = dict()
-        # scores for the first proposal
-        scores["Edit Text"] = 1. - edit_txt / float(max(len_txt, 1))
-        scores["Edit Img"]  = 1. - edit_img / float(max(len_img, 1))
-        scores["EM Text"]   = em_txt / float(max(total_txt, 1))
-        scores["EM Img"]    = em_img / float(max(total_img, 1))
-        scores["BLEU"]    = bleu_score(references, hypotheses)
+    # plot distributions
+    plot_histograms(x0=results["distrib_edit_txt"], x1=results["distrib_edit_img"], 
+                    fname=dir_plots + str(prefix) + "_edit_hist")
 
-        # scores for the best proposals
-        scores["Edit Text Best"] = 1. - edit_txt_best / float(max(len_txt_best, 1))
-        scores["Edit Img Best"]  = 1. - edit_img_best / float(max(len_img_best, 1))
-        scores["EM Text Best"]   = em_txt_best / float(max(total_txt_best, 1))
-        scores["EM Img Best"]    = em_img_best / float(max(total_img_best, 1))
-        scores["BLEU Best"]    = bleu_score(references, hypotheses_best)
+    plot_histograms(x0=results_best["distrib_edit_txt"], x1=results_best["distrib_edit_img"], 
+                    fname=dir_plots + str(prefix) + "_edit_hist_best")
 
-        info = "Unable to render LaTeX for {} out of {} images".format(nb_errors, total_rdr)
+    plot_histogram(x=results_best["distrib_ids"], fname=dir_plots + str(prefix) + "_ids")
 
-        print(scores)
-        print(info)
-
-        plot_histograms(counts, path_fig + str(prefix) + "_edit_hist")
-        plot_histograms(counts_best, path_fig + str(prefix) + "_edit_hist_best")
-        plot_histogram(ids_best, path_fig + str(prefix) + "_ids")
+    print("\n- done.")
+    return scores
 
 
-        return scores, info
-
-
-def plot_histogram(counts, fname, xlabel="proposal"):
-    import numpy as np
-    import matplotlib.mlab as mlab
-    import matplotlib.pyplot as plt
-
-    bins = np.arange(0, 7) + 0.5
+def plot_histogram(x, fname, bins=np.arange(0, 7) + 0.5, xlabel="proposal", ylabel="Counts"):
     plt.figure()
-    plt.hist(counts, bins, histtype='bar', facecolor='green', rwidth=0.8)
+    plt.hist(x, bins, histtype='bar', facecolor='green', rwidth=0.8)
     plt.xlabel(xlabel)
-    plt.ylabel("Counts")
+    plt.ylabel(ylabel)
     plt.savefig(fname + ".png")
     plt.close()
 
 
-def plot_histograms(counts, fname):
-    import numpy as np
-    import matplotlib.mlab as mlab
-    import matplotlib.pyplot as plt
-
-    bins = np.arange(-0.1, 1.1, 0.1) + 0.05
-
-    x0 = counts["d_txt"]
-    x1 = counts["d_img"]
-
+def plot_histograms(x0, x1, fname, bins=np.arange(-0.1, 1.1, 0.1) + 0.05,
+                    xlabel0="Edit Txt", xlabel1="Edit Img", ylabel="Counts"):
     fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 5))
     ax0, ax1 = axes.flatten()
 
     ax0.hist(x0, bins, histtype='bar', facecolor='green', rwidth=0.8)
-    ax0.set_xlabel('Edit Text')
-    ax0.set_ylabel('Counts')
+    ax0.set_xlabel(xlabel0)
+    ax0.set_ylabel(ylabel)
 
     ax1.hist(x1, bins, histtype='bar', facecolor='green', rwidth=0.8)
-    ax1.set_xlabel('Edit Image')
+    ax1.set_xlabel(xlabel1)
 
     fig.tight_layout()
     plt.savefig(fname + ".png")
@@ -486,10 +322,6 @@ def plot_histograms(counts, fname):
 
 
 def simple_plots(xs, ys, path_fig):
-    import numpy as np
-    import matplotlib.mlab as mlab
-    import matplotlib.pyplot as plt
-
     for k, v in ys.iteritems():
         plt.figure()
         plt.plot(xs, v)

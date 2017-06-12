@@ -32,17 +32,21 @@ class Encoder(object):
             out = max_pooling2d(inputs=out)
 
             out = conv2d(inputs=out, filters=256, kernel_size=3)
-            # out = batch_normalization(inputs=out, training=training) 
 
             out = conv2d(inputs=out, filters=256, kernel_size=3)
-            out = max_pooling2d(inputs=out, pool_size=(2,1), strides=(2,1)) 
+
+            if self.config.encode_mode == "vanilla":
+                out = max_pooling2d(inputs=out, pool_size=(2,1), strides=(2,1)) 
 
             out = conv2d(inputs=out, filters=512, kernel_size=3)
-            # out = batch_normalization(inputs=out, training=training)
-            out = max_pooling2d(inputs=out, pool_size=(1,2), strides=(1,2))
+
+            if self.config.encode_mode == "vanilla":
+                out = max_pooling2d(inputs=out, pool_size=(1,2), strides=(1,2))
+
+            if self.config.encode_mode == "cnn":
+                out = conv2d(inputs=out, filters=512, kernel_size=(2, 4), strides=(2, 2))
 
             out = conv2d(inputs=out, filters=512, kernel_size=3, padding='VALID')
-            # out = batch_normalization(inputs=out, training=training) 
 
         if self.config.encode_with_lstm:
             with tf.variable_scope("bilstm_encoder"):
