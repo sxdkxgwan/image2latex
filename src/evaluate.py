@@ -21,7 +21,7 @@ if __name__ == "__main__":
     test_set  =  Dataset(path_formulas=path_formulas, dir_images=dir_images,
                     path_matching=path_matching_eval, img_prepro=greyscale, 
                     form_prepro=get_form_prepro(config.vocab), max_len=config.max_length_formula,
-                    max_iter=config.max_iter, bucket=False)
+                    max_iter=config.max_iter, bucket=False, single=False)
 
     # generate the images and the matching from the formulas
     # test_set.generate_from_formulas(single=False)

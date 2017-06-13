@@ -19,9 +19,6 @@ class Config():
         # directory for training outputs
         if not os.path.exists(self.dir_output):
             os.makedirs(self.dir_output)
-        # else:
-        #     print("ERROR: Results directory from previous experience. Abort.")
-        #     raise Exception
 
         if not os.path.exists(self.model_output):
             os.makedirs(self.model_output)
@@ -75,7 +72,7 @@ class Config():
 
     # preprocess images and formulas
     dim_embeddings = 80
-    max_length_formula = 50
+    max_length_formula = 150
 
     # model training parameters
     n_epochs      = 15
@@ -114,6 +111,6 @@ class Test(Config):
     n_epochs = 1
     batch_size = 20
     max_iter = 20
-    max_length_formula = 150
+    max_length_formula = 50
     decoding = "beam_search"
     encode_with_lstm = False

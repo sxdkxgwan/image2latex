@@ -145,7 +145,7 @@ def img_edit_distance(img1, img2):
         max length of the two sequences
     """
     # load the image (H, W)
-    img1, img2 = np.squeeze(img1), np.squeeze(img2)
+    img1, img2 = img1[:, :, 0], img2[:, :, 0]
 
     # transpose and convert to 0 or 1
     img1 = np.transpose(img1)
@@ -234,13 +234,18 @@ def evaluate_dataset(test_set, dir_plots, prefix=""):
 
     # iterate over examples
     for idx, example in enumerate(test_set):
+        # print example
         sys.stdout.write("\rAt example {}".format(idx))
         sys.stdout.flush()
         ref = example[0] # ref is the first element
         hypos = example[1:]
         img_ref, formula_ref = ref
-        references.append([formula_ref])
         hypo_best = None
+        
+
+        # fake hypothesis if we don't have one (failed to compile image)
+        if len(hypos) == 0:
+            hypos = [(np.zeros((1, 1, 1)), [])]
 
         # enumerate the different hypotheses
         for idx, hypo in enumerate(hypos):
@@ -252,6 +257,8 @@ def evaluate_dataset(test_set, dir_plots, prefix=""):
                 hypo_best = {"edit_img": edit_img, "edit_txt": edit_txt,
                              "len_img": len_img, "len_txt": len_txt, 
                              "id": idx + 1, "formula": formula_hypo}
+
+                references.append([formula_ref])
                 hypotheses.append(formula_hypo)
                 _update_results(results, hypo_best)
 

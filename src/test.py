@@ -11,13 +11,14 @@ from utils.evaluate import simple_plots, evaluate_dataset
 
 if __name__ == "__main__":
     # Load config
-    config = Config()
+    # config = Config()
+    config = Test()
 
     path_formulas = config.path_results_final
     path_matching_eval = config.dir_output + "matching.txt"
     dir_images = config.dir_output + "images/"
 
-    max_lengths = [20, 50, 100]
+    max_lengths = [20, 50, 75, 100, 150]
     all_scores = None
 
     for i, max_length in enumerate(max_lengths):
@@ -27,7 +28,7 @@ if __name__ == "__main__":
         test_set  =  Dataset(path_formulas=path_formulas, dir_images=dir_images,
                         path_matching=path_matching_eval, img_prepro=greyscale, 
                         form_prepro=get_form_prepro(config.vocab), max_len=max_length,
-                        max_iter=config.max_iter, bucket=False)
+                        max_iter=10, bucket=False, single=False)
 
 
         # Build model

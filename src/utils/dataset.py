@@ -9,19 +9,21 @@ from utils.images import convert_to_png
 
 
 class DataGeneratorFile(object):
-    def __init__(self, filename):
+    def __init__(self, filename, single=True):
         """
         Args:
             filename: (string of path to file) where we have
                 multiple instances per example
                     aqmsldfj.png 1 qmsdljfs.png 2
                     qsfamsqsdf.png 4 qaezqd.png 5
+            single: if multiple instance, false
         Returns:
             iterator that returns
                 tuple img_path, formula_id if n == 2
                 tuple list of tuples path, id if n != 2
         """
         self._filename = filename
+        self._single = single
 
     def __iter__(self):
         """
@@ -35,7 +37,7 @@ class DataGeneratorFile(object):
                 for i in range(len(line)/2):
                     instances.append((line[2*i], line[2*i+1]))
 
-                if len(instances) == 1:
+                if self._single:
                     yield instances[0]
                 else:
                     yield instances
@@ -44,7 +46,7 @@ class DataGeneratorFile(object):
 class Dataset(object):
     def __init__(self, path_formulas, dir_images, path_matching,
                 img_prepro, form_prepro, max_iter=None, max_len=None,
-                iter_mode="data", bucket=True, bucket_size=20):
+                iter_mode="data", bucket=True, bucket_size=20, single=True):
         """
         Args:
             path_formulas: (string) file of formulas, one formula per line
@@ -68,7 +70,7 @@ class Dataset(object):
         self.max_len       = max_len  # optional
         self.iter_mode     = iter_mode
 
-        self.data_generator = DataGeneratorFile(self.path_matching)
+        self.data_generator = DataGeneratorFile(self.path_matching, single)
 
         if bucket:
             self.data_generator = self.bucket(bucket_size)
@@ -231,7 +233,7 @@ class Dataset(object):
 
 
 
-    def generate_from_formulas(self, single=True):
+    def generate_from_formulas(self, single=True, quality=100, density=200):
         """
         Generate images from the formulas and writes the correspondance in a 
         matchin file.
@@ -252,7 +254,7 @@ class Dataset(object):
 
                 elif len(formula) > 0:
                     try:
-                        img_path = convert_to_png(formula, self.dir_images, idx)
+                        img_path = convert_to_png(formula, self.dir_images, idx, quality, density)
                         if img_path[-4:] == ".png":
                             example.append("{} {}".format(img_path, idx))
 
